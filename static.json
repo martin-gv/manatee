@@ -5,7 +5,7 @@
    },
    "proxies": {
       "/api": {
-         "origin": "https://koala-server.herokuapp.com"
+         "origin": "https://koala-server.herokuapp.com/api"
       }
    }
 }
