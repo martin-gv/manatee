@@ -1,0 +1,91 @@
+.main {
+   background-color: #f7f7f7;
+}
+
+.navbar {
+   height: 55px;
+   margin-bottom: 0;
+}
+
+.main {
+   padding: 25px 30px;
+}
+
+.client-list-item,
+.client-order-list-item {
+   cursor: pointer;
+}
+
+.clickable tbody tr {
+   cursor: pointer;
+}
+
+tr.selected {
+   background-color: #cbcbcb !important;
+   /* background-color: #d0e7ff !important; */
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+   -webkit-appearance: none;
+   /* margin: 0;  */
+}
+
+/* Bootstrap */
+
+/* Card Header */
+.card-header {
+   background-color: #fff;
+}
+
+/* Modal */
+.modal-dialog-centered {
+   align-items: flex-start;
+   margin-top: 100px;
+}
+
+/* Semantic UI */
+
+/* Main */
+.ui.segment.pushable {
+   margin: 0;
+   border: 0;
+   border-radius: 0;
+   height: 90vh;
+}
+
+.pusher {
+   margin-left: 150px;
+}
+
+/* Print */
+
+@media print {
+   nav,
+   .sidebar,
+   .toolbar {
+      display: none !important;
+   }
+
+   .pusher {
+      margin-left: 0;
+   }
+
+   .main {
+      background-color: #fff;
+   }
+}
+
+@page {
+   margin: 200px;
+}
+
+/* Date Range Picker */
+
+.InputFromTo .DayPickerInput-Overlay {
+   width: 550px;
+}
+
+.InputFromTo-to .DayPickerInput-Overlay {
+   margin-left: -198px;
+}
