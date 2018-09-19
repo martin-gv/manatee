@@ -9,7 +9,10 @@ const CompanyOrders = props => {
    ));
 
    return (
-      <table className="ui selectable clickable table">
+      <table
+         className="small hover clickable"
+         style={{ marginBottom: 20, marginTop: 82 }}
+      >
          <thead>
             <tr>
                <th>Invoice #</th>

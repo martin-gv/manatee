@@ -3,10 +3,12 @@ import { addError, removeError } from "./errors";
 import { toggleModal } from "./system";
 import {
    LOAD_CLIENTS,
-   UPDATE_CLIENT,
    LOAD_TAG,
-   REMOVE_TAG
+   REMOVE_TAG,
+   EDIT_CLIENT
 } from "../actionTypes";
+
+// LOCAL ACTIONS
 
 export function loadClients(clients) {
    return {
@@ -15,19 +17,28 @@ export function loadClients(clients) {
    };
 }
 
-export function updateClient(id, event) {
+export function updateClient(clientID, field, value) {
+   // DOES NOTHING
    return {
-      type: UPDATE_CLIENT,
-      id,
-      field: event.target.name,
-      value: event.target.value
+      type: EDIT_CLIENT
    };
 }
+
+export function editClient(clientID, field, value) {
+   return {
+      type: EDIT_CLIENT,
+      id: clientID,
+      field,
+      value
+   };
+}
+
+// DATABASE API CALLS
 
 export function fetchClient(search, tagSearch) {
    return dispatch => {
       return apiCall("get", "/api/clients", {
-         params: { search, "tagSearch": tagSearch }
+         params: { search, tagSearch: tagSearch }
       })
          .then(res => {
             dispatch(removeError());
@@ -80,7 +91,7 @@ export function createClient(client) {
 
 export function saveClient(data) {
    return dispatch => {
-      return apiCall("put", "/api/clients/" + data.clientId, { client: data })
+      return apiCall("put", "/api/clients/" + data.clientID, { client: data })
          .then(res => {
             dispatch(removeError());
             dispatch(toggleModal("clientSaveConfirmation"));

@@ -57,31 +57,29 @@ class ClientTags extends React.Component {
          }));
 
       return (
-         <div className="card mt-3">
-            <div className="card-header">Tags</div>
-            <div className="card-body">
-               <div className="row">
-                  <div className="col-8">
-                     <Select
-                        options={clientTagOptions}
-                        onChange={option => this.setState({ option })}
-                        value={this.state.option}
-                        disabled={clientTagOptions.length === 0}
-                     />
-                  </div>
-                  <div className="col">
-                     <button
-                        className="btn btn-primary btn-block"
-                        onClick={this.onAddTagButtonClick}
-                        disabled={!this.state.option}
-                     >
-                        Add Tag
-                     </button>
-                  </div>
+         <div style={{ marginTop: "20px", border: "1px solid #ddd", padding: "20px", borderRadius: "5px" }}>
+            <div style={{fontSize: "16px", marginBottom: "15px", fontWeight: "300"}}>Tags</div>
+            <div className="ui grid">
+               <div className="twelve wide column">
+                  <Select
+                     options={clientTagOptions}
+                     onChange={option => this.setState({ option })}
+                     value={this.state.option}
+                     disabled={clientTagOptions.length === 0}
+                  />
                </div>
-               <hr />
-               <span style={{ fontSize: "18px" }}>{tags}</span>
+               <div className="four wide column">
+                  <button
+                     className="ui basic primary button"
+                     onClick={this.onAddTagButtonClick}
+                     disabled={!this.state.option}
+                  >
+                     Add Tag
+                  </button>
+               </div>
             </div>
+            <hr />
+            <span style={{ fontSize: "18px" }}>{tags}</span>
          </div>
       );
    }

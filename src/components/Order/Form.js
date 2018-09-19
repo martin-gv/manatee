@@ -363,109 +363,123 @@ class OrderForm extends React.Component {
    };
 
    render() {
-      if (!this.props.isDataLoaded) {
-         return <div className="alert alert-primary">Loading...</div>;
-      }
+      const {
+         isDataLoaded,
+         orderRows,
+         selectedRowId,
+         pricingRows
+      } = this.props;
 
-      const { orderRows, selectedRowId, pricingRows } = this.props;
-      const { orderID, total, paymentTotal, void: isVoid } = this.props.order;
+      const order = this.props.order || {};
+      const { orderID, total, paymentTotal, void: isVoid } = order;
 
-      const form = this.state.form.map(el => (
-         <div className="form-group" key={el}>
-            <label htmlFor={el}>{el}</label>
-            <input
-               className="form-control"
-               id={el}
-               name={el}
-               value={this.props.order[el] || ""}
-               type="text"
-               onChange={this.handleChange}
-            />
-         </div>
-      ));
-
-      const checkRow = { ...orderRows.find(r => r._id === selectedRowId) };
-
-      return (
-         <div className="ui grid">
-            <div className="ten wide column">
-               <div className="card">
-                  <div className="card-header">
-                     Order ID: {orderID} {isVoid && <strong>VOIDED</strong>}
-                     <button
-                        className="btn btn-outline-secondary float-right ml-3"
-                        onClick={this.handleViewClientButton}
-                     >
-                        View Client
-                     </button>
-                     <button
-                        className="btn btn-outline-secondary float-right ml-3"
-                        onClick={this.print}
-                        disabled={isVoid}
-                     >
-                        Print
-                     </button>
-                     <button
-                        className="btn btn-outline-danger float-right"
-                        disabled={isVoid}
-                        onClick={this.void}
-                     >
-                        Void
-                     </button>
-                  </div>
-                  <div className="card-body">
-                     <form onSubmit={this.handleSubmit}>
-                        {form}
-                        <button
-                           type="submit"
-                           className="btn btn-success mb-3"
-                           disabled={isVoid}
-                        >
-                           Save
-                        </button>
-                     </form>
-                  </div>
-               </div>
-               {this.props.isOrderRowDataLoaded && (
-                  <OrderRowDetail
-                     checkRow={checkRow}
-                     row={{
-                        ...orderRows.find(r => r._id === selectedRowId)
-                     }}
-                     selectedRowId={selectedRowId}
-                     onRowChange={this.onRowChange}
-                     saveRowButton={this.handleSaveRowButton}
-                     deleteRowButton={this.handleDeleteRowButton}
-                     glassOptions={setupOptions(pricingRows, "glass")}
-                     mountOptions={setupOptions(pricingRows, "mount")}
-                     addItem={this.addItem}
-                     removeItem={this.removeItem}
-                     toggleModal={this.toggleModal}
-                     modal={this.state.modal}
-                     updateTotal={this.updateTotal}
-                     isVoid={isVoid}
-                  />
-               )}
-            </div>
-            <div className="six wide column">
-               {this.props.isOrderRowDataLoaded && (
-                  <OrderRowList
-                     rows={this.props.orderRows}
-                     selectedRowId={this.props.selectedRowId}
-                     newRowButton={this.handleNewRowButton}
-                     handleRowClick={id => this.handleRowClick(id)}
-                     total={total}
-                     isVoid={isVoid}
-                  />
-               )}
-               <OrderPaymentList
-                  orderID={orderID}
-                  orderTotal={total}
-                  paymentTotal={paymentTotal}
-                  addRewards={this.addRewards}
-                  isVoid={isVoid}
+      let form;
+      if (isDataLoaded) {
+         form = this.state.form.map(el => (
+            <div className="form-group" key={el}>
+               <label htmlFor={el}>{el}</label>
+               <input
+                  className="form-control"
+                  id={el}
+                  name={el}
+                  value={this.props.order[el] || ""}
+                  type="text"
+                  onChange={this.handleChange}
                />
             </div>
+         ));
+      }
+      const checkRow = { ...orderRows.find(r => r._id === selectedRowId) };
+      const loader = <div className="loader">Loading...</div>;
+
+      return (
+         <div className="card full-height">
+            {!isDataLoaded ? (
+               loader
+            ) : (
+               <div className="ui grid">
+                  <div className="ten wide column">
+                     <div className="section">
+                        Order ID: {orderID} {isVoid && <strong>VOIDED</strong>}
+                        <div style={{ float: "right", marginBottom: 20 }}>
+                           <button
+                              className="ui red basic button"
+                              disabled={isVoid}
+                              onClick={this.void}
+                           >
+                              <i className="material-icons">cancel</i>
+                              Void
+                           </button>
+                           <button
+                              className="ui basic button"
+                              onClick={this.handleViewClientButton}
+                           >
+                              <i className="material-icons">person</i>
+                              View Client
+                           </button>
+                           <button
+                              className="ui basic button"
+                              onClick={this.print}
+                              disabled={isVoid}
+                           >
+                              <i className="material-icons">print</i>
+                              Print
+                           </button>
+                        </div>
+                        <form onSubmit={this.handleSubmit}>
+                           {form}
+                           <button
+                              type="submit"
+                              className="ui green basic button"
+                              disabled={isVoid}
+                           >
+                              <i className="material-icons">save</i>
+                              Save
+                           </button>
+                        </form>
+                     </div>
+                     {this.props.isOrderRowDataLoaded && (
+                        <OrderRowDetail
+                           checkRow={checkRow}
+                           row={{
+                              ...orderRows.find(r => r._id === selectedRowId)
+                           }}
+                           selectedRowId={selectedRowId}
+                           onRowChange={this.onRowChange}
+                           saveRowButton={this.handleSaveRowButton}
+                           deleteRowButton={this.handleDeleteRowButton}
+                           glassOptions={setupOptions(pricingRows, "glass")}
+                           mountOptions={setupOptions(pricingRows, "mount")}
+                           addItem={this.addItem}
+                           removeItem={this.removeItem}
+                           toggleModal={this.toggleModal}
+                           modal={this.state.modal}
+                           updateTotal={this.updateTotal}
+                           isVoid={isVoid}
+                        />
+                     )}
+                  </div>
+                  <div className="six wide column">
+                     {this.props.isOrderRowDataLoaded && (
+                        <OrderRowList
+                           rows={this.props.orderRows}
+                           selectedRowId={this.props.selectedRowId}
+                           newRowButton={this.handleNewRowButton}
+                           handleRowClick={id => this.handleRowClick(id)}
+                           total={total}
+                           isVoid={isVoid}
+                        />
+                     )}
+                     <OrderPaymentList
+                        orderID={orderID}
+                        orderTotal={total}
+                        paymentTotal={paymentTotal}
+                        addRewards={this.addRewards}
+                        isVoid={isVoid}
+                     />
+                  </div>
+               </div>
+            )}
          </div>
       );
    }

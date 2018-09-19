@@ -1,6 +1,6 @@
 import { apiCall, setTokenHeader } from "../../services/api";
 import { addError, removeError } from "./errors";
-import { SET_CURRENT_USER } from "../actionTypes";
+import { SET_CURRENT_USER, SET_IDLE_TIMEOUT } from "../actionTypes";
 
 export function setCurrentUser(user) {
    return {
@@ -37,5 +37,23 @@ export function logout() {
       localStorage.clear();
       setAuthorizationToken(false);
       dispatch(setCurrentUser({}));
+   };
+}
+
+export function setIdleTimeout(timeoutID) {
+   return {
+      type: SET_IDLE_TIMEOUT,
+      timeoutID
+   };
+}
+
+export function resetIdleTimeout(currentTimer) {
+   return dispatch => {
+      if (currentTimer) clearTimeout(currentTimer);
+      const newTimeout = setTimeout(() => {
+         dispatch(addError("Logging user out due to inactivity"));
+         dispatch(logout());
+      }, 1000 * 60 * 30);
+      dispatch(setIdleTimeout(newTimeout));
    };
 }

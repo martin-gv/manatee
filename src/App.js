@@ -10,21 +10,22 @@ import jwtDecode from "jwt-decode";
 import { setAuthorizationToken, setCurrentUser } from "./store/actions/auth";
 
 import "./App.css";
+import "./Animations.css";
 // import "react-dates/lib/css/_datepicker.css";
 import "react-select/dist/react-select.css";
-import 'react-day-picker/lib/style.css';
+import "react-day-picker/lib/style.css";
 
 import Navbar from "./components/UI/Navbar/Navbar";
 import Main from "./components/UI/Main/Main";
-import { Segment, Sidebar } from "semantic-ui-react";
-import SidebarMenu from "./components/UI/Sidebar/SidebarMenu";
+import Sidebar from "./components/UI/Sidebar/Sidebar";
 
 const store = configureStore();
 
-if (localStorage.jwtToken) {
-   setAuthorizationToken(localStorage.jwtToken);
+const { jwtToken } = localStorage;
+if (jwtToken) {
+   setAuthorizationToken(jwtToken);
    try {
-      store.dispatch(setCurrentUser(jwtDecode(localStorage.jwtToken)));
+      store.dispatch(setCurrentUser(jwtDecode(jwtToken)));
    } catch (err) {
       store.dispatch(setCurrentUser({}));
    }
@@ -35,13 +36,8 @@ const App = () => (
       <Router>
          <div className="onboarding">
             <Navbar />
-
-            <Sidebar.Pushable as={Segment}>
-               <SidebarMenu />
-               <Sidebar.Pusher>
-                  <Main />
-               </Sidebar.Pusher>
-            </Sidebar.Pushable>
+            <Sidebar />
+            <Main />
          </div>
       </Router>
    </Provider>

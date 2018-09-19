@@ -1,0 +1,17 @@
+.InventoryList table {
+   table-layout: fixed;
+}
+
+.InventoryList table tr {
+   height: 45px;
+}
+
+.InventoryList table th {
+   font-size: 16px;
+   font-weight: 400;
+   padding-right: 20px;
+}
+
+.InventoryList table td {
+   padding-right: 25px;
+}

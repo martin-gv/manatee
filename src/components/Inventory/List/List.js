@@ -1,5 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Motion, spring } from "react-motion";
+import "./InventoryList.css";
 
 import {
    editInventory,
@@ -54,7 +56,7 @@ class InventoryList extends React.Component {
       this.setState({ selectedItemID: null });
    };
 
-    onChange = (inventoryID, field, value) => {
+   onChange = (inventoryID, field, value) => {
       this.props.editInventory(inventoryID, field, value);
    };
 
@@ -64,9 +66,8 @@ class InventoryList extends React.Component {
    };
 
    render() {
-      if (!this.props.isDataLoaded.inventoryList) {
-         return <div className="alert alert-primary">Loading...</div>;
-      }
+      const { showAddNewPanel, selectedItemID } = this.state;
+      const { inventoryList } = this.props.isDataLoaded;
 
       const tableRows = this.props.inventory.map(el => (
          <InventoryListItem
@@ -78,106 +79,133 @@ class InventoryList extends React.Component {
          />
       ));
 
+      const loader = <div className="loader">Loading...</div>;
+
       return (
-         <div className="row">
-            {this.state.showAddNewPanel && (
-               <div className="col-3">
-                  <InventoryNew />
-               </div>
-            )}
-            <div className="col">
-               <div className="card">
-                  <div className="card-header">Inventory List</div>
-                  <div className="card-body">
-                     <div className="card">
-                        <div className="card-body">
-                           <div className="form-row">
-                              <div className="col">
-                                 <form onSubmit={this.handleSearch}>
-                                    <div className="input-group">
-                                       <input
-                                          className="form-control"
-                                          type="text"
-                                          placeholder="Search inventory..."
-                                          value={this.state.searchBox}
-                                          onChange={this.handleSearchBoxChange}
-                                       />
-                                       <div className="input-group-append">
-                                          <button className="btn btn-primary">
-                                             Search
-                                          </button>
-                                       </div>
-                                    </div>
-                                 </form>
-                                 <button
-                                    className="btn btn-primary mt-3"
-                                    onClick={this.handleAddNewInventoryButton}
-                                 >
-                                    Add New
+         <div style={{ display: "flex", alignItems: "flex-start" }}>
+            <Motion style={{ x: spring(showAddNewPanel ? 0 : -280) }}>
+               {style => (
+                  <InventoryNew
+                     style={{ transform: `translateX(${style.x}px)` }}
+                  />
+               )}
+            </Motion>
+
+            <Motion
+               style={{
+                  xLeft: spring(showAddNewPanel ? 0 : -240),
+                  xRight: spring(selectedItemID ? 0 : -290)
+               }}
+            >
+               {style => (
+                  <div
+                     className="card full-height InventoryList"
+                     style={{
+                        flex: 1,
+                        marginLeft: style.xLeft,
+                        marginRight: style.xRight
+                     }}
+                  >
+                     <h2>Inventory</h2>
+                     <div className="section">
+                        <form
+                           onSubmit={this.handleSearch}
+                           style={{
+                              display: "inline-block",
+                              width: 300,
+                              marginRight: 20
+                           }}
+                        >
+                           <div className="input-group">
+                              <input
+                                 className="form-control"
+                                 type="text"
+                                 placeholder="Search inventory..."
+                                 value={this.state.searchBox}
+                                 onChange={this.handleSearchBoxChange}
+                              />
+                              <div className="input-group-append">
+                                 <button className="btn btn-primary">
+                                    Search
                                  </button>
-                                 <form
-                                    action="/api/inventory/print"
-                                    method="post"
-                                 >
-                                    <input
-                                       type="hidden"
-                                       name="inventory"
-                                       defaultValue={this.checked()}
-                                    />
-                                    <button className="ui basic button">
-                                       <i className="download icon" />
-                                       Price Tags
-                                    </button>
-                                 </form>
-                              </div>
-                              <div className="col">
-                                 {this.state.previousSearch && (
-                                    <div>
-                                       Showing search results for:{" "}
-                                       <strong>
-                                          {this.state.previousSearch}
-                                       </strong>
-                                    </div>
-                                 )}
                               </div>
                            </div>
-                        </div>
+                        </form>
+                        <button
+                           className="ui basic blue button"
+                           onClick={this.handleAddNewInventoryButton}
+                        >
+                           Add New
+                        </button>
+                        <form
+                           action="/api/inventory/print"
+                           method="post"
+                           style={{
+                              display: "inline-block",
+                              margin: "0 20px 0 10px"
+                           }}
+                        >
+                           <input
+                              type="hidden"
+                              name="inventory"
+                              defaultValue={this.checked()}
+                           />
+                           <button className="ui basic button">
+                              <i className="download icon" />
+                              Price Tags
+                           </button>
+                        </form>
+                        {this.state.previousSearch && (
+                           <div style={{ display: "inline-block" }}>
+                              Showing search results for:{" "}
+                              <strong>{this.state.previousSearch}</strong>
+                           </div>
+                        )}
                      </div>
-                     <table className="table table-hover clickable">
-                        <thead>
-                           <tr>
-                              <th />
-                              <th>ID</th>
-                              <th>Artist</th>
-                              <th>Title</th>
-                              <th>Type</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           {this.props.isDataLoaded.inventoryListRows ? (
-                              tableRows
-                           ) : (
+                     {!inventoryList ? (
+                        loader
+                     ) : (
+                        <table
+                           className="hover clickable"
+                           style={{ marginTop: 30 }}
+                        >
+                           <thead>
                               <tr>
-                                 <td colSpan="4">
-                                    <div className="alert alert-primary">
-                                       Loading...
-                                    </div>
-                                 </td>
+                                 <th style={{ width: 60 }} />
+                                 <th style={{ width: 100 }}>ID</th>
+                                 <th style={{ width: 250 }}>Artist</th>
+                                 <th>Title</th>
+                                 <th>Type</th>
                               </tr>
-                           )}
-                        </tbody>
-                     </table>
+                           </thead>
+                           <tbody>
+                              {this.props.isDataLoaded.inventoryListRows ? (
+                                 tableRows
+                              ) : (
+                                 <tr>
+                                    <td colSpan="4">
+                                       <div className="alert alert-primary">
+                                          Loading...
+                                       </div>
+                                    </td>
+                                 </tr>
+                              )}
+                           </tbody>
+                        </table>
+                     )}
                   </div>
-               </div>
-            </div>
-            {this.state.selectedItemID && (
-               <div className="col-3">
+               )}
+            </Motion>
+
+            <Motion style={{ x: spring(this.state.selectedItemID ? 0 : 330) }}>
+               {style => (
                   <InventoryForm
+                     style={{ transform: `translateX(${style.x}px)` }}
                      selectedItemID={this.state.selectedItemID}
                      closePanel={this.closeSelectedItemPanel}
                   />
-               </div>
-            )}
+               )}
+            </Motion>
          </div>
       );
    }

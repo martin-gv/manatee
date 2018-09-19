@@ -7,13 +7,14 @@ import {
    LOAD_CLIENT_TAG_OPTIONS,
    LOAD_PRICING_COLUMN_DATA,
    LOAD_PRICING_ROW_DATA,
-   SET_DATA_READY_STATUS
+   SET_DATA_READY_STATUS,
+   SET_IDLE_TIMEOUT
 } from "../actionTypes";
 
 const defaultState = {
+   idleTimer: undefined,
    isDataLoaded: {
       clientList: false,
-      clientForm: false,
       clientOrderList: false,
       orderList: false,
       orderForm: false,
@@ -92,6 +93,10 @@ const setDataReadyStatus = (state, action) => {
    return { ...state, isDataLoaded };
 };
 
+const setIdleTimeout = (state, action) => {
+   return { ...state, idleTimer: action.timeoutID };
+};
+
 const reducer = (state = defaultState, action) => {
    switch (action.type) {
       case SET_DATA_LOADED_STATUS:
@@ -112,6 +117,8 @@ const reducer = (state = defaultState, action) => {
          return loadPricingRowData(state, action);
       case SET_DATA_READY_STATUS:
          return setDataReadyStatus(state, action);
+      case SET_IDLE_TIMEOUT:
+         return setIdleTimeout(state, action);
       default:
          return state;
    }

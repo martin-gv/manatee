@@ -1,28 +1,39 @@
 .main {
    background-color: #f7f7f7;
+   padding: 30px 35px;
+   margin-left: 170px;
+   position: relative;
+   top: 55px;
 }
 
 .navbar {
+   width: 100%;
    height: 55px;
+   position: fixed;
+   top: 0;
    margin-bottom: 0;
+   z-index: 10;
+   background-color: #252c33;
+   margin-bottom: 1rem;
 }
 
-.main {
-   padding: 25px 30px;
+.navbar-brand > img {
+   display: inline-block;
+   width: 50px;
+   border-radius: 2px;
+   margin-bottom: 2px;
+   margin-right: 5px;
+   margin-left: 48px;
+   filter: invert(100%);
 }
 
-.client-list-item,
-.client-order-list-item {
-   cursor: pointer;
-}
-
-.clickable tbody tr {
-   cursor: pointer;
+.navbar input {
+   width: 390px;
+   height: 34px;
 }
 
 tr.selected {
    background-color: #cbcbcb !important;
-   /* background-color: #d0e7ff !important; */
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -31,12 +42,18 @@ input[type="number"]::-webkit-outer-spin-button {
    /* margin: 0;  */
 }
 
-/* Bootstrap */
-
-/* Card Header */
-.card-header {
-   background-color: #fff;
+/* General Styles */
+h2 {
+   font-weight: 400;
+   font-size: 25px;
 }
+
+h3 {
+   font-weight: 400;
+   font-size: 18px;
+}
+
+/* Bootstrap */
 
 /* Modal */
 .modal-dialog-centered {
@@ -44,18 +61,108 @@ input[type="number"]::-webkit-outer-spin-button {
    margin-top: 100px;
 }
 
-/* Semantic UI */
+/* Bootstrap Override */
 
-/* Main */
-.ui.segment.pushable {
-   margin: 0;
+.card {
+   padding: 30px;
    border: 0;
-   border-radius: 0;
-   height: 90vh;
+   border-radius: 3px;
+   box-shadow: #ddd 0px 0px 5px;
 }
 
-.pusher {
-   margin-left: 150px;
+.full-height {
+   min-height: 83vh;
+}
+
+table {
+   width: 100%;
+   table-layout: fixed;
+   font-family: "Roboto", sans-serif;
+}
+
+table.hover tbody tr:hover {
+   background-color: #f6f6f6;
+}
+
+table.clickable tbody tr {
+   cursor: pointer;
+}
+
+table tr {
+   height: 60px;
+}
+
+table th {
+   font-size: 18px;
+   font-weight: 300;
+   color: #555;
+}
+
+table td {
+   font-size: 14px;
+   color: #444;
+   border-top: 1px solid #ddd;
+   font-weight: 300;
+   padding: 0 5px;
+   overflow: hidden; /* 1 of 3 for hiding text exceeding cell width */
+   white-space: nowrap; /* 2 of 3 */
+   text-overflow: ellipsis; /* 3 of 3 */
+}
+
+/* Section */
+
+.section {
+   margin-top: 20px;
+   border: 1px solid #ddd;
+   padding: 20px;
+   border-radius: 5px;
+   /* width: 250px; */
+   /* min-width: 250px; */
+   margin-right: 20px;
+}
+
+/* Table (Small) */
+
+table.small tr {
+   height: 40px;
+}
+
+table.small th {
+   font-size: 14px;
+   font-weight: 400;
+   color: #555;
+}
+
+/* Semantic UI Override */
+
+.ui.form .field > label {
+   font-family: "Roboto";
+   font-weight: 400;
+}
+
+.ui.button {
+   padding: 10px 20px;
+   margin-right: 10px;
+   /* display: flex; */
+}
+
+.ui.button:last-of-type {
+   margin-right: 0;
+}
+
+.ui.button,
+.ui.button i {
+   font-size: 13px;
+}
+
+.ui.button,
+.ui.basic.button {
+   border-radius: 30px;
+}
+
+/* Utility */
+.text-center {
+   text-align: center;
 }
 
 /* Print */
@@ -82,10 +189,11 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /* Date Range Picker */
 
-.InputFromTo .DayPickerInput-Overlay {
-   width: 550px;
+.InputFromTo .DayPickerInput-OverlayWrapper {
+   top: 42px;
+   left: -183px;
 }
 
-.InputFromTo-to .DayPickerInput-Overlay {
-   margin-left: -198px;
+.InputFromTo .DayPickerInput-Overlay {
+   width: 550px;
 }

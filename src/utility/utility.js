@@ -17,6 +17,7 @@ export function eventObj(option, field) {
 }
 
 // Takes state and action from a reducer plus the id field to lookup
+// Returns state array with updated values
 export function editStore(state, action, idField) {
    const index = state.findIndex(el => el[idField] === action.id);
    const newState = [...state];

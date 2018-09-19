@@ -120,14 +120,14 @@ class PricingProgramView extends React.Component {
       const total = this.calculateTotal([glassCharge, mountCharge]);
 
       return (
-         <div className="card">
-            <div className="card-body">
-               <div className="row">
-                  <div className="col-4">
-                     <div className="form-group">
+         <div className="card full-height">
+            <h2 style={{ marginBottom: 20 }}>Quote Calculator</h2>
+            <div className="ui grid">
+               <div className="five wide column">
+                  <form className="ui form" style={{ marginBottom: 10 }}>
+                     <div className="field">
                         <label>Height</label>
                         <input
-                           className="form-control"
                            name="height"
                            value={this.state.height}
                            type="number"
@@ -138,10 +138,9 @@ class PricingProgramView extends React.Component {
                            }
                         />
                      </div>
-                     <div className="form-group">
+                     <div className="field">
                         <label>Width</label>
                         <input
-                           className="form-control"
                            name="width"
                            value={this.state.width}
                            type="number"
@@ -152,49 +151,50 @@ class PricingProgramView extends React.Component {
                            }
                         />
                      </div>
-                     <div className="form-group">
-                        <label>Glass</label>
-                        <Select
-                           options={setupOptions(rows, "glass")}
-                           onChange={glass =>
-                              this.setState({ glass: glass && glass.value })
-                           }
-                           value={this.state.glass}
-                        />
-                     </div>
-                     <div className="form-group">
-                        <label>Mount</label>
-                        <Select
-                           options={setupOptions(rows, "mount")}
-                           onChange={mount =>
-                              this.setState({ mount: mount && mount.value })
-                           }
-                           value={this.state.mount}
-                        />
-                     </div>
-                  </div>
-                  <div className="col">
-                     UI: {ui}
-                     <br />
-                     Glass: {glass && glass.label} - ${glassCharge}
-                     <br />
-                     Mount: {mount && mount.label} - ${mountCharge}
-                     <br />
-                     Total: ${total}
-                     <br />
-                     <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.toggleModal}
-                     >
-                        Add to Invoice
-                     </Button>
-                     <AddToInvoiceModal
-                        isOpen={this.state.showModal}
-                        toggle={this.toggleModal}
-                        addToOrder={(e, id) => this.addToOrder(e, id, total)}
+                  </form>
+                  <div className="form-group">
+                     <label>Glass</label>
+                     <Select
+                        options={setupOptions(rows, "glass")}
+                        onChange={glass =>
+                           this.setState({ glass: glass && glass.value })
+                        }
+                        value={this.state.glass}
                      />
                   </div>
+                  <div className="form-group">
+                     <label>Mount</label>
+                     <Select
+                        options={setupOptions(rows, "mount")}
+                        onChange={mount =>
+                           this.setState({ mount: mount && mount.value })
+                        }
+                        value={this.state.mount}
+                     />
+                  </div>
+               </div>
+               <div className="eleven wide column">
+                  UI: {ui}
+                  <br />
+                  Glass: {glass && glass.label} - ${glassCharge}
+                  <br />
+                  Mount: {mount && mount.label} - ${mountCharge}
+                  <br />
+                  Total: ${total}
+                  <br />
+                  <button
+                     className="ui blue basic button"
+                     onClick={this.toggleModal}
+                     style={{ marginTop: 10 }}
+                  >
+                     <i className="material-icons">add_shopping_cart</i>
+                     Add to Invoice
+                  </button>
+                  <AddToInvoiceModal
+                     isOpen={this.state.showModal}
+                     toggle={this.toggleModal}
+                     addToOrder={(e, id) => this.addToOrder(e, id, total)}
+                  />
                </div>
             </div>
          </div>

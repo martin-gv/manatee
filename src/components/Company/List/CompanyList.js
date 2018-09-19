@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import "./CompanyList.css";
 
 import { fetchCompany } from "../../../store/actions/companies";
 import Loading from "../../UI/Loading";
@@ -29,11 +30,21 @@ class OrderList extends React.Component {
          <TableRow key={el._id} {...el} rowClick={this.rowClick} />
       ));
 
+      let loader = null;
+      if (!ready) {
+         loader = <div className="loader">Loading...</div>;
+      }
+
       return (
-         <table className="table table-hover clickable">
-            <TableHeader />
-            <tbody>{ready ? tableRows : <Loading colSpan={5} />}</tbody>
-         </table>
+         <div className="card full-height CompanyList">
+            {loader}
+            {ready && (
+               <table className="hover clickable">
+                  <TableHeader />
+                  <tbody>{ready ? tableRows : null}</tbody>
+               </table>
+            )}
+         </div>
       );
    }
 }

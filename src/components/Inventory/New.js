@@ -50,14 +50,19 @@ class InventoryNew extends React.Component {
       ));
 
       return (
-         <div className="card">
-            <div className="card-header">Add to Inventory</div>
-            <div className="card-body">
-               <form onSubmit={this.handleSubmit}>
-                  {fields}
-                  <button className="btn btn-primary">Add to Inventory</button>
-               </form>
-            </div>
+         <div
+            className="card"
+            style={{
+               width: 225,
+               marginRight: 20,
+               ...this.props.style
+            }}
+         >
+            <h3>Add to Inventory</h3>
+            <form onSubmit={this.handleSubmit} style={{ marginTop: 10 }}>
+               {fields}
+               <button className="ui blue button">Add to Inventory</button>
+            </form>
          </div>
       );
    }

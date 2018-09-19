@@ -1,9 +1,10 @@
 import {
    LOAD_CLIENTS,
-   UPDATE_CLIENT,
+   EDIT_CLIENT,
    LOAD_TAG,
    REMOVE_TAG
 } from "../actionTypes";
+import { editStore } from "../../utility/utility";
 
 const defaultState = [];
 
@@ -11,14 +12,8 @@ const loadClients = (state, action) => {
    return [...action.clients];
 };
 
-const updateClient = (state, action) => {
-   const index = state.findIndex(c => c.clientId === action.id);
-   const newState = [...state];
-   newState[index] = {
-      ...newState[index],
-      [action.field]: action.value
-   };
-   return newState;
+const editClient = (state, action) => {
+   return editStore(state, action, "clientID");
 };
 
 const loadTag = (state, action) => {
@@ -57,8 +52,8 @@ const reducer = (state = defaultState, action) => {
    switch (action.type) {
       case LOAD_CLIENTS:
          return loadClients(state, action);
-      case UPDATE_CLIENT:
-         return updateClient(state, action);
+      case EDIT_CLIENT:
+         return editClient(state, action);
       case LOAD_TAG:
          return loadTag(state, action);
       case REMOVE_TAG:

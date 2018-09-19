@@ -7,8 +7,13 @@ const DateRangePicker = props => {
    const { from, to, onChange } = props;
 
    return (
-      <div className="InputFromTo">
+      <div className="InputFromTo" style={{ display: "inline-block" }}>
          <DayPickerInput
+            classNames={{
+               container: "DayPickerInput ui input",
+               overlayWrapper: "DayPickerInput-OverlayWrapper",
+               overlay: "DayPickerInput-Overlay"
+            }}
             value={from}
             // format="LL"
             // formatDate={formatDate}
@@ -26,9 +31,13 @@ const DateRangePicker = props => {
                onDayClick: () => this.to.getInput().focus()
             }}
          />{" "}
-         —{" "}
          <span className="InputFromTo-to">
             <DayPickerInput
+               classNames={{
+                  container: "DayPickerInput ui input",
+                  overlayWrapper: "DayPickerInput-OverlayWrapper",
+                  overlay: "DayPickerInput-Overlay"
+               }}
                ref={el => (this.to = el)}
                value={to}
                // format="LL"

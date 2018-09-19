@@ -112,52 +112,52 @@ class OrderPaymentList extends React.Component {
          }, 0);
 
       return (
-         <div className="card">
-            <div className="card-header">Payments</div>
-            <div className="card-body">
-               <table className="table">
-                  <TableHead />
-                  <tbody>{tableRows}</tbody>
-               </table>
-               <strong>Total: ${paymentTotal}</strong>
-               <br />
-               <strong>Total (Local): ${total}</strong>
-               <br />
-               <strong>JS: ${js}</strong>
-            </div>
+         <div className="section">
+            <h3>Payments</h3>
+            <table className="small" style={{ marginBottom: 30 }}>
+               <TableHead />
+               <tbody>{tableRows}</tbody>
+            </table>
+            <strong>Total: ${paymentTotal}</strong>
+            <br />
+            <strong>Total (Local): ${total}</strong>
+            <br />
+            <strong>JS: ${js}</strong>
             {!isVoid && (
-               <div className="card-footer">
-                  <form onSubmit={this.newPayment}>
-                     <div className="row mb-3">
-                        <div className="col-6">
-                           <InputMoney
-                              value={amount}
-                              onChange={val => this.onChange("amount", val)}
-                           />
-                        </div>
-                        <div className="col">
-                           <DatePicker
-                              selected={date}
-                              onChange={val => this.onChange("date", val)}
-                              dateFormat="MMM Do YYYY"
-                              className="form-control"
-                              placeholderText="Date"
-                              popperPlacement="top"
-                           />
-                        </div>
-                     </div>
-                     <button className="btn btn-outline-success btn-block">
-                        Add New Payment
-                     </button>
-                     <button
-                        className="btn btn-outline-warning btn-block"
-                        onClick={this.schedulePayment}
+               <form onSubmit={this.newPayment}>
+                  <div className="ui grid" style={{ margin: "20px 0" }}>
+                     <div
+                        className="eight wide column"
+                        style={{ padding: "0 10px 0 0" }}
                      >
-                        <i className="clock icon" />
-                        Schedule Payment
-                     </button>
-                  </form>
-               </div>
+                        <InputMoney
+                           value={amount}
+                           onChange={val => this.onChange("amount", val)}
+                        />
+                     </div>
+                     <div className="eight wide column" style={{ padding: "0 0 0 10px" }}>
+                        <DatePicker
+                           selected={date}
+                           onChange={val => this.onChange("date", val)}
+                           dateFormat="MMM Do YYYY"
+                           className="form-control"
+                           placeholderText="Date"
+                           popperPlacement="top"
+                        />
+                     </div>
+                  </div>
+                  <button className="ui green basic button">
+                     <i className="material-icons">attach_money</i>
+                     Add New Payment
+                  </button>
+                  <button
+                     className="ui yellow basic button"
+                     onClick={this.schedulePayment}
+                  >
+                     <i className="clock icon" />
+                     Schedule Payment
+                  </button>
+               </form>
             )}
          </div>
       );

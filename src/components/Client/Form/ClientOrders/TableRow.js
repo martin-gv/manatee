@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 
 class ClientOrderListItem extends React.Component {
    state = {
@@ -14,30 +15,30 @@ class ClientOrderListItem extends React.Component {
    };
 
    render() {
-      const { void: isVoid } = this.props;
+      const { orderID, total, void: isVoid, createdAt } = this.props;
+
       return (
          <tr
-            className="client-order-list-item"
             onClick={this.props.handleRowClick}
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
          >
             <td>
-               {this.props.orderID} {isVoid && <strong>VOID</strong>}
+               {orderID} {isVoid && <strong>VOID</strong>}
             </td>
-            <td>{this.props.companyID && <i className="building icon" />}</td>
-            <td>{this.props.title}</td>
-            <td>{this.props.description}</td>
-            <td>
+            <td>{moment(createdAt).format("MMM Do YYYY")}</td>
+            <td>{total}</td>
+            {/* <td>{companyID && <i className="building icon" />}</td> */}
+            {/* <td>
                {this.state.hover && (
                   <button
                      className="btn btn-danger btn-sm"
-                     onClick={this.props.handleDeleteButton}
+                     onClick={handleDeleteButton}
                   >
                      Delete
                   </button>
                )}
-            </td>
+            </td> */}
          </tr>
       );
    }

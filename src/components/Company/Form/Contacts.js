@@ -4,7 +4,7 @@ const Contacts = props => {
    const { addButton, removeButton, makePrimaryButton } = props;
    const contacts = props.contacts.map(el => (
       <div key={el._id}>
-         {el.clientId} {el.firstName} {el.lastName}{" "}
+         {el.clientID} {el.firstName} {el.lastName}{" "}
          <button
             className="ui mini green basic button"
             onClick={() => makePrimaryButton(el)}
@@ -12,27 +12,22 @@ const Contacts = props => {
             Primary
          </button>
          <button
-            className="ui mini basic icon button"
+            className="ui mini basic button"
             onClick={() => removeButton(el._id)}
          >
-            <i className="trash icon" />
+            <i className="material-icons">delete</i>
          </button>
       </div>
    ));
 
    return (
-      <div className="ui card">
-         <div className="content">
-            <div className="meta">Company Contacts</div>
-            {contacts}
-         </div>
-         <div className="extra content">
-            <div className="ui two buttons">
-               <button className="ui basic green button" onClick={addButton}>
-                  Add New
-               </button>
-            </div>
-         </div>
+      <div className="section">
+         <div style={{ marginBottom: 10 }}>Company Contacts</div>
+         {contacts}
+         <button className="ui basic green button" onClick={addButton}>
+            <i className="material-icons">person_add</i>
+            Add Contact
+         </button>
       </div>
    );
 };

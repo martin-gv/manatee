@@ -164,49 +164,71 @@ class CompanyForm extends React.Component {
          />
       ));
 
+      let loader = null;
+      if (!ready) {
+         loader = <div className="loader">Loading...</div>;
+      }
+
       return (
-         <div className="ui grid">
-            <div className="six wide column">
-               <h2>{company.name}</h2>
-               <form
-                  className="ui form"
-                  onSubmit={e => this.onSubmit(e, company)}
-               >
-                  {ready && fields}
-                  <button className="ui green button">Save</button>
-               </form>
-            </div>
-            <div className="ten wide column">
-               <Toolbar newOrder={() => this.toggleModal("newOrderModal")} />
-               <Orders orders={orders} rowClick={this.handleOrderRowClick} />
-               <div className="ui two cards">
-                  <PrimaryContact
-                     {...company.primaryContact}
-                     removeButton={() => this.removePrimaryContact(company)}
+         <div className="card full-height">
+            {loader}
+            {ready && (
+               <div className="ui grid">
+                  <div className="six wide column">
+                     <h2 style={{ marginBottom: 40 }}>{company.name}</h2>
+                     <form
+                        className="ui form"
+                        onSubmit={e => this.onSubmit(e, company)}
+                     >
+                        {fields}
+                        <button className="ui green basic button">
+                           <i className="material-icons">save</i>
+                           Save
+                        </button>
+                     </form>
+                  </div>
+                  <div className="ten wide column">
+                     <Toolbar
+                        newOrder={() => this.toggleModal("newOrderModal")}
+                     />
+                     <Orders
+                        orders={orders}
+                        rowClick={this.handleOrderRowClick}
+                     />
+                     <div className="ui two cards">
+                        <PrimaryContact
+                           {...company.primaryContact}
+                           removeButton={() =>
+                              this.removePrimaryContact(company)
+                           }
+                        />
+                        <Contacts
+                           contacts={company.contacts || []}
+                           addButton={() => this.toggleModal("addContactModal")}
+                           removeButton={id => this.removeContact(id, company)}
+                           makePrimaryButton={this.makePrimaryContact}
+                        />
+                     </div>
+                  </div>
+                  <AddContactModal
+                     isOpen={addContactModal}
+                     toggle={() => this.toggleModal("addContactModal")}
+                     submit={this.addContact}
+                     value={modalInput}
+                     onChange={e =>
+                        this.setState({ modalInput: e.target.value })
+                     }
                   />
-                  <Contacts
-                     contacts={company.contacts || []}
-                     addButton={() => this.toggleModal("addContactModal")}
-                     removeButton={id => this.removeContact(id, company)}
-                     makePrimaryButton={this.makePrimaryContact}
+                  <NewOrderModal
+                     contacts={contacts}
+                     isOpen={newOrderModal}
+                     toggle={() => this.toggleModal("newOrderModal")}
+                     selectedID={selectedContactID}
+                     onSelect={ID => this.setState({ selectedContactID: ID })}
+                     submit={this.newOrder}
                   />
                </div>
-            </div>
-            <AddContactModal
-               isOpen={addContactModal}
-               toggle={() => this.toggleModal("addContactModal")}
-               submit={this.addContact}
-               value={modalInput}
-               onChange={e => this.setState({ modalInput: e.target.value })}
-            />
-            <NewOrderModal
-               contacts={contacts}
-               isOpen={newOrderModal}
-               toggle={() => this.toggleModal("newOrderModal")}
-               selectedID={selectedContactID}
-               onSelect={ID => this.setState({ selectedContactID: ID })}
-               submit={this.newOrder}
-            />
+            )}
          </div>
       );
    }

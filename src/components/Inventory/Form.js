@@ -50,34 +50,46 @@ class InventoryForm extends React.Component {
       ));
 
       return (
-         <div className="card">
-            <div className="card-header">
-               Inventory Form
+         <div
+            className="card"
+            style={{
+               width: 275,
+               height: "100%",
+               marginLeft: 20,
+               ...this.props.style
+            }}
+         >
+            <h3>{this.props.item.title || ""}</h3>
+            <div>Inventory ID: {inventoryID}</div>
+            <form
+               className="ui form"
+               onSubmit={this.handleSubmit}
+               style={{ marginTop: 10 }}
+            >
+               {fields}
+               <div className="field">
+                  <label>Price</label>
+                  <input
+                     id="price"
+                     name="price"
+                     type="Number"
+                     disabled={!this.props.item}
+                     value={price || ""}
+                     onChange={this.handleChange}
+                  />
+               </div>
                <button
-                  className="btn btn-danger float-right"
+                  className="ui red basic button"
                   onClick={this.handleDeleteButton}
                >
+                  <i className="material-icons">delete</i>
                   Delete
                </button>
-            </div>
-            <div className="card-body">
-               <form className="ui form" onSubmit={this.handleSubmit}>
-               <div>Inventory ID: {inventoryID}</div>
-                  {fields}
-                  <div className="field">
-                     <label>Price</label>
-                     <input
-                        id="price"
-                        name="price"
-                        type="Number"
-                        disabled={!this.props.item}
-                        value={price || ""}
-                        onChange={this.handleChange}
-                     />
-                  </div>
-                  <button className="btn btn-success">Save</button>
-               </form>
-            </div>
+               <button className="ui green button">
+                  <i className="material-icons">save</i>
+                  Save
+               </button>
+            </form>
          </div>
       );
    }

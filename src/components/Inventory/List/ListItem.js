@@ -18,20 +18,6 @@ const InventoryListItem = props => {
                />
                <label />
             </div>
-            <div className="ui checkbox">
-               <input
-                  type="checkbox"
-                  checked={props.anotherField || ""}
-                  onChange={e =>
-                     props.onChange(
-                        inventoryID,
-                        "anotherField",
-                        e.target.checked
-                     )
-                  }
-               />
-               <label />
-            </div>
          </td>
          <td>{inventoryID}</td>
          <td>{artist}</td>

@@ -8,11 +8,9 @@ class PaymentView extends React.Component {
       const { path } = this.props.match;
 
       return (
-         <div>
-            <Switch>
-               <Route exact path={path} component={PaymentList} />
-            </Switch>
-         </div>
+         <Switch>
+            <Route exact path={path} component={PaymentList} />
+         </Switch>
       );
    }
 }

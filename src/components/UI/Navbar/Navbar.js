@@ -9,7 +9,10 @@ import Search from "./Search";
 
 class Navbar extends Component {
    render() {
-      const { isAuthenticated } = this.props.users;
+      const {
+         isAuthenticated,
+         currentUser: { username }
+      } = this.props.users;
       return (
          <nav className="navbar navbar-expand">
             <div className="container-fluid">
@@ -17,12 +20,6 @@ class Navbar extends Component {
                   <Link to="/" className="navbar-brand">
                      <img src={Logo} alt="Manatee Home" />
                   </Link>
-                  <Link to="/clients">Clients</Link>
-                  <Link to="/clients/new"> New</Link>
-                  <Link to="/inventory"> Inventory</Link>
-                  <Link to="/orders"> Orders</Link>
-                  <Link to="/admin"> Admin</Link>
-                  <Link to="/pricing"> Pricing Program</Link>
                </div>
                <Search />
                <ul className="nav navbar-nav navbar-right">
@@ -32,7 +29,7 @@ class Navbar extends Component {
                      </li>
                   ) : (
                      <li>
-                        <a onClick={this.props.logout}>Log out</a>
+                        {username} <a onClick={this.props.logout}>Log out</a>
                      </li>
                   )}
                </ul>

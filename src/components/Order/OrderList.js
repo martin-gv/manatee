@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
+import "./OrderList.css";
 
 import {
    fetchOrder,
@@ -83,58 +84,89 @@ class OrderList extends React.Component {
             <Item key={el._id} {...el} onClick={this.viewOrder} />
          ));
 
+      const loader = <div className="loader">Loading...</div>;
+
       return (
-         <div>
-            <div className="toolbar" style={{ marginBottom: "10px" }}>
-               <div className="InputFromTo">
-                  <DayPickerInput
-                     value={from}
-                     placeholder="From"
-                     format="LL"
-                     formatDate={formatDate}
-                     parseDate={parseDate}
-                     hideOnDayClick={false}
-                     dayPickerProps={{
-                        selectedDays: [from, { from, to }],
-                        disabledDays: { after: to },
-                        toMonth: to,
-                        modifiers,
-                        numberOfMonths: 2,
-                        onDayClick: () => this.to.getInput().focus()
-                     }}
-                     onDayChange={this.handleFromChange}
-                  />{" "}
-                  —{" "}
-                  <span className="InputFromTo-to">
-                     <DayPickerInput
-                        ref={el => (this.to = el)}
-                        value={to}
-                        placeholder="To"
-                        format="LL"
-                        formatDate={formatDate}
-                        parseDate={parseDate}
-                        hideOnDayClick={false}
-                        dayPickerProps={{
-                           selectedDays: [from, { from, to }],
-                           disabledDays: { before: from },
-                           modifiers,
-                           month: from,
-                           fromMonth: from,
-                           numberOfMonths: 2
-                        }}
-                        onDayChange={this.handleToChange}
-                     />
-                  </span>{" "}
-                  <button className="ui button" onClick={this.search}>
-                     Search
-                  </button>{" "}
-                  Total: ${this.total()}
+         <div className="OrderList">
+            {!ready ? (
+               loader
+            ) : (
+               <div>
+                  <div className="toolbar" style={{ marginBottom: "10px" }}>
+                     <div className="InputFromTo">
+                        <DayPickerInput
+                           classNames={{
+                              container: "DayPickerInput ui input",
+                              overlayWrapper: "DayPickerInput-OverlayWrapper",
+                              overlay: "DayPickerInput-Overlay"
+                           }}
+                           value={from}
+                           placeholder="From"
+                           format="LL"
+                           formatDate={formatDate}
+                           parseDate={parseDate}
+                           hideOnDayClick={false}
+                           dayPickerProps={{
+                              selectedDays: [from, { from, to }],
+                              disabledDays: { after: to },
+                              toMonth: to,
+                              modifiers,
+                              numberOfMonths: 2,
+                              onDayClick: () => this.to.getInput().focus()
+                           }}
+                           onDayChange={this.handleFromChange}
+                        />{" "}
+                        <span className="InputFromTo-to ui input">
+                           <DayPickerInput
+                              classNames={{
+                                 container: "DayPickerInput ui input",
+                                 overlayWrapper:
+                                    "DayPickerInput-OverlayWrapper",
+                                 overlay: "DayPickerInput-Overlay"
+                              }}
+                              ref={el => (this.to = el)}
+                              value={to}
+                              placeholder="To"
+                              format="LL"
+                              formatDate={formatDate}
+                              parseDate={parseDate}
+                              hideOnDayClick={false}
+                              dayPickerProps={{
+                                 selectedDays: [from, { from, to }],
+                                 disabledDays: { before: from },
+                                 modifiers,
+                                 month: from,
+                                 fromMonth: from,
+                                 numberOfMonths: 2
+                              }}
+                              onDayChange={this.handleToChange}
+                           />
+                        </span>{" "}
+                        <button
+                           className="ui button"
+                           onClick={this.search}
+                           style={{ marginLeft: 10 }}
+                        >
+                           Search
+                        </button>{" "}
+                        <div
+                           style={{
+                              fontSize: 16,
+                              fontWeight: "bold",
+                              color: "#444",
+                              float: "right"
+                           }}
+                        >
+                           Total: ${this.total()}
+                        </div>
+                     </div>
+                  </div>
+                  <table className="hover clickable">
+                     <TableHead />
+                     <tbody>{tableRows}</tbody>
+                  </table>
                </div>
-            </div>
-            <table className="table table-hover clickable">
-               <TableHead />
-               <tbody>{tableRows}</tbody>
-            </table>
+            )}
          </div>
       );
    }

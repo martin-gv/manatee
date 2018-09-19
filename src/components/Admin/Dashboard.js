@@ -13,8 +13,27 @@ import {
 } from "../../store/actions/dev";
 import { createClient } from "../../store/actions/clients";
 import { updateOrder } from "../../store/actions/orders";
+import { createUser } from "../../store/actions/users";
 
 class AdminDashboard extends React.Component {
+   state = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      username: "",
+      password: ""
+   };
+
+   reset = () => {
+      this.setState({
+         firstName: "",
+         lastName: "",
+         email: "",
+         username: "",
+         password: ""
+      });
+   };
+
    orders = async () => {
       const orders = await this.props.generateOrder();
       const rowData = orders.reduce((acc, cur) => {
@@ -55,38 +74,127 @@ class AdminDashboard extends React.Component {
    clients = async () => {
       const client = []; // array of clients
       let n = 0;
-      while (n < 10000) {
-         const clientId = n + 1;
+      while (n < 100) {
+         const clientID = n + 1;
          client.push({
-            clientId,
+            clientID,
             firstName: f.name.firstName(),
             lastName: f.name.lastName(),
-            phone: f.phone.phoneNumberFormat(),
-            email: f.internet.email()
+            phone: this.randomPhoneNum(),
+            email: f.internet.email().toLocaleLowerCase(),
+            address: f.address.streetAddress(),
+            city: f.address.city(),
+            province: f.address.stateAbbr(),
+            postalCode: f.address.zipCode(),
+            country: "Canada"
          });
          n++;
       }
-      const res = await this.props.createClient({ client });
+      await this.props.createClient({ client });
+   };
+
+   randomPhoneNum = () => {
+      const phone = Number(
+         Math.random()
+            .toString()
+            .slice(2, 11)
+      );
+      return phone;
+   };
+
+   onChange = (field, value) => {
+      this.setState({ [field]: value });
+   };
+
+   createUser = async e => {
+      e.preventDefault();
+      const res = await this.props.createUser(this.state);
       console.log(res);
+      if (res) {
+         this.reset();
+      }
    };
 
    render() {
       return (
-         <div className="card">
-            <div className="card-header">Admin Dashboard</div>
-            <div className="card-body">
+         <div className="card full-height">
+            <h2>Admin Dashboard</h2>
+            <div style={{ marginTop: 10 }}>
                <button
-                  className="btn btn-primary btn-lg"
+                  className="ui basic button"
                   onClick={this.props.generateInventory}
                >
                   Generate Inventory
                </button>
-               <button className="ui button" onClick={this.orders}>
-                  100 Orders
+               <button className="ui basic button" onClick={this.orders}>
+                  Orders
                </button>
-               <button className="ui button" onClick={this.clients}>
+               <button className="ui basic button" onClick={this.clients}>
                   Clients
                </button>
+
+               <form
+                  className="ui form"
+                  onSubmit={this.createUser}
+                  style={{ marginTop: 30 }}
+               >
+                  <div className="field">
+                     <label>First Name</label>
+                     <input
+                        type="text"
+                        name="firstName"
+                        value={this.state.firstName}
+                        onChange={({ target: t }) =>
+                           this.onChange(t.name, t.value)
+                        }
+                     />
+                  </div>
+                  <div className="field">
+                     <label>Last Name</label>
+                     <input
+                        type="text"
+                        name="lastName"
+                        value={this.state.lastName}
+                        onChange={({ target: t }) =>
+                           this.onChange(t.name, t.value)
+                        }
+                     />
+                  </div>
+                  <div className="field">
+                     <label>Email</label>
+                     <input
+                        type="email"
+                        name="email"
+                        value={this.state.email}
+                        onChange={({ target: t }) =>
+                           this.onChange(t.name, t.value)
+                        }
+                     />
+                  </div>
+                  <div className="field">
+                     <label>Username</label>
+                     <input
+                        type="text"
+                        name="username"
+                        value={this.state.username}
+                        onChange={({ target: t }) =>
+                           this.onChange(t.name, t.value)
+                        }
+                     />
+                  </div>
+                  <div className="field">
+                     <label>Password</label>
+                     <input
+                        type="password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={({ target: t }) =>
+                           this.onChange(t.name, t.value)
+                        }
+                     />
+                  </div>
+                  <button className="ui button">Submit</button>
+               </form>
             </div>
          </div>
       );
@@ -101,6 +209,7 @@ export default connect(
       generateInventory,
       generateOrder,
       generateRow,
-      updateOrder
+      updateOrder,
+      createUser
    }
 )(AdminDashboard);

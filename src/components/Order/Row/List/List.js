@@ -31,33 +31,30 @@ const OrderRowList = props => {
    const { total, isVoid } = props;
 
    return (
-      <div className="card mb-3">
-         <div className="card-header">
-            <button
-               className="btn btn-primary"
-               onClick={props.newRowButton}
-               disabled={isVoid}
-            >
-               New Row
-            </button>
-         </div>
-         <div className="card-body">
-            <table className="table table-hover clickable">
-               <thead>
-                  <tr>
-                     <th>#</th>
-                     <th>Title</th>
-                     <th>Price</th>
-                  </tr>
-               </thead>
-               <tbody>{tableRows}</tbody>
-            </table>
-            <strong>Total: ${total}</strong>
-            <br />
-            <strong>Total (Local): ${orderTotal}</strong>
-            <br />
-            <strong>JS: ${js}</strong>
-         </div>
+      <div className="section" style={{ marginBottom: 30 }}>
+         <button
+            className="ui blue basic button"
+            onClick={props.newRowButton}
+            disabled={isVoid}
+         >
+            <i className="material-icons">add</i>
+            New Row
+         </button>
+         <table className="small hover clickable" style={{ marginBottom: 30 }}>
+            <thead>
+               <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Price</th>
+               </tr>
+            </thead>
+            <tbody>{tableRows}</tbody>
+         </table>
+         <strong>Total: ${total}</strong>
+         <br />
+         <strong>Total (Local): ${orderTotal}</strong>
+         <br />
+         <strong>JS: ${js}</strong>
       </div>
    );
 };

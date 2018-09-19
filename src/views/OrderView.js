@@ -7,12 +7,10 @@ class OrderView extends React.Component {
    render() {
       const { path } = this.props.match;
       return (
-         <div className="card">
-            <div className="card-body">
-               <Switch>
-                  <Route exact path={path} component={OrderList} />
-               </Switch>
-            </div>
+         <div className="card full-height">
+            <Switch>
+               <Route exact path={path} component={OrderList} />
+            </Switch>
          </div>
       );
    }

@@ -9,11 +9,12 @@ import {
 } from "../../../../store/actions/orders";
 import { resetDataLoadedStatus } from "../../../../store/actions/system";
 
-import ClientOrderListItem from "./ListItem";
+import TableHead from "./TableHead";
+import TableRow from "./TableRow";
 
 class ClientOrderList extends React.Component {
    componentDidMount() {
-      this.props.fetchClientOrders(this.props.clientId);
+      this.props.fetchClientOrders(this.props.clientID);
    }
 
    componentWillUnmount() {
@@ -21,11 +22,11 @@ class ClientOrderList extends React.Component {
    }
 
    handleNewOrderButton = () => {
-      this.props.createOrder(this.props.clientId);
+      this.props.createOrder(this.props.clientID);
    };
 
    handleRowClick = id => {
-      this.props.history.push(`/orders/${id}`);
+      this.props.history.push("/orders/" + id);
    };
 
    handleDeleteButton = (e, id) => {
@@ -35,12 +36,12 @@ class ClientOrderList extends React.Component {
 
    render() {
       if (!this.props.isDataLoaded) {
-         return <div className="alert alert-primary">Loading...</div>;
+         return null;
       }
 
       const clientOrderList = this.props.orders.map(o => {
          return (
-            <ClientOrderListItem
+            <TableRow
                key={o.orderID}
                {...o}
                handleRowClick={() => this.handleRowClick(o.orderID)}
@@ -50,30 +51,19 @@ class ClientOrderList extends React.Component {
       });
 
       return (
-         <div className="card">
-            <div className="card-header">
-               Client Orders
-               <button
-                  className="btn btn-primary float-right"
-                  onClick={this.handleNewOrderButton}
-               >
-                  New Order
-               </button>
-            </div>
-            <div className="card-body">
-               <table className="table table-hover">
-                  <thead>
-                     <tr>
-                        <th>ID</th>
-                        <th></th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th />
-                     </tr>
-                  </thead>
-                  <tbody>{clientOrderList}</tbody>
-               </table>
-            </div>
+         <div>
+            <button
+               style={{ float: "right", position: "relative", top: "10px" }}
+               className="ui primary button"
+               onClick={this.handleNewOrderButton}
+            >
+               <i className="material-icons">add</i>
+               New Order
+            </button>
+            <table className="small hover clickable">
+               <TableHead />
+               <tbody>{clientOrderList}</tbody>
+            </table>
          </div>
       );
    }

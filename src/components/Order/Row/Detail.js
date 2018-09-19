@@ -60,143 +60,139 @@ class OrderRowDetail extends React.Component {
       ));
 
       return (
-         <div className="ui fluid card">
-            <div className="content">
-               <div className="ui grid">
-                  <div className="six wide column">
-                     <form onSubmit={this.handleSubmit}>
-                        {fields}
-                        <div className="form-group">
-                           <label>Quantity</label>
-                           <input
-                              className="form-control"
-                              name="quantity"
-                              type="number"
-                              min="1"
-                              step="1"
-                              disabled={!rowFound || isVoid}
-                              value={row.quantity || ""}
-                              onChange={e =>
-                                 onRowChange(id, e.target.name, e.target.value)
-                              }
-                           />
-                        </div>
-                        <div className="form-group">
-                           <label>Price</label>
-                           <input
-                              className="form-control"
-                              name="price"
-                              type="number"
-                              min="0"
-                              step="0.01"
-                              disabled={!rowFound || isVoid}
-                              value={row.price || ""}
-                              onChange={e =>
-                                 onRowChange(id, e.target.name, e.target.value)
-                              }
-                           />
-                        </div>
-                        <div className="form-group">
-                           <label>Height</label>
-                           <input
-                              className="form-control"
-                              name="height"
-                              type="number"
-                              min="0"
-                              disabled={!rowFound || isVoid}
-                              value={row.height || ""}
-                              onChange={e =>
-                                 onRowChange(id, e.target.name, e.target.value)
-                              }
-                           />
-                        </div>
-                        <div className="form-group">
-                           <label>Width</label>
-                           <input
-                              className="form-control"
-                              name="width"
-                              type="number"
-                              min="0"
-                              disabled={!rowFound || isVoid}
-                              value={row.width || ""}
-                              onChange={e =>
-                                 onRowChange(id, e.target.name, e.target.value)
-                              }
-                           />
-                        </div>
-                     </form>
-                  </div>
-                  <div className="five wide column">
-                     <div className="form-group">
-                        <label>Glass</label>
-                        <Select
-                           disabled={!rowFound || isVoid}
-                           options={this.props.glassOptions}
-                           onChange={e =>
-                              onRowChange(id, "glass", e ? e.value : null)
-                           }
-                           value={row.glass}
-                        />
-                     </div>
-                     <div className="form-group">
-                        <label>Mount</label>
-                        <Select
-                           disabled={!rowFound || isVoid}
-                           options={this.props.mountOptions}
-                           onChange={e =>
-                              onRowChange(id, "mount", e ? e.value : null)
-                           }
-                           value={row.mount}
-                        />
-                     </div>
-                     <div className="ui checkbox">
+         <div className="section">
+            <div className="ui grid">
+               <div className="six wide column">
+                  <form onSubmit={this.handleSubmit} className="ui form">
+                     {fields}
+                     <div className="field">
+                        <label>Quantity</label>
                         <input
-                           type="checkbox"
-                           name="framingRewards"
-                           checked={framingRewards || ""}
-                           onChange={e =>
-                              onRowChange(id, e.target.name, e.target.checked)
-                           }
+                           name="quantity"
+                           type="number"
+                           min="1"
+                           step="1"
                            disabled={!rowFound || isVoid}
+                           value={row.quantity || ""}
+                           onChange={e =>
+                              onRowChange(id, e.target.name, e.target.value)
+                           }
                         />
-                        <label>Framing Rewards</label>
                      </div>
+                     <div className="field">
+                        <label>Price</label>
+                        <input
+                           name="price"
+                           type="number"
+                           min="0"
+                           step="0.01"
+                           disabled={!rowFound || isVoid}
+                           value={row.price || ""}
+                           onChange={e =>
+                              onRowChange(id, e.target.name, e.target.value)
+                           }
+                        />
+                     </div>
+                     <div className="field">
+                        <label>Height</label>
+                        <input
+                           name="height"
+                           type="number"
+                           min="0"
+                           disabled={!rowFound || isVoid}
+                           value={row.height || ""}
+                           onChange={e =>
+                              onRowChange(id, e.target.name, e.target.value)
+                           }
+                        />
+                     </div>
+                     <div className="field">
+                        <label>Width</label>
+                        <input
+                           name="width"
+                           type="number"
+                           min="0"
+                           disabled={!rowFound || isVoid}
+                           value={row.width || ""}
+                           onChange={e =>
+                              onRowChange(id, e.target.name, e.target.value)
+                           }
+                        />
+                     </div>
+                  </form>
+               </div>
+               <div className="five wide column">
+                  <div className="form-group">
+                     <label>Glass</label>
+                     <Select
+                        disabled={!rowFound || isVoid}
+                        options={this.props.glassOptions}
+                        onChange={e =>
+                           onRowChange(id, "glass", e ? e.value : null)
+                        }
+                        value={row.glass}
+                     />
                   </div>
-                  <div className="five wide column">
-                     <InventoryItem {...row.inventoryItem} />
+                  <div className="form-group">
+                     <label>Mount</label>
+                     <Select
+                        disabled={!rowFound || isVoid}
+                        options={this.props.mountOptions}
+                        onChange={e =>
+                           onRowChange(id, "mount", e ? e.value : null)
+                        }
+                        value={row.mount}
+                     />
+                  </div>
+                  <div className="ui checkbox">
+                     <input
+                        type="checkbox"
+                        name="framingRewards"
+                        checked={framingRewards || ""}
+                        onChange={e =>
+                           onRowChange(id, e.target.name, e.target.checked)
+                        }
+                        disabled={!rowFound || isVoid}
+                     />
+                     <label>Framing Rewards</label>
                   </div>
                </div>
+               <div className="five wide column">
+                  <InventoryItem {...row.inventoryItem} />
+               </div>
             </div>
-            <div className="extra content">
-               Row: {row && row.rowNum} Total: $ {rowTotal}
-               <button
-                  className="ui basic blue float-right button"
-                  onClick={() => this.props.toggleModal("item")}
-                  disabled={row.inventoryItem || isVoid}
-               >
-                  Add Item
-               </button>
-               <button
-                  className="ui basic red float-right button"
-                  onClick={removeItem}
-                  disabled={!row.inventoryItem || isVoid}
-               >
-                  Remove Item
-               </button>
-               <button
-                  className="btn btn-success ml-3 float-right"
-                  onClick={() => this.props.saveRowButton(row)}
-                  disabled={isVoid}
-               >
-                  Save Row
-               </button>
-               <button
-                  className="btn btn-outline-danger float-right"
-                  onClick={() => this.props.deleteRowButton(id)}
-                  disabled={isVoid}
-               >
-                  Delete
-               </button>
+            <div style={{ marginTop: 30 }}>
+               Row #{row && row.rowNum} <strong>Total: ${rowTotal}</strong>
+               <div style={{ float: "right" }}>
+                  <button
+                     className="ui basic blue button"
+                     onClick={() => this.props.toggleModal("item")}
+                     disabled={row.inventoryItem || isVoid}
+                  >
+                     Add Item
+                  </button>
+                  <button
+                     className="ui basic red button"
+                     onClick={removeItem}
+                     disabled={!row.inventoryItem || isVoid}
+                  >
+                     Remove Item
+                  </button>
+                  <button
+                     className="ui basic green button"
+                     onClick={() => this.props.saveRowButton(row)}
+                     disabled={isVoid}
+                  >
+                     Save Row
+                  </button>
+                  <button
+                     className="ui basic red button"
+                     onClick={() => this.props.deleteRowButton(id)}
+                     disabled={isVoid}
+                  >
+                     Delete
+                  </button>
+               </div>
             </div>
             <AddItemModal
                isOpen={modal.item}

@@ -1,3 +1,6 @@
+// Auth
+export const SET_IDLE_TIMEOUT = "SET_IDLE_TIMEOUT";
+
 // Users
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 
@@ -17,7 +20,7 @@ export const SET_DATA_READY_STATUS = "SET_DATA_READY_STATUS";
 
 // Clients
 export const LOAD_CLIENTS = "LOAD_CLIENTS";
-export const UPDATE_CLIENT = "UPDATE_CLIENT";
+export const EDIT_CLIENT = "EDIT_CLIENT";
 export const LOAD_TAG = "LOAD_TAG";
 export const REMOVE_TAG = "REMOVE_TAG";
 

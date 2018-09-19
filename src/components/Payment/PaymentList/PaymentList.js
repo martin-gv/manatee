@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 import xlsx from "xlsx";
+import "./PaymentList.css";
 
 import {
    fetchPayment,
@@ -101,22 +102,38 @@ class PaymentList extends React.Component {
          <Row key={el._id} {...el} rowClick={this.rowClick} />
       ));
 
+      const loader = <div className="loader">Loading...</div>;
+
       return (
-         <div className="ui segment">
-            <Toolbar />
-            <div className="toolbar">
-               <DateRangePicker from={from} to={to} onChange={this.onChange} />
-               <button className="ui button" onClick={this.search}>
-                  Search
-               </button>
-               <button className="ui button" onClick={this.download}>
-                  Download
-               </button>
-            </div>
-            <table className="table table-hover clickable">
-               <Head />
-               <tbody>{ready ? rows : <Loading colSpan={5} />}</tbody>
-            </table>
+         <div className="card full-height PaymentList">
+            {!ready ? (
+               loader
+            ) : (
+               <div>
+                  <Toolbar />
+                  <div className="toolbar">
+                     <DateRangePicker
+                        from={from}
+                        to={to}
+                        onChange={this.onChange}
+                     />
+                     <button
+                        className="ui button"
+                        onClick={this.search}
+                        style={{ marginLeft: 10 }}
+                     >
+                        Search
+                     </button>
+                     <button className="ui button" onClick={this.download}>
+                        Download
+                     </button>
+                  </div>
+                  <table style={{ marginTop: 30 }}>
+                     <Head />
+                     <tbody>{rows}</tbody>
+                  </table>
+               </div>
+            )}
          </div>
       );
    }
