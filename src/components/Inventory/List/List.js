@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Motion, spring } from "react-motion";
+import { Motion, spring as $ } from "react-motion";
 import "./InventoryList.css";
 
 import {
@@ -83,7 +83,7 @@ class InventoryList extends React.Component {
 
       return (
          <div style={{ display: "flex", alignItems: "flex-start" }}>
-            <Motion style={{ x: spring(showAddNewPanel ? 0 : -280) }}>
+            <Motion style={{ x: $(showAddNewPanel ? 0 : -280) }}>
                {style => (
                   <InventoryNew
                      style={{ transform: `translateX(${style.x}px)` }}
@@ -93,8 +93,8 @@ class InventoryList extends React.Component {
 
             <Motion
                style={{
-                  xLeft: spring(showAddNewPanel ? 0 : -240),
-                  xRight: spring(selectedItemID ? 0 : -290)
+                  xLeft: $(showAddNewPanel ? 0 : -240),
+                  xRight: $(selectedItemID ? 0 : -290)
                }}
             >
                {style => (
@@ -197,7 +197,7 @@ class InventoryList extends React.Component {
                )}
             </Motion>
 
-            <Motion style={{ x: spring(this.state.selectedItemID ? 0 : 330) }}>
+            <Motion style={{ x: $(this.state.selectedItemID ? 0 : 330) }}>
                {style => (
                   <InventoryForm
                      style={{ transform: `translateX(${style.x}px)` }}

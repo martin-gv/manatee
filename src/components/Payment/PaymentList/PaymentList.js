@@ -11,7 +11,6 @@ import {
 } from "../../../store/actions/payments";
 import { found } from "../../../utility/utility";
 
-import Loading from "../../UI/Loading";
 import Toolbar from "./Toolbar";
 import Head from "./TableHead";
 import Row from "./TableRow";

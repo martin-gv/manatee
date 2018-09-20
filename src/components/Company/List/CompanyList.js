@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import "./CompanyList.css";
 
 import { fetchCompany } from "../../../store/actions/companies";
-import Loading from "../../UI/Loading";
 import TableHeader from "./TableHeader";
 import TableRow from "./TableRow";
 
