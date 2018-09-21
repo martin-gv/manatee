@@ -14,25 +14,28 @@ class ClientTags extends React.Component {
       this.props.fetchClientTag();
    };
 
-   onAddTagButtonClick = () => {
+   onAddTagButtonClick = async () => {
+      const { option } = this.state;
+      const { tags, clientID } = this.props;
+
       // prevent action if no option selected
-      if (!this.state.option) {
+      if (!option) {
          return;
       }
 
       // prevent adding duplicate tags
-      const option = this.state.option.value;
-      const tagIds = this.props.tags.map(el => el._id);
-      if (tagIds.includes(option._id)) {
+      const selected = option.value;
+      const tagIDs = tags.map(el => el._id);
+      if (tagIDs.includes(selected._id)) {
          return;
       }
 
-      this.props.addTagToClient(this.props.clientId, option, "$push");
+      await this.props.addTagToClient(clientID, selected, "$push");
       this.setState({ option: "" });
    };
 
    onDeleteTagButtonClick = tag => {
-      this.props.addTagToClient(this.props.clientId, tag, "$pull");
+      this.props.addTagToClient(this.props.clientID, tag, "$pull");
    };
 
    render() {
@@ -48,9 +51,9 @@ class ClientTags extends React.Component {
          </span>
       ));
 
-      const tagIds = this.props.tags.map(el => el._id);
+      const tagIDs = tags.map(el => el._id);
       const clientTagOptions = this.props.data
-         .filter(el => !tagIds.includes(el._id))
+         .filter(el => !tagIDs.includes(el._id))
          .map(el => ({
             label: `${el.category} -> ${el.name}`,
             value: el

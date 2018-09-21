@@ -153,7 +153,7 @@ class ClientForm extends Component {
 
    render() {
       const { ready, modal, inputCompany } = this.state;
-      const { client } = this.props;
+      const { id, client } = this.props;
       const { clientID, company, tags, notes } = client || {};
       const cssAnimate = ["animated", ready ? "fade-visible" : "fade-hidden"];
 
@@ -188,7 +188,7 @@ class ClientForm extends Component {
                      className="nine wide column"
                      style={{ position: "relative", top: "-50px" }}
                   >
-                     <Orders clientID={clientID} />
+                     <Orders clientID={id} />
                      <ClientTags clientID={clientID} tags={tags || []} />
                      <div className="section">
                         <h3 style={{ marginBottom: 15 }}>Notes</h3>
@@ -247,6 +247,7 @@ function mapStateToProps(state, ownProps) {
    const id = ownProps.match.params.clientID;
    const client = state.clients.find(obj => obj.clientID === +id);
    return {
+      id,
       client,
       showSaveConfirmation: state.system.showModal.clientSaveConfirmation
    };

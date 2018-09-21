@@ -92,7 +92,7 @@ class GlobalSearch extends React.Component {
       return (
          <Search
             category
-            placeholder="Search..."
+            placeholder="Search database..."
             loading={loading}
             results={results}
             value={value}

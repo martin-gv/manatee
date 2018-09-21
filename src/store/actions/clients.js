@@ -118,38 +118,36 @@ export function deleteClient(id, history) {
 
 // Client Tag Actions
 
-export function loadTag(clientId, tag) {
+export function loadTag(clientID, tag) {
    return {
       type: LOAD_TAG,
-      clientId,
+      clientID,
       tag
    };
 }
 
-export function removeTag(clientId, tag) {
+export function removeTag(clientID, tag) {
    return {
       type: REMOVE_TAG,
-      clientId,
+      clientID,
       tag
    };
 }
 
-export function addTagToClient(clientId, tag, op) {
-   // is clientId needed in data object? not according to API endpoint used
+export function addTagToClient(clientID, tag, op) {
    const data = {
-      clientId,
       [op]: { tags: tag._id },
       skipPreUpdateHook: true
    };
 
    return dispatch => {
-      return apiCall("put", `/api/clients/${clientId}`, { client: data })
+      return apiCall("put", "/api/clients/" + clientID, { client: data })
          .then(res => {
             dispatch(removeError());
             if (op === "$push") {
-               dispatch(loadTag(clientId, tag));
+               dispatch(loadTag(clientID, tag));
             } else if (op === "$pull") {
-               dispatch(removeTag(clientId, tag));
+               dispatch(removeTag(clientID, tag));
             }
          })
          .catch(err => {
