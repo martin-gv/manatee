@@ -57,8 +57,8 @@ class ClientTags extends React.Component {
          }));
 
       return (
-         <div style={{ marginTop: "20px", border: "1px solid #ddd", padding: "20px", borderRadius: "5px" }}>
-            <div style={{fontSize: "16px", marginBottom: "15px", fontWeight: "300"}}>Tags</div>
+         <div className="section">
+            <h3 style={{ marginBottom: 15 }}>Tags</h3>
             <div className="ui grid">
                <div className="twelve wide column">
                   <Select
@@ -74,6 +74,7 @@ class ClientTags extends React.Component {
                      onClick={this.onAddTagButtonClick}
                      disabled={!this.state.option}
                   >
+                     <i className="tag icon" />
                      Add Tag
                   </button>
                </div>

@@ -92,6 +92,7 @@ class OrderList extends React.Component {
                loader
             ) : (
                <div>
+                  <h2 style={{ marginBottom: 20 }}>Orders</h2>
                   <div className="toolbar" style={{ marginBottom: "10px" }}>
                      <div className="InputFromTo">
                         <DayPickerInput

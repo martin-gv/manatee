@@ -398,9 +398,12 @@ class OrderForm extends React.Component {
                loader
             ) : (
                <div className="ui grid">
+                  <div className="sixteen wide column">
+                     <h2>Invoice {orderID}</h2>
+                  </div>
                   <div className="ten wide column">
                      <div className="section">
-                        Order ID: {orderID} {isVoid && <strong>VOIDED</strong>}
+                        {isVoid && <strong>VOIDED</strong>}
                         <div style={{ float: "right", marginBottom: 20 }}>
                            <button
                               className="ui red basic button"

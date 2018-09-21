@@ -1,31 +1,23 @@
 import React from "react";
-import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import Modal from "../../UI/Shared/Modal";
 
-class SecureNotesModal extends React.Component {
-   render() {
-      const { isOpen, toggle, submit, client, onChange } = this.props;
-
-      return (
-         <Modal isOpen={isOpen} toggle={() => toggle("secure")} centered>
-            <ModalHeader>Secure Notes</ModalHeader>
-            <form className="ui form" onSubmit={submit}>
-               <ModalBody>
-                  <div className="field">
-                     <label>Secure Notes</label>
-                     <textarea
-                        name="secureNotes"
-                        value={client.secureNotes}
-                        onChange={onChange}
-                     />
-                  </div>
-               </ModalBody>
-               <ModalFooter>
-                  <button className="ui green button">Save</button>
-               </ModalFooter>
-            </form>
-         </Modal>
-      );
-   }
-}
+const SecureNotesModal = props => {
+   const { open, close, submit, client, onChange } = props;
+   return (
+      <Modal open={open} close={() => close("secure")}>
+         <h3>Secure Notes</h3>
+         <form className="ui form" onSubmit={submit}>
+            <div className="field">
+               <textarea
+                  name="secureNotes"
+                  value={client.secureNotes}
+                  onChange={onChange}
+               />
+            </div>
+            <button className="ui green basic button">Save</button>
+         </form>
+      </Modal>
+   );
+};
 
 export default SecureNotesModal;

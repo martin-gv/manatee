@@ -38,10 +38,13 @@ class OrderList extends React.Component {
          <div className="card full-height CompanyList">
             {loader}
             {ready && (
-               <table className="hover clickable">
-                  <TableHeader />
-                  <tbody>{ready ? tableRows : null}</tbody>
-               </table>
+               <div>
+                  <h2>Companies</h2>
+                  <table className="hover clickable">
+                     <TableHeader />
+                     <tbody>{ready ? tableRows : null}</tbody>
+                  </table>
+               </div>
             )}
          </div>
       );

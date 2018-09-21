@@ -35,9 +35,7 @@ class ClientList extends Component {
 
       let loader = null;
       if (!isDataLoaded) {
-         loader = (
-            <div className="loader">Loading...</div>
-         );
+         loader = <div className="loader">Loading...</div>;
       }
 
       return (
@@ -45,6 +43,7 @@ class ClientList extends Component {
             {/* <Toolbar clientTagOptions={this.props.clientTagOptions} /> */}
             {loader}
             <div className={"animated " + cssAnimate}>
+               <h2>Clients</h2>
                <table className="hover clickable">
                   <TableHead />
                   <TableBody clients={clients} onRowClick={this.viewClient} />

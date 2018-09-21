@@ -35,8 +35,6 @@ class Login extends Component {
 
    render() {
       const { username, password, redirectTo, animate } = this.state;
-      const { errors } = this.props;
-
       const { from } = this.props.location.state || { from: { pathname: "/" } };
 
       if (redirectTo) return <Redirect to={from} />;

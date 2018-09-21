@@ -1,14 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { Search } from "semantic-ui-react";
 
 // import _ from "lodash";
 
 import { fetchClient } from "../../../store/actions/clients";
 import { fetchOrderByID } from "../../../store/actions/orders";
 import { resetDataLoadedStatus } from "../../../store/actions/system";
-
-import { Search } from "semantic-ui-react";
 
 class GlobalSearch extends React.Component {
    componentWillMount() {
@@ -73,9 +72,9 @@ class GlobalSearch extends React.Component {
    formatResults = res => {
       return {
          type: "clients",
-         id: res.clientId,
+         id: res.clientID,
          title: res.firstName + " " + res.lastName,
-         description: res.email + "," + res.phone + ", ID: " + res.clientId
+         description: res.email + "," + res.phone + ", ID: " + res.clientID
       };
    };
 
@@ -93,6 +92,7 @@ class GlobalSearch extends React.Component {
       return (
          <Search
             category
+            placeholder="Search..."
             loading={loading}
             results={results}
             value={value}

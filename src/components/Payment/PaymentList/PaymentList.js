@@ -109,6 +109,7 @@ class PaymentList extends React.Component {
                loader
             ) : (
                <div>
+                  <h2 style={{ marginBottom: 20 }}>Payments</h2>
                   <Toolbar />
                   <div className="toolbar">
                      <DateRangePicker

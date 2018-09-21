@@ -1,39 +1,23 @@
 import React from "react";
-import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import Modal from "../../../UI/Shared/Modal";
 
 const ClientCompanyModal = props => {
-   const { isOpen, toggle, submit, value, onChange } = props;
+   const { open, close, submit, value, onChange } = props;
 
    return (
-      <Modal
-         isOpen={isOpen}
-         toggle={() => toggle("company")}
-         centered
-         style={{ maxWidth: "400px" }}
-      >
-         <ModalHeader>Add Company</ModalHeader>
-         <ModalBody>
-            <form className="ui form" onSubmit={submit}>
-               <div className="ui left icon action fluid input">
-                  <input
-                     type="text"
-                     placeholder="Add by Company ID"
-                     value={value}
-                     onChange={onChange}
-                  />
-                  <i className="building icon" />
-                  <button className="ui green button">Add Company</button>
-               </div>
-            </form>
-         </ModalBody>
-         <ModalFooter>
-            <button
-               className="ui red basic button"
-               onClick={() => toggle("company")}
-            >
-               Cancel
-            </button>
-         </ModalFooter>
+      <Modal open={open} close={() => close("company")}>
+         <h3>Add Company</h3>
+         <form className="ui form" style={{ marginTop: 20 }} onSubmit={submit}>
+            <div className="field">
+               <input
+                  type="text"
+                  placeholder="Add by Company ID"
+                  value={value}
+                  onChange={onChange}
+               />
+            </div>
+            <button className="ui blue button">Add Company</button>
+         </form>
       </Modal>
    );
 };
