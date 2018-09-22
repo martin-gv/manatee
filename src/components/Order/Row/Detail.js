@@ -124,25 +124,25 @@ class OrderRowDetail extends React.Component {
                <div className="five wide column">
                   <div className="form-group">
                      <label>Glass</label>
-                     <Select
+                     {/* <Select
                         disabled={!rowFound || isVoid}
                         options={this.props.glassOptions}
                         onChange={e =>
                            onRowChange(id, "glass", e ? e.value : null)
                         }
                         value={row.glass}
-                     />
+                     /> */}
                   </div>
                   <div className="form-group">
                      <label>Mount</label>
-                     <Select
+                     {/* <Select
                         disabled={!rowFound || isVoid}
                         options={this.props.mountOptions}
                         onChange={e =>
                            onRowChange(id, "mount", e ? e.value : null)
                         }
                         value={row.mount}
-                     />
+                     /> */}
                   </div>
                   <div className="ui checkbox">
                      <input

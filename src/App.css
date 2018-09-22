@@ -206,3 +206,23 @@ table.small th {
 .InputFromTo .DayPickerInput-Overlay {
    width: 550px;
 }
+
+/* Scrollbar */
+::-webkit-scrollbar {
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+   background: #f7f7f7;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+   background: #b0b0b0;
+   border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+   background: rgb(158, 158, 158);
+}

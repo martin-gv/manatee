@@ -1,9 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
 import Select from "react-select";
+import CreatableSelect from "react-select/lib/Creatable";
+import "./ClientTags.css";
 
 import { fetchClientTag } from "../../../store/actions/system";
 import { addTagToClient } from "../../../store/actions/clients";
+
+// const customStyles = {
+//    control: (base, state) => ({
+//       ...base,
+//       borderColor: state.isFocused ? "red" : "white"
+//    })
+// };
 
 class ClientTags extends React.Component {
    state = {
@@ -39,41 +48,51 @@ class ClientTags extends React.Component {
    };
 
    render() {
-      const tags = this.props.tags.map(el => (
-         <span className="badge badge-secondary mr-3 mb-3" key={el._id}>
-            {el.category} -> {el.name}{" "}
-            <button
-               className="btn btn-secondary btn-sm"
-               onClick={() => this.onDeleteTagButtonClick(el)}
-            >
-               x
-            </button>
+      const clientTags = this.props.tags.map(tag => (
+         <span className="client-tag" key={tag._id}>
+            <span className="category">{tag.category}</span>
+            <span className="name">{tag.name}</span>
+            <i
+               className="x icon"
+               onClick={() => this.onDeleteTagButtonClick(tag)}
+            />
          </span>
       ));
 
-      const tagIDs = tags.map(el => el._id);
-      const clientTagOptions = this.props.data
-         .filter(el => !tagIDs.includes(el._id))
-         .map(el => ({
-            label: `${el.category} -> ${el.name}`,
-            value: el
+      const tagIDs = clientTags.map(el => el._id);
+      const tagOptions = this.props.data
+         .filter(tag => !tagIDs.includes(tag._id))
+         .map(tag => ({
+            label: `${tag.category} - ${tag.name}`,
+            value: tag
          }));
 
       return (
-         <div className="section">
+         <div className="section ClientTags">
             <h3 style={{ marginBottom: 15 }}>Tags</h3>
             <div className="ui grid">
-               <div className="twelve wide column">
+               <div className="ten wide column">
                   <Select
-                     options={clientTagOptions}
+                     options={tagOptions}
+                     classNamePrefix="tag-select"
+                     placeholder="Search tags..."
+                     noOptionsMessage={inputValue => {
+                        return "No matching tag found";
+                     }}
                      onChange={option => this.setState({ option })}
                      value={this.state.option}
-                     disabled={clientTagOptions.length === 0}
+                     disabled={tagOptions.length === 0}
+                  />
+
+                  <CreatableSelect
+                     onChange={option => this.setState({ option })}
+                     value={this.state.option}
+                     options={tagOptions}
                   />
                </div>
-               <div className="four wide column">
+               <div className="six wide column">
                   <button
-                     className="ui basic primary button"
+                     className="ui basic blue button"
                      onClick={this.onAddTagButtonClick}
                      disabled={!this.state.option}
                   >
@@ -82,8 +101,7 @@ class ClientTags extends React.Component {
                   </button>
                </div>
             </div>
-            <hr />
-            <span style={{ fontSize: "18px" }}>{tags}</span>
+            <div style={{ marginTop: 20 }}>{clientTags}</div>
          </div>
       );
    }

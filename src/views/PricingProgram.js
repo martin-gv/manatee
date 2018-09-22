@@ -153,23 +153,23 @@ class PricingProgramView extends React.Component {
                   </form>
                   <div className="form-group">
                      <label>Glass</label>
-                     <Select
+                     {/* <Select
                         options={setupOptions(rows, "glass")}
                         onChange={glass =>
                            this.setState({ glass: glass && glass.value })
                         }
                         value={this.state.glass}
-                     />
+                     /> */}
                   </div>
                   <div className="form-group">
                      <label>Mount</label>
-                     <Select
+                     {/* <Select
                         options={setupOptions(rows, "mount")}
                         onChange={mount =>
                            this.setState({ mount: mount && mount.value })
                         }
                         value={this.state.mount}
-                     />
+                     /> */}
                   </div>
                </div>
                <div className="eleven wide column">

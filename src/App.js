@@ -11,7 +11,6 @@ import { setAuthorizationToken, setCurrentUser } from "./store/actions/auth";
 import "./App.css";
 import "./Animations.css";
 // import "react-dates/lib/css/_datepicker.css";
-import "react-select/dist/react-select.css";
 import "react-day-picker/lib/style.css";
 
 import Start from "./Start";
