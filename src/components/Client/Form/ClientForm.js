@@ -34,9 +34,12 @@ class ClientForm extends Component {
       modal: {
          secure: false,
          company: false,
-         rewards: false
+         rewards: false,
+         newTag: false
       },
-      inputCompany: ""
+      inputCompany: "",
+      inputTagCategory: "",
+      inputTagName: ""
    };
 
    static getDerivedStateFromProps(props, state) {
@@ -73,11 +76,6 @@ class ClientForm extends Component {
    onChange = (field, value) => {
       const { clientID } = this.props.client;
       this.props.editClient(clientID, field, value);
-   };
-
-   handleChange = e => {
-      const id = this.props.client.clientId;
-      this.props.updateClient(id, e);
    };
 
    saveClient = e => {
@@ -189,7 +187,12 @@ class ClientForm extends Component {
                      style={{ position: "relative", top: "-50px" }}
                   >
                      <Orders clientID={id} />
-                     <ClientTags clientID={clientID} tags={tags || []} />
+                     <ClientTags
+                        clientID={clientID}
+                        tags={tags || []}
+                        open={modal.newTag}
+                        toggle={this.toggleModal}
+                     />
                      <div className="section">
                         <h3 style={{ marginBottom: 15 }}>Notes</h3>
                         <form className="ui form">
@@ -221,7 +224,7 @@ class ClientForm extends Component {
                   close={this.toggleModal}
                   submit={this.saveSecureNotes}
                   client={client || {}}
-                  onChange={this.handleChange}
+                  // onChange={this.handleChange}
                />
                <CompanyModal
                   open={modal.company}

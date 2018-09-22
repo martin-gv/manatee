@@ -4,7 +4,7 @@ import {
    TOGGLE_MODAL,
    TOGGLE_MODAL_V2,
    SET_SELECTED_ORDER_ROW,
-   LOAD_CLIENT_TAG_OPTIONS,
+   LOAD_TAG_DATA,
    LOAD_PRICING_COLUMN_DATA,
    LOAD_PRICING_ROW_DATA,
    SET_DATA_READY_STATUS,
@@ -31,7 +31,7 @@ const defaultState = {
       message: ""
    },
    selectedRowId: null,
-   clientTagOptions: [],
+   tagData: [],
    pricingColumns: [],
    pricingRows: []
 };
@@ -73,8 +73,8 @@ const setSelectedOrderRow = (state, action) => {
    return { ...state, selectedRowId: action.id };
 };
 
-const loadClientTagOptions = (state, action) => {
-   return { ...state, clientTagOptions: action.data };
+const loadTagData = (state, action) => {
+   return { ...state, tagData: action.data };
 };
 
 const loadPricingColumnData = (state, action) => {
@@ -109,8 +109,8 @@ const reducer = (state = defaultState, action) => {
          return toggleModalV2(state, action);
       case SET_SELECTED_ORDER_ROW:
          return setSelectedOrderRow(state, action);
-      case LOAD_CLIENT_TAG_OPTIONS:
-         return loadClientTagOptions(state, action);
+      case LOAD_TAG_DATA:
+         return loadTagData(state, action);
       case LOAD_PRICING_COLUMN_DATA:
          return loadPricingColumnData(state, action);
       case LOAD_PRICING_ROW_DATA:

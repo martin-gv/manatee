@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import "./Navbar.css";
 
 import { logout } from "../../../store/actions/auth";
 
@@ -12,13 +13,19 @@ class Navbar extends Component {
          currentUser: { username }
       } = this.props.users;
       return (
-         <nav className="navbar navbar-expand">
+         <nav className="Navbar navbar navbar-expand">
             <div className="container-fluid">
                <Search />
                {isAuthenticated && (
-                  <a className="logout" onClick={this.props.logout}>
-                     Log out
-                  </a>
+                  <div>
+                     <div className="user">
+                        Logged in as{" "}
+                        <span className="username">{username}</span>
+                     </div>
+                     <a className="logout" onClick={this.props.logout}>
+                        Log out
+                     </a>
+                  </div>
                )}
             </div>
          </nav>

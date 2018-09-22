@@ -6,10 +6,10 @@ import { fetchClient, loadClients } from "../../../store/actions/clients";
 import {
    resetDataLoadedStatus,
    setDataLoadedStatus,
-   fetchClientTag
+   fetchTag
 } from "../../../store/actions/system";
 
-import Toolbar from "./Toolbar";
+// import Toolbar from "./Toolbar";
 import TableHead from "./TableHead";
 import TableBody from "./TableBody";
 
@@ -18,7 +18,7 @@ class ClientList extends Component {
       const res = await this.props.fetchClient();
       this.props.loadClients(res);
       this.props.setDataLoadedStatus("clientList");
-      this.props.fetchClientTag();
+      this.props.fetchTag();
    }
 
    componentWillUnmount() {
@@ -40,7 +40,7 @@ class ClientList extends Component {
 
       return (
          <div className="ClientList card full-height">
-            {/* <Toolbar clientTagOptions={this.props.clientTagOptions} /> */}
+            {/* <Toolbar tagData={this.props.tagData} /> */}
             {loader}
             <div className={"animated " + cssAnimate}>
                <h2>Clients</h2>
@@ -58,7 +58,7 @@ function mapStateToProps(state) {
    return {
       clients: state.clients,
       isDataLoaded: state.system.isDataLoaded.clientList,
-      clientTagOptions: state.system.clientTagOptions
+      tagData: state.system.tagData
    };
 }
 
@@ -69,6 +69,6 @@ export default connect(
       loadClients,
       setDataLoadedStatus,
       resetDataLoadedStatus,
-      fetchClientTag
+      fetchTag
    }
 )(ClientList);

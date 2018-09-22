@@ -3,8 +3,8 @@ import { addError, removeError } from "./errors";
 import { toggleModal } from "./system";
 import {
    LOAD_CLIENTS,
-   LOAD_TAG,
-   REMOVE_TAG,
+   //    LOAD_TAG,
+   //    REMOVE_TAG,
    EDIT_CLIENT
 } from "../actionTypes";
 
@@ -118,25 +118,25 @@ export function deleteClient(id, history) {
 
 // Client Tag Actions
 
-export function loadTag(clientID, tag) {
-   return {
-      type: LOAD_TAG,
-      clientID,
-      tag
-   };
-}
+// export function loadTag(clientID, tag) {
+//    return {
+//       type: LOAD_TAG,
+//       clientID,
+//       tag
+//    };
+// }
 
-export function removeTag(clientID, tag) {
-   return {
-      type: REMOVE_TAG,
-      clientID,
-      tag
-   };
-}
+// export function removeTag(clientID, tag) {
+//    return {
+//       type: REMOVE_TAG,
+//       clientID,
+//       tag
+//    };
+// }
 
-export function addTagToClient(clientID, tag, op) {
+export function updateClientTag(clientID, tagID, op) {
    const data = {
-      [op]: { tags: tag._id },
+      [op]: { tags: tagID },
       skipPreUpdateHook: true
    };
 
@@ -144,11 +144,12 @@ export function addTagToClient(clientID, tag, op) {
       return apiCall("put", "/api/clients/" + clientID, { client: data })
          .then(res => {
             dispatch(removeError());
-            if (op === "$push") {
-               dispatch(loadTag(clientID, tag));
-            } else if (op === "$pull") {
-               dispatch(removeTag(clientID, tag));
-            }
+            // if (op === "$push") {
+            //    dispatch(loadTag(clientID, tagID));
+            // } else if (op === "$pull") {
+            //    dispatch(removeTag(clientID, tagID));
+            // }
+            return res;
          })
          .catch(err => {
             dispatch(addError(err.message));

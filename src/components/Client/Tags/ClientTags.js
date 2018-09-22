@@ -1,18 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import Select from "react-select";
-import CreatableSelect from "react-select/lib/Creatable";
 import "./ClientTags.css";
 
-import { fetchClientTag } from "../../../store/actions/system";
-import { addTagToClient } from "../../../store/actions/clients";
-
-// const customStyles = {
-//    control: (base, state) => ({
-//       ...base,
-//       borderColor: state.isFocused ? "red" : "white"
-//    })
-// };
+import { fetchTag, loadTagData } from "../../../store/actions/system";
+import { loadClients, updateClientTag } from "../../../store/actions/clients";
+import { createTag } from "../../../store/actions/tags";
+import NewTagModal from "./NewTagModal";
 
 class ClientTags extends React.Component {
    state = {
@@ -20,7 +14,7 @@ class ClientTags extends React.Component {
    };
 
    componentDidMount = () => {
-      this.props.fetchClientTag();
+      this.props.fetchTag();
    };
 
    onAddTagButtonClick = async () => {
@@ -33,18 +27,27 @@ class ClientTags extends React.Component {
       }
 
       // prevent adding duplicate tags
-      const selected = option.value;
+      const tagID = option.value;
       const tagIDs = tags.map(el => el._id);
-      if (tagIDs.includes(selected._id)) {
+      if (tagIDs.includes(tagID)) {
          return;
       }
 
-      await this.props.addTagToClient(clientID, selected, "$push");
+      const res = await this.props.updateClientTag(clientID, tagID, "$push");
+      this.props.loadClients([res]);
       this.setState({ option: "" });
    };
 
-   onDeleteTagButtonClick = tag => {
-      this.props.addTagToClient(this.props.clientID, tag, "$pull");
+   onDeleteTagButtonClick = async tagID => {
+      const { clientID } = this.props;
+      const res = await this.props.updateClientTag(clientID, tagID, "$pull");
+      this.props.loadClients([res]);
+   };
+
+   createNewTag = async data => {
+      const res = await this.props.createTag(data);
+      this.props.loadTagData(res);
+      return true;
    };
 
    render() {
@@ -54,17 +57,17 @@ class ClientTags extends React.Component {
             <span className="name">{tag.name}</span>
             <i
                className="x icon"
-               onClick={() => this.onDeleteTagButtonClick(tag)}
+               onClick={() => this.onDeleteTagButtonClick(tag._id)}
             />
          </span>
       ));
 
-      const tagIDs = clientTags.map(el => el._id);
+      const tagIDs = this.props.tags.map(tag => tag._id);
       const tagOptions = this.props.data
          .filter(tag => !tagIDs.includes(tag._id))
          .map(tag => ({
             label: `${tag.category} - ${tag.name}`,
-            value: tag
+            value: tag._id
          }));
 
       return (
@@ -73,21 +76,13 @@ class ClientTags extends React.Component {
             <div className="ui grid">
                <div className="ten wide column">
                   <Select
+                     value={this.state.option}
                      options={tagOptions}
+                     onChange={option => this.setState({ option })}
+                     disabled={tagOptions.length === 0}
+                     noOptionsMessage={() => "No matching tag found"}
                      classNamePrefix="tag-select"
                      placeholder="Search tags..."
-                     noOptionsMessage={inputValue => {
-                        return "No matching tag found";
-                     }}
-                     onChange={option => this.setState({ option })}
-                     value={this.state.option}
-                     disabled={tagOptions.length === 0}
-                  />
-
-                  <CreatableSelect
-                     onChange={option => this.setState({ option })}
-                     value={this.state.option}
-                     options={tagOptions}
                   />
                </div>
                <div className="six wide column">
@@ -102,6 +97,20 @@ class ClientTags extends React.Component {
                </div>
             </div>
             <div style={{ marginTop: 20 }}>{clientTags}</div>
+            <hr />
+            <div>
+               <button
+                  className="ui basic mini button"
+                  onClick={() => this.props.toggle("newTag")}
+               >
+                  Create New Tag
+               </button>
+            </div>
+            <NewTagModal
+               open={this.props.open}
+               toggle={this.props.toggle}
+               createNewTag={this.createNewTag}
+            />
          </div>
       );
    }
@@ -109,11 +118,11 @@ class ClientTags extends React.Component {
 
 function mapStateToProps(state) {
    return {
-      data: state.system.clientTagOptions
+      data: state.system.tagData
    };
 }
 
 export default connect(
    mapStateToProps,
-   { fetchClientTag, addTagToClient }
+   { fetchTag, loadTagData, loadClients, updateClientTag, createTag }
 )(ClientTags);

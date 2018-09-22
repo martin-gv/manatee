@@ -29,7 +29,7 @@ const Modal = props => {
          {style => (
             <div>
                <div
-                  className="card"
+                  className={"card " + props.className}
                   style={{
                      ...modalStyle,
                      opacity: style.opacity,

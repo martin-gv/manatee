@@ -1,5 +1,5 @@
 import React from "react";
-import Select from "react-select";
+// import Select from "react-select";
 import Big from "big.js";
 
 import InventoryItem from "./Detail/InventoryItem";

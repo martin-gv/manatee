@@ -10,7 +10,7 @@ const Toolbar = props => {
             <ClientSearch />
          </div>
          <div className="col">
-            <ClientSearchByTag data={props.clientTagOptions} />
+            <ClientSearchByTag data={props.tagData} />
          </div>
       </div>
    );

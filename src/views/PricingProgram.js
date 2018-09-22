@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import Big from "big.js";
-import Select from "react-select";
+// import Select from "react-select";
 
-import { setupOptions } from "../utility/utility";
+// import { setupOptions } from "../utility/utility";
 import {
    fetchPricingColumn,
    fetchPricingRow,
@@ -111,7 +111,7 @@ class PricingProgramView extends React.Component {
 
    render() {
       const { glass, mount } = this.state;
-      const { rows } = this.props;
+      // const { rows } = this.props;
 
       const ui = this.calculateUI();
       const glassCharge = this.calculateCharge(glass);
