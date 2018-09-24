@@ -8,7 +8,8 @@ import {
    LOAD_PRICING_COLUMN_DATA,
    LOAD_PRICING_ROW_DATA,
    SET_DATA_READY_STATUS,
-   SET_IDLE_TIMEOUT
+   SET_IDLE_TIMEOUT,
+   TRIGGER_ORDER_SAVE
 } from "../actionTypes";
 
 const defaultState = {
@@ -33,7 +34,8 @@ const defaultState = {
    selectedRowId: null,
    tagData: [],
    pricingColumns: [],
-   pricingRows: []
+   pricingRows: [],
+   triggerOrderSave: false
 };
 
 const setDataLoadedStatus = (state, action) => {
@@ -97,6 +99,10 @@ const setIdleTimeout = (state, action) => {
    return { ...state, idleTimer: action.timeoutID };
 };
 
+const updateValue = (state, action) => {
+   return { ...state, [action.field]: action.value };
+};
+
 const reducer = (state = defaultState, action) => {
    switch (action.type) {
       case SET_DATA_LOADED_STATUS:
@@ -119,6 +125,8 @@ const reducer = (state = defaultState, action) => {
          return setDataReadyStatus(state, action);
       case SET_IDLE_TIMEOUT:
          return setIdleTimeout(state, action);
+      case TRIGGER_ORDER_SAVE:
+         return updateValue(state, action);
       default:
          return state;
    }

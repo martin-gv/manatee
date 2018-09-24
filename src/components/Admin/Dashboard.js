@@ -132,69 +132,80 @@ class AdminDashboard extends React.Component {
                <button className="ui basic button" onClick={this.clients}>
                   Clients
                </button>
-
-               <form
-                  className="ui form"
-                  onSubmit={this.createUser}
-                  style={{ marginTop: 30 }}
-               >
-                  <div className="field">
-                     <label>First Name</label>
-                     <input
-                        type="text"
-                        name="firstName"
-                        value={this.state.firstName}
-                        onChange={({ target: t }) =>
-                           this.onChange(t.name, t.value)
-                        }
-                     />
+               <div className="ui grid">
+                  <div className="nine wide column">
+                     <div className="section">
+                        <h3 style={{ marginBottom: 20 }}>Add New User</h3>
+                        <form
+                           className="ui form"
+                           onSubmit={this.createUser}
+                           style={{ marginTop: 30 }}
+                        >
+                           <div className="field">
+                              <label>First Name</label>
+                              <input
+                                 type="text"
+                                 name="firstName"
+                                 value={this.state.firstName}
+                                 onChange={({ target: t }) =>
+                                    this.onChange(t.name, t.value)
+                                 }
+                              />
+                           </div>
+                           <div className="field">
+                              <label>Last Name</label>
+                              <input
+                                 type="text"
+                                 name="lastName"
+                                 value={this.state.lastName}
+                                 onChange={({ target: t }) =>
+                                    this.onChange(t.name, t.value)
+                                 }
+                              />
+                           </div>
+                           <div className="field">
+                              <label>Email</label>
+                              <input
+                                 type="email"
+                                 name="email"
+                                 value={this.state.email}
+                                 onChange={({ target: t }) =>
+                                    this.onChange(t.name, t.value)
+                                 }
+                              />
+                           </div>
+                           <div className="field">
+                              <label>Username</label>
+                              <input
+                                 type="text"
+                                 name="username"
+                                 value={this.state.username}
+                                 onChange={({ target: t }) =>
+                                    this.onChange(t.name, t.value)
+                                 }
+                              />
+                           </div>
+                           <div className="field">
+                              <label>Password</label>
+                              <input
+                                 type="password"
+                                 name="password"
+                                 value={this.state.password}
+                                 onChange={({ target: t }) =>
+                                    this.onChange(t.name, t.value)
+                                 }
+                              />
+                           </div>
+                           <button className="ui button">Submit</button>
+                        </form>
+                     </div>
                   </div>
-                  <div className="field">
-                     <label>Last Name</label>
-                     <input
-                        type="text"
-                        name="lastName"
-                        value={this.state.lastName}
-                        onChange={({ target: t }) =>
-                           this.onChange(t.name, t.value)
-                        }
-                     />
+                  <div className="seven wide column">
+                     <div className="section">
+                        <h3 style={{ marginBottom: 20 }}>Users</h3>
+                     </div>
                   </div>
-                  <div className="field">
-                     <label>Email</label>
-                     <input
-                        type="email"
-                        name="email"
-                        value={this.state.email}
-                        onChange={({ target: t }) =>
-                           this.onChange(t.name, t.value)
-                        }
-                     />
-                  </div>
-                  <div className="field">
-                     <label>Username</label>
-                     <input
-                        type="text"
-                        name="username"
-                        value={this.state.username}
-                        onChange={({ target: t }) =>
-                           this.onChange(t.name, t.value)
-                        }
-                     />
-                  </div>
-                  <div className="field">
-                     <label>Password</label>
-                     <input
-                        type="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={({ target: t }) =>
-                           this.onChange(t.name, t.value)
-                        }
-                     />
-                  </div>
-                  <button className="ui button">Submit</button>
-               </form>
+               </div>
             </div>
          </div>
       );

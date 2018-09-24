@@ -7,13 +7,15 @@ import { setupOptions } from "../utility/utility";
 import {
    fetchPricingColumn,
    fetchPricingRow,
-   toggleModalV2
+   toggleModalV2,
+   triggerOrderSave
 } from "../store/actions/system";
-import { fetchOrderByID } from "../store/actions/orders";
+import { fetchOrderByID, updateOrder } from "../store/actions/orders";
 import {
    createOrderRow,
    fetchOrderRow,
-   updateOrderRow
+   updateOrderRow,
+   editRow
 } from "../store/actions/orderRows";
 
 import AddToInvoiceModal from "../components/PricingProgram/AddToInvoiceModal";
@@ -76,27 +78,32 @@ class PricingProgramView extends React.Component {
       this.setState({ showModal: !this.state.showModal });
    };
 
-   addToOrder = async (inventoryID, total) => {
-      const orderRes = await this.props.fetchOrderByID(inventoryID);
+   addToOrder = async (orderID, total) => {
+      const orderRes = await this.props.fetchOrderByID(orderID);
       if (orderRes && orderRes.length) {
-         const rowRes = await this.props.fetchOrderRow(inventoryID);
+         const rowRes = await this.props.fetchOrderRow(orderID);
          if (rowRes) {
             const nextRowNum =
                Math.max(0, ...rowRes.map(row => row.rowNum)) + 1;
-            const newRow = await this.props.createOrderRow(
-               inventoryID,
-               nextRowNum
-            );
+            const newRow = await this.props.createOrderRow(orderID, nextRowNum);
             if (newRow) {
                const row = {
                   ...newRow,
+                  height: this.state.height,
+                  width: this.state.width,
                   glass: this.state.glass.value,
                   mount: this.state.mount.value,
                   price: total
                };
                const rowUpdate = await this.props.updateOrderRow(row);
                if (rowUpdate) {
-                  this.props.history.push("/orders/" + inventoryID);
+                  const orderTotal = this.updateOrderTotal([
+                     ...rowRes,
+                     rowUpdate
+                  ]);
+                  const data = { orderID, total: orderTotal };
+                  await this.props.updateOrder(data);
+                  this.props.history.push("/orders/" + orderID);
                   // todo: save order to update order totals
                   // todo: message if successful
                } else {
@@ -109,6 +116,16 @@ class PricingProgramView extends React.Component {
       } else {
          this.props.toggleModalV2(true, "Error", "No order found");
       }
+   };
+
+   updateOrderTotal = arr => {
+      const total = arr.reduce((acc, curr) => {
+         const sum = Big(acc).plus(
+            Big(curr.price || 0).plus(Big(curr.itemPrice || 0))
+         );
+         return Number(sum);
+      }, 0);
+      return total;
    };
 
    render() {
@@ -233,9 +250,12 @@ export default connect(
       fetchPricingColumn,
       fetchPricingRow,
       toggleModalV2,
+      triggerOrderSave,
       fetchOrderByID,
+      updateOrder,
       createOrderRow,
       fetchOrderRow,
-      updateOrderRow
+      updateOrderRow,
+      editRow
    }
 )(PricingProgramView);

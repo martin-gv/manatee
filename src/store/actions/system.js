@@ -9,7 +9,8 @@ import {
    LOAD_TAG_DATA,
    LOAD_PRICING_COLUMN_DATA,
    LOAD_PRICING_ROW_DATA,
-   SET_DATA_READY_STATUS
+   SET_DATA_READY_STATUS,
+   TRIGGER_ORDER_SAVE
 } from "../actionTypes";
 
 export function setDataLoadedStatus(component) {
@@ -111,5 +112,13 @@ export function fetchPricingRow() {
          .catch(err => {
             dispatch(addError(err.message));
          });
+   };
+}
+
+export function triggerOrderSave(boolean) {
+   return {
+      type: TRIGGER_ORDER_SAVE,
+      field: "triggerOrderSave",
+      value: boolean
    };
 }

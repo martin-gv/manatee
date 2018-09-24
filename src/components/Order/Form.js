@@ -43,7 +43,8 @@ import {
 import {
    setDataLoadedStatus,
    resetDataLoadedStatus,
-   fetchPricingRow
+   fetchPricingRow,
+   triggerOrderSave
 } from "../../store/actions/system";
 
 import OrderToolbar from "./OrderToolbar";
@@ -71,6 +72,20 @@ class OrderForm extends React.Component {
       if (prev !== current) {
          this.fetchData(current);
       }
+
+   //    console.log("COMPONENT DID UPDATE");
+   //    if (
+   //       this.props.isDataLoaded &&
+   //       this.props.isOrderRowDataLoaded &&
+   //       this.state.clientsReady &&
+   //       prevProps.triggerOrderSave
+   //       // prevProps.triggerOrderSave !== this.props.triggerOrderSave
+   //    ) {
+   //       console.log("working?");
+   //       this.updateTotal();
+   //       this.saveOrder();
+   //       this.props.triggerOrderSave(false);
+   //    }
    }
 
    componentWillUnmount() {
@@ -105,8 +120,8 @@ class OrderForm extends React.Component {
       this.props.editOrder(orderID, name, value);
    };
 
-   handleSubmit = e => {
-      e.preventDefault();
+   saveOrder = e => {
+      e && e.preventDefault();
       this.props.updateOrder(this.props.order);
    };
 
@@ -136,16 +151,16 @@ class OrderForm extends React.Component {
       this.props.deleteOrderRow(id);
    };
 
-   updateTotal = () => {
-      const { orderRows: rows } = this.props;
+   updateTotal = async () => {
       const { orderID } = this.props.order;
-      const total = rows.reduce((acc, curr) => {
+      const total = this.props.orderRows.reduce((acc, curr) => {
          const sum = Big(acc).plus(
             Big(curr.price || 0).plus(Big(curr.itemPrice || 0))
          );
          return Number(sum);
       }, 0);
       this.props.editOrder(orderID, "total", total);
+      return true;
    };
 
    print = () => {
@@ -449,7 +464,7 @@ class OrderForm extends React.Component {
                   >
                      {/* <div className="section" style={{ marginTop: -10 }}>
                         {isVoid && <strong>VOIDED</strong>}
-                        <form onSubmit={this.handleSubmit}>
+                        <form onSubmit={this.saveOrder}>
                            {form}
                            <button
                               type="submit"
@@ -523,7 +538,8 @@ function mapStateToProps(state, ownProps) {
       isDataLoaded: state.system.isDataLoaded.orderForm,
       isOrderRowDataLoaded: state.system.isDataLoaded.orderRow,
       selectedRowId: state.system.selectedRowId,
-      pricingRows: state.system.pricingRows
+      pricingRows: state.system.pricingRows,
+      triggerOrderSave: state.system.triggerOrderSave
    };
 }
 
@@ -547,6 +563,7 @@ export default connect(
       setDataLoadedStatus,
       resetDataLoadedStatus,
       fetchPricingRow,
+      triggerOrderSave,
       fetchClientByID_v2,
       loadClients,
       saveClient
