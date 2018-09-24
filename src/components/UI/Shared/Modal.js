@@ -20,21 +20,23 @@ const overlayStyle = {
 };
 
 const Modal = props => {
+   const zModifier = props.zModifier || 0;
    return (
       <Motion
          style={{
             opacity: spring(props.open ? 1 : 0),
-            z: props.open ? 999 : -999
+            z: props.open ? 500 : -500
          }}
       >
          {style => (
             <div>
                <div
-                  className={"card " + props.className}
+                  className="card"
                   style={{
                      ...modalStyle,
                      opacity: style.opacity,
-                     zIndex: style.z + 1
+                     ...props.cardStyle,
+                     zIndex: style.z + 1 + zModifier
                   }}
                >
                   {props.children}
@@ -44,7 +46,7 @@ const Modal = props => {
                   style={{
                      ...overlayStyle,
                      opacity: style.opacity,
-                     zIndex: style.z
+                     zIndex: style.z + zModifier
                   }}
                   onClick={props.close}
                />

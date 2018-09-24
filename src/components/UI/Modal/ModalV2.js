@@ -11,7 +11,12 @@ class ModalV2 extends React.Component {
 
    render() {
       return (
-         <Modal open={this.props.isOpen} close={this.handleToggle}>
+         <Modal
+            open={this.props.isOpen}
+            close={this.handleToggle}
+            cardStyle={{ width: 400 }}
+            zModifier={100}
+         >
             <div style={{ textAlign: "center" }}>
                <h3 style={{ marginBottom: 20 }}>{this.props.title}</h3>
                <div style={{ marginBottom: 20 }}>{this.props.message}</div>

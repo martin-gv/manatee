@@ -76,37 +76,39 @@ class PricingProgramView extends React.Component {
       this.setState({ showModal: !this.state.showModal });
    };
 
-   addToOrder = (e, id, total) => {
-      e.preventDefault();
-      this.props.fetchOrderByID(id).then(res => {
-         if (res && res.length) {
-            this.props.fetchOrderRow(id).then(res => {
-               if (res) {
-                  const nextRowNum = Math.max(0, ...res.map(r => r.rowNum)) + 1;
-                  this.props.createOrderRow(id, nextRowNum).then(res => {
-                     if (res) {
-                        const row = { ...res, ...this.state, price: total };
-                        this.props.updateOrderRow(row).then(res => {
-                           if (res) {
-                              this.props.history.push(`/orders/${id}`);
-                           } else {
-                              this.props.toggleModalV2(
-                                 true,
-                                 "Error",
-                                 "Row API error"
-                              );
-                           }
-                        });
-                     }
-                  });
+   addToOrder = async (inventoryID, total) => {
+      const orderRes = await this.props.fetchOrderByID(inventoryID);
+      if (orderRes && orderRes.length) {
+         const rowRes = await this.props.fetchOrderRow(inventoryID);
+         if (rowRes) {
+            const nextRowNum =
+               Math.max(0, ...rowRes.map(row => row.rowNum)) + 1;
+            const newRow = await this.props.createOrderRow(
+               inventoryID,
+               nextRowNum
+            );
+            if (newRow) {
+               const row = {
+                  ...newRow,
+                  glass: this.state.glass.value,
+                  mount: this.state.mount.value,
+                  price: total
+               };
+               const rowUpdate = await this.props.updateOrderRow(row);
+               if (rowUpdate) {
+                  this.props.history.push("/orders/" + inventoryID);
+                  // todo: save order to update order totals
+                  // todo: message if successful
                } else {
                   this.props.toggleModalV2(true, "Error", "Row API error");
                }
-            });
+            }
          } else {
-            this.props.toggleModalV2(true, "Error", "No order found");
+            this.props.toggleModalV2(true, "Error", "Row API error");
          }
-      });
+      } else {
+         this.props.toggleModalV2(true, "Error", "No order found");
+      }
    };
 
    render() {
@@ -155,6 +157,7 @@ class PricingProgramView extends React.Component {
                      <label>Glass</label>
                      <Select
                         value={this.state.glass}
+                        // todo: fix when delete?
                         onChange={glass => this.setState({ glass })}
                         options={setupOptions(rows, "glass")}
                         classNamePrefix="Select"
@@ -164,6 +167,7 @@ class PricingProgramView extends React.Component {
                      <label>Mount</label>
                      <Select
                         value={this.state.mount}
+                        // todo: fix when delete?
                         onChange={mount => this.setState({ mount })}
                         options={setupOptions(rows, "mount")}
                         classNamePrefix="Select"
@@ -206,7 +210,7 @@ class PricingProgramView extends React.Component {
                      <AddToInvoiceModal
                         isOpen={this.state.showModal}
                         toggle={this.toggleModal}
-                        addToOrder={(e, id) => this.addToOrder(e, id, total)}
+                        addToOrder={id => this.addToOrder(id, total)}
                      />
                   </div>
                </div>
