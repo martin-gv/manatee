@@ -21,7 +21,7 @@ export function addNewPayment(obj) {
 export function editPayment(paymentID, field, value) {
    return {
       type: EDIT_PAYMENT,
-      paymentID,
+      id: +paymentID,
       field,
       value
    };

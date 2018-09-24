@@ -31,10 +31,6 @@
    cursor: pointer;
 }
 
-.ClientTags .Select .Select-control {
-   cursor: text;
-}
-
 .ClientTags .NewTagModal .positive-message {
    color: #2fb478;
    background-color: #d6ffd6;

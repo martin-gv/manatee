@@ -1,6 +1,6 @@
 import { apiCall } from "../../services/api";
 import { addError, removeError } from "./errors";
-import { toggleModal } from "./system";
+import { toggleModalV2 } from "./system";
 import {
    LOAD_CLIENTS,
    //    LOAD_TAG,
@@ -94,7 +94,8 @@ export function saveClient(data) {
       return apiCall("put", "/api/clients/" + data.clientID, { client: data })
          .then(res => {
             dispatch(removeError());
-            dispatch(toggleModal("clientSaveConfirmation"));
+            // dispatch(toggleModal("clientSaveConfirmation"));
+            dispatch(toggleModalV2(true, "Client updated!"));
             return true;
          })
          .catch(err => {

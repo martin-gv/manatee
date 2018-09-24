@@ -1,11 +1,11 @@
 import React from "react";
 
 const FormField = props => {
-   const { field, value, onChange } = props;
+   const { field, value, label, onChange } = props;
 
    return (
       <div className="field">
-         <label>{field}</label>
+         <label>{label}</label>
          <input name={field} value={value || ""} onChange={onChange} />
       </div>
    );

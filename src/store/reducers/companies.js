@@ -1,9 +1,10 @@
 import {
    LOAD_COMPANY_DATA,
-   COMPANY_INPUT_CHANGE,
+   EDIT_COMPANY,
    ADD_COMPANY_CONTACT,
    REMOVE_COMPANY_CONTACT
 } from "../actionTypes";
+import { editStore } from "../../utility/utility";
 
 const defaultState = [];
 
@@ -11,16 +12,8 @@ const loadData = (state, action) => {
    return [...action.data];
 };
 
-const inputChange = (state, action) => {
-   const index = state.findIndex(
-      el => el._id === action.id || el.companyID === +action.id
-   );
-   const newState = [...state];
-   newState[index] = {
-      ...state[index],
-      [action.field]: action.value
-   };
-   return newState;
+const editCompany = (state, action) => {
+   return editStore(state, action, "companyID");
 };
 
 const addCompanyContact = (state, action) => {
@@ -55,8 +48,8 @@ const reducer = (state = defaultState, action) => {
    switch (action.type) {
       case LOAD_COMPANY_DATA:
          return loadData(state, action);
-      case COMPANY_INPUT_CHANGE:
-         return inputChange(state, action);
+      case EDIT_COMPANY:
+         return editCompany(state, action);
       case ADD_COMPANY_CONTACT:
          return addCompanyContact(state, action);
       case REMOVE_COMPANY_CONTACT:

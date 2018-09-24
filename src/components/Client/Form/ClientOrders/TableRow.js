@@ -27,7 +27,7 @@ class ClientOrderListItem extends React.Component {
                {orderID} {isVoid && <strong>VOID</strong>}
             </td>
             <td>{moment(createdAt).format("MMM Do YYYY")}</td>
-            <td>{total}</td>
+            <td>${total}</td>
             {/* <td>{companyID && <i className="building icon" />}</td> */}
             {/* <td>
                {this.state.hover && (

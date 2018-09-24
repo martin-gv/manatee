@@ -19,7 +19,7 @@ const addToInventory = (state, action) => {
 };
 
 const removeInventoryItem = (state, action) => {
-   const newState = state.filter(i => i.inventoryID !== action.id);
+   const newState = state.filter(i => i.inventoryID !== action.inventoryID);
    return newState;
 };
 

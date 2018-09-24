@@ -88,7 +88,6 @@ export function updateOrderRow(row) {
       return apiCall("put", "/api/order_rows/" + row._id, { row })
          .then(res => {
             dispatch(removeError());
-            dispatch(toggleModalV2(true, "Success: Row Saved"));
             return res;
          })
          .catch(err => {
@@ -104,7 +103,7 @@ export function deleteOrderRow(id) {
             dispatch(removeError());
             dispatch(removeRow(res._id));
             dispatch(setSelectedOrderRow(null));
-            dispatch(toggleModalV2(true, "Deleted!", `It's gone: ${res._id}`));
+            dispatch(toggleModalV2(true, "Deleted!"));
          })
          .catch(err => {
             dispatch(addError(err.message));

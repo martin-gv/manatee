@@ -135,7 +135,7 @@ export function updateOrder(order) {
       return apiCall("put", "/api/orders/" + order.orderID, { order })
          .then(res => {
             dispatch(removeError());
-            dispatch(toggleModalV2(true, "Success: Order Saved"));
+            dispatch(toggleModalV2(true, "Order updated!"));
             return res;
          })
          .catch(err => {

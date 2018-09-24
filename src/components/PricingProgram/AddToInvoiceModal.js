@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import Modal from "../UI/Shared/Modal";
 
 class AddToInvoiceModal extends React.Component {
    state = {
@@ -7,7 +7,7 @@ class AddToInvoiceModal extends React.Component {
    };
 
    handleChange = e => {
-      this.setState({ [e.target.name]: e.target.value });
+      this.setState({ id: e.target.value });
    };
 
    render() {
@@ -15,27 +15,15 @@ class AddToInvoiceModal extends React.Component {
       const { isOpen, toggle, addToOrder } = this.props;
 
       return (
-         <Modal isOpen={isOpen} toggle={toggle} centered>
-            <ModalHeader>Add to Order</ModalHeader>
-            <ModalBody>
-               <form onSubmit={e => addToOrder(e, id)}>
-                  <div className="form-group">
-                     <label>Invoice #</label>
-                     <input
-                        className="form-control"
-                        name="id"
-                        value={id}
-                        onChange={this.handleChange}
-                     />
-                  </div>
-                  <button className="btn btn-primary">Add to Order</button>
-               </form>
-            </ModalBody>
-            <ModalFooter>
-               <button onClick={toggle} className="btn btn-outline-danger">
-                  Cancel
-               </button>
-            </ModalFooter>
+         <Modal open={isOpen} close={toggle}>
+            <h3 style={{ marginBottom: 20 }}>Add to Order</h3>
+            <form className="ui form" onSubmit={e => addToOrder(e, id)}>
+               <div className="field">
+                  <label>Invoice #</label>
+                  <input name="id" value={id} onChange={this.handleChange} />
+               </div>
+               <button className="ui blue button">Add to Order</button>
+            </form>
          </Modal>
       );
    }

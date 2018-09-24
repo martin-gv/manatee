@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import "./CompanyList.css";
 
 import { fetchCompany } from "../../../store/actions/companies";
-import TableHeader from "./TableHeader";
+import TableHead from "./TableHead";
 import TableRow from "./TableRow";
 
 class OrderList extends React.Component {
@@ -41,7 +41,7 @@ class OrderList extends React.Component {
                <div>
                   <h2>Companies</h2>
                   <table className="hover clickable">
-                     <TableHeader />
+                     <TableHead />
                      <tbody>{ready ? tableRows : null}</tbody>
                   </table>
                </div>

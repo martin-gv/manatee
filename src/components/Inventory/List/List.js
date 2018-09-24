@@ -65,6 +65,11 @@ class InventoryList extends React.Component {
       return JSON.stringify(selection);
    };
 
+   checkboxClick = e => {
+      e.stopPropagation();
+      this.closeSelectedItemPanel();
+   };
+
    render() {
       const { showAddNewPanel, selectedItemID } = this.state;
       const { inventoryList } = this.props.isDataLoaded;
@@ -76,6 +81,7 @@ class InventoryList extends React.Component {
             selectedItemID={this.state.selectedItemID}
             handleRowClick={() => this.handleRowClick(el.inventoryID)}
             onChange={this.onChange}
+            checkboxClick={this.checkboxClick}
          />
       ));
 
@@ -183,11 +189,7 @@ class InventoryList extends React.Component {
                                  tableRows
                               ) : (
                                  <tr>
-                                    <td colSpan="4">
-                                       <div className="alert alert-primary">
-                                          Loading...
-                                       </div>
-                                    </td>
+                                    <td colSpan="5">{loader}</td>
                                  </tr>
                               )}
                            </tbody>
@@ -197,10 +199,18 @@ class InventoryList extends React.Component {
                )}
             </Motion>
 
-            <Motion style={{ x: $(this.state.selectedItemID ? 0 : 330) }}>
+            <Motion
+               style={{
+                  x: $(this.state.selectedItemID ? 0 : 350),
+                  opacity: $(this.state.selectedItemID ? 1 : 0)
+               }}
+            >
                {style => (
                   <InventoryForm
-                     style={{ transform: `translateX(${style.x}px)` }}
+                     style={{
+                        transform: `translateX(${style.x}px)`,
+                        opacity: style.opacity
+                     }}
                      selectedItemID={this.state.selectedItemID}
                      closePanel={this.closeSelectedItemPanel}
                   />

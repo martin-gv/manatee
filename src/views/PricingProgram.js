@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import Big from "big.js";
-// import Select from "react-select";
+import Select from "react-select";
 
-// import { setupOptions } from "../utility/utility";
+import { setupOptions } from "../utility/utility";
 import {
    fetchPricingColumn,
    fetchPricingRow,
@@ -37,7 +37,7 @@ class PricingProgramView extends React.Component {
       if (!ui || !item) {
          return;
       }
-      const id = item;
+      const itemID = item.value;
       const { columns, rows } = this.props;
       const filteredColumns = columns.filter(el => ui <= el.maxSize);
       if (filteredColumns.length > 0) {
@@ -47,7 +47,7 @@ class PricingProgramView extends React.Component {
       } else {
          return;
       }
-      const row = rows.find(el => el._id === id);
+      const row = rows.find(el => el._id === itemID);
       if (colNum === 0) {
          return row.minCharge;
       }
@@ -111,7 +111,7 @@ class PricingProgramView extends React.Component {
 
    render() {
       const { glass, mount } = this.state;
-      // const { rows } = this.props;
+      const { rows } = this.props;
 
       const ui = this.calculateUI();
       const glassCharge = this.calculateCharge(glass);
@@ -120,7 +120,7 @@ class PricingProgramView extends React.Component {
 
       return (
          <div className="card full-height">
-            <h2 style={{ marginBottom: 20 }}>Quote Calculator</h2>
+            <h2 style={{ marginBottom: 40 }}>Quote Calculator</h2>
             <div className="ui grid">
                <div className="five wide column">
                   <form className="ui form" style={{ marginBottom: 10 }}>
@@ -153,47 +153,62 @@ class PricingProgramView extends React.Component {
                   </form>
                   <div className="form-group">
                      <label>Glass</label>
-                     {/* <Select
-                        options={setupOptions(rows, "glass")}
-                        onChange={glass =>
-                           this.setState({ glass: glass && glass.value })
-                        }
+                     <Select
                         value={this.state.glass}
-                     /> */}
+                        onChange={glass => this.setState({ glass })}
+                        options={setupOptions(rows, "glass")}
+                        classNamePrefix="Select"
+                     />
                   </div>
                   <div className="form-group">
                      <label>Mount</label>
-                     {/* <Select
-                        options={setupOptions(rows, "mount")}
-                        onChange={mount =>
-                           this.setState({ mount: mount && mount.value })
-                        }
+                     <Select
                         value={this.state.mount}
-                     /> */}
+                        onChange={mount => this.setState({ mount })}
+                        options={setupOptions(rows, "mount")}
+                        classNamePrefix="Select"
+                     />
                   </div>
                </div>
-               <div className="eleven wide column">
-                  UI: {ui}
-                  <br />
-                  Glass: {glass && glass.label} - ${glassCharge}
-                  <br />
-                  Mount: {mount && mount.label} - ${mountCharge}
-                  <br />
-                  Total: ${total}
-                  <br />
-                  <button
-                     className="ui blue basic button"
-                     onClick={this.toggleModal}
-                     style={{ marginTop: 10 }}
-                  >
-                     <i className="material-icons">add_shopping_cart</i>
-                     Add to Invoice
-                  </button>
-                  <AddToInvoiceModal
-                     isOpen={this.state.showModal}
-                     toggle={this.toggleModal}
-                     addToOrder={(e, id) => this.addToOrder(e, id, total)}
-                  />
+               <div className="eight wide column">
+                  <div className="section">
+                     <h3 style={{ marginBottom: 20 }}>Quote Summary</h3>
+                     <table className="small" style={{ marginBottom: 10 }}>
+                        <tbody>
+                           <tr>
+                              <td style={{ width: 75 }}>UI:</td>
+                              <td>{ui}</td>
+                           </tr>
+                           <tr>
+                              <td>Glass:</td>
+                              <td>{glass && glass.label}</td>
+                           </tr>
+                           <tr>
+                              <td>Mount:</td>
+                              <td>{mount && mount.label}</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                     <div style={{ fontSize: 14 }}>
+                        Total:
+                        <span style={{ fontSize: 16, marginLeft: 12 }}>
+                           ${total}
+                        </span>
+                     </div>
+                     <button
+                        className="ui blue basic button"
+                        onClick={this.toggleModal}
+                        style={{ marginTop: 10 }}
+                     >
+                        <i className="material-icons">add_shopping_cart</i>
+                        Add to Invoice
+                     </button>
+                     <AddToInvoiceModal
+                        isOpen={this.state.showModal}
+                        toggle={this.toggleModal}
+                        addToOrder={(e, id) => this.addToOrder(e, id, total)}
+                     />
+                  </div>
                </div>
             </div>
          </div>

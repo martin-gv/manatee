@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import moment from "moment";
 import Big from "big.js";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
@@ -29,7 +30,11 @@ import {
    editRow
 } from "../../store/actions/orderRows";
 import { fetchInventoryByID } from "../../store/actions/inventory";
-import { fetchPayment, updatePayment } from "../../store/actions/payments";
+import {
+   fetchPayment,
+   updatePayment,
+   editPayment
+} from "../../store/actions/payments";
 import {
    fetchClientByID_v2,
    saveClient,
@@ -41,13 +46,15 @@ import {
    fetchPricingRow
 } from "../../store/actions/system";
 
+import OrderToolbar from "./OrderToolbar";
 import OrderRowDetail from "./Row/Detail";
 import OrderRowList from "./Row/List/List";
 import OrderPaymentList from "./Payment/List/List";
 
 class OrderForm extends React.Component {
    state = {
-      form: ["title", "description"],
+      form: ["title"],
+      clientsReady: false,
       modal: {
          item: false
       }
@@ -78,6 +85,7 @@ class OrderForm extends React.Component {
          const order = findByID(res, "orderID", id);
          this.props.fetchClientByID_v2(order.clientID).then(res => {
             this.props.loadClients(res);
+            this.setState({ clientsReady: true });
          });
       });
       this.props.fetchOrderRow(id).then(res => {
@@ -87,7 +95,7 @@ class OrderForm extends React.Component {
       this.props.fetchPricingRow();
    };
 
-   handleViewClientButton = () => {
+   viewClient = () => {
       this.props.history.push("/clients/" + this.props.order.clientID);
    };
 
@@ -191,29 +199,30 @@ class OrderForm extends React.Component {
       this.setState({ modal: { ...m, [modal]: !m[modal] } });
    };
 
-   addItem = (e, inventoryID) => {
-      e.preventDefault();
+   addItem = async inventoryID => {
       const {
          selectedRowId,
          fetchInventoryByID,
          updateOrderRow,
          editRow
       } = this.props;
-      fetchInventoryByID(inventoryID).then(res => {
-         if (found(res, 1)) {
-            const item = res[0];
-            const data = {
-               _id: selectedRowId,
-               inventoryItem: item._id
-            };
-            updateOrderRow(data).then(res => {
-               if (res) {
-                  editRow(selectedRowId, "inventoryItem", item);
-                  this.toggleModal("item");
-               }
-            });
+      const res = await fetchInventoryByID(inventoryID);
+      if (found(res, 1)) {
+         const item = res[0];
+         const data = {
+            _id: selectedRowId,
+            inventoryItem: item._id
+         };
+         const update = await updateOrderRow(data);
+         if (update) {
+            editRow(selectedRowId, "inventoryItem", item);
+            editRow(selectedRowId, "itemPrice", item.price);
+            this.updateTotal();
+            this.props.updateOrder(this.props.order);
+            this.toggleModal("item");
+            return true;
          }
-      });
+      }
    };
 
    removeItem = () => {
@@ -223,7 +232,12 @@ class OrderForm extends React.Component {
          inventoryItem: null
       };
       updateOrderRow(data).then(res => {
-         if (res) editRow(selectedRowId, "inventoryItem", null);
+         if (res) {
+            editRow(selectedRowId, "inventoryItem", null);
+            editRow(selectedRowId, "itemPrice", 0);
+            this.updateTotal();
+            this.props.updateOrder(this.props.order);
+         }
       });
    };
 
@@ -347,6 +361,7 @@ class OrderForm extends React.Component {
          // todo: add void reason
       };
       this.props.updateOrder(orderData);
+      this.props.editOrder(order.orderID, "void", true);
 
       orderRows.forEach(row => {
          const rowData = {
@@ -354,81 +369,86 @@ class OrderForm extends React.Component {
             ...voidUpdate
          };
          this.props.updateOrderRow(rowData);
+         this.props.editOrder(row._id, "void", true);
       });
 
       const res = await this.props.fetchPayment(order.orderID);
       res.forEach(payment => {
          this.props.updatePayment(payment.paymentID, voidUpdate);
+         this.props.editPayment(payment.paymentID, "void", true);
       });
    };
 
    render() {
       const {
          isDataLoaded,
+         isOrderRowDataLoaded,
          orderRows,
          selectedRowId,
-         pricingRows
+         pricingRows,
+         clients
       } = this.props;
+      const { clientsReady } = this.state;
 
       const order = this.props.order || {};
       const { orderID, total, paymentTotal, void: isVoid } = order;
+      // const client = findByID(clients, order.clientID, "clientID");
 
-      let form;
-      if (isDataLoaded) {
-         form = this.state.form.map(el => (
-            <div className="form-group" key={el}>
-               <label htmlFor={el}>{el}</label>
-               <input
-                  className="form-control"
-                  id={el}
-                  name={el}
-                  value={this.props.order[el] || ""}
-                  type="text"
-                  onChange={this.handleChange}
-               />
-            </div>
-         ));
-      }
+      // let form;
+      // if (isDataLoaded) {
+      //    form = this.state.form.map(el => (
+      //       <div className="form-group" key={el}>
+      //          <label htmlFor={el}>{el}</label>
+      //          <input
+      //             className="form-control"
+      //             id={el}
+      //             name={el}
+      //             value={this.props.order[el] || ""}
+      //             type="text"
+      //             onChange={this.handleChange}
+      //          />
+      //       </div>
+      //    ));
+      // }
       const checkRow = { ...orderRows.find(r => r._id === selectedRowId) };
       const loader = <div className="loader">Loading...</div>;
 
       return (
          <div className="card full-height">
-            {!isDataLoaded ? (
+            {!isDataLoaded || !isOrderRowDataLoaded || !clientsReady ? (
                loader
             ) : (
                <div className="ui grid">
-                  <div className="sixteen wide column">
-                     <h2>Invoice {orderID}</h2>
+                  <div className="eight wide column">
+                     <h2 style={{ display: "inline-block", marginBottom: 3 }}>
+                        Order #{orderID}
+                     </h2>
+                     <h3>
+                        {clients[0].firstName + " " + clients[0].lastName}{" "}
+                        <span style={{ color: "#5a5a5a", fontSize: 14 }}>
+                           Client ID {clients[0].clientID}
+                        </span>
+                     </h3>
+                     <div className="sub header" style={{ color: "#797979" }}>
+                        Created: {moment(order.createdAt).fromNow()}{" "}
+                        <span style={{ color: "#b9b9b9" }}>|</span> Updated:{" "}
+                        {moment(order.updatedAt).fromNow()}
+                     </div>
                   </div>
-                  <div className="ten wide column">
-                     <div className="section">
+                  <div className="eight wide column">
+                     <OrderToolbar
+                        isVoid={isVoid}
+                        void={this.void}
+                        viewClient={this.viewClient}
+                        print={this.print}
+                     />
+                  </div>
+                  <div
+                     className="eleven wide column"
+                     style={{ paddingRight: 0 }}
+                  >
+                     {/* <div className="section" style={{ marginTop: -10 }}>
                         {isVoid && <strong>VOIDED</strong>}
-                        <div style={{ float: "right", marginBottom: 20 }}>
-                           <button
-                              className="ui red basic button"
-                              disabled={isVoid}
-                              onClick={this.void}
-                           >
-                              <i className="material-icons">cancel</i>
-                              Void
-                           </button>
-                           <button
-                              className="ui basic button"
-                              onClick={this.handleViewClientButton}
-                           >
-                              <i className="material-icons">person</i>
-                              View Client
-                           </button>
-                           <button
-                              className="ui basic button"
-                              onClick={this.print}
-                              disabled={isVoid}
-                           >
-                              <i className="material-icons">print</i>
-                              Print
-                           </button>
-                        </div>
                         <form onSubmit={this.handleSubmit}>
                            {form}
                            <button
@@ -436,43 +456,46 @@ class OrderForm extends React.Component {
                               className="ui green basic button"
                               disabled={isVoid}
                            >
-                              <i className="material-icons">save</i>
                               Save
                            </button>
                         </form>
-                     </div>
-                     {this.props.isOrderRowDataLoaded && (
-                        <OrderRowDetail
-                           checkRow={checkRow}
-                           row={{
-                              ...orderRows.find(r => r._id === selectedRowId)
-                           }}
-                           selectedRowId={selectedRowId}
-                           onRowChange={this.onRowChange}
-                           saveRowButton={this.handleSaveRowButton}
-                           deleteRowButton={this.handleDeleteRowButton}
-                           glassOptions={setupOptions(pricingRows, "glass")}
-                           mountOptions={setupOptions(pricingRows, "mount")}
-                           addItem={this.addItem}
-                           removeItem={this.removeItem}
-                           toggleModal={this.toggleModal}
-                           modal={this.state.modal}
-                           updateTotal={this.updateTotal}
-                           isVoid={isVoid}
-                        />
-                     )}
+                     </div> */}
+                     <OrderRowDetail
+                        checkRow={checkRow}
+                        row={{
+                           ...orderRows.find(r => r._id === selectedRowId)
+                        }}
+                        selectedRowId={selectedRowId}
+                        onRowChange={this.onRowChange}
+                        saveRowButton={this.handleSaveRowButton}
+                        deleteRowButton={this.handleDeleteRowButton}
+                        glassOptions={setupOptions(pricingRows, "glass")}
+                        mountOptions={setupOptions(pricingRows, "mount")}
+                        addItem={this.addItem}
+                        removeItem={this.removeItem}
+                        toggleModal={this.toggleModal}
+                        modal={this.state.modal}
+                        updateTotal={this.updateTotal}
+                        isVoid={isVoid}
+                     />
                   </div>
-                  <div className="six wide column">
-                     {this.props.isOrderRowDataLoaded && (
-                        <OrderRowList
-                           rows={this.props.orderRows}
-                           selectedRowId={this.props.selectedRowId}
-                           newRowButton={this.handleNewRowButton}
-                           handleRowClick={id => this.handleRowClick(id)}
-                           total={total}
-                           isVoid={isVoid}
-                        />
-                     )}
+                  <div className="five wide column" style={{ paddingLeft: 0 }}>
+                     <OrderRowList
+                        rows={this.props.orderRows}
+                        selectedRowId={this.props.selectedRowId}
+                        newRowButton={this.handleNewRowButton}
+                        handleRowClick={id => this.handleRowClick(id)}
+                        total={total}
+                        isVoid={isVoid}
+                     />
+                     <div className="section" style={{ marginRight: 0 }}>
+                        Hello
+                     </div>
+                  </div>
+                  <div
+                     className="sixteen wide column"
+                     style={{ paddingTop: 30 }}
+                  >
                      <OrderPaymentList
                         orderID={orderID}
                         orderTotal={total}
@@ -519,6 +542,7 @@ export default connect(
       fetchInventoryByID,
       fetchPayment,
       updatePayment,
+      editPayment,
       setSelectedOrderRow,
       setDataLoadedStatus,
       resetDataLoadedStatus,

@@ -15,6 +15,7 @@ const InventoryListItem = props => {
                   onChange={e =>
                      props.onChange(inventoryID, "checked", e.target.checked)
                   }
+                  onClick={props.checkboxClick}
                />
                <label />
             </div>

@@ -28,10 +28,10 @@ export function addToInventory(item) {
    };
 }
 
-export function removeInventoryItem(id) {
+export function removeInventoryItem(inventoryID) {
    return {
       type: REMOVE_INVENTORY_ITEM,
-      id
+      inventoryID
    };
 }
 
@@ -147,10 +147,10 @@ export function deleteInventory(inventoryID) {
       return apiCall("delete", "/api/inventory/" + inventoryID)
          .then(res => {
             dispatch(removeError());
-            // fix this next call
             dispatch(removeInventoryItem(res.inventoryID));
-            const message = `Inventory item ${res.title} deleted successfully`;
-            dispatch(toggleModalV2(true, "Success", message));
+            const message = `${res.title} is now deleted`;
+            dispatch(toggleModalV2(true, "Item deleted!", message));
+            return res;
          })
          .catch(err => {
             dispatch(addError(err.message));

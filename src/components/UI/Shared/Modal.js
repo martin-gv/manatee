@@ -3,9 +3,10 @@ import { Motion, spring } from "react-motion";
 
 const modalStyle = {
    position: "fixed",
-   top: "25%",
+   top: 0,
+   marginTop: 60,
    left: "50%",
-   transform: "translate(-50%, -50%)",
+   transform: "translate(-50%)",
    minWidth: 350
 };
 

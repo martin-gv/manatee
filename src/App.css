@@ -1,15 +1,15 @@
 .main {
-   background-color: #f7f7f7;
    padding: 15px 35px 30px;
    margin-left: 170px;
+   max-width: 1300px;
 }
 
 .navbar {
    width: 100%;
+   max-width: 1470px;
    height: 55px;
    top: 0;
    margin-bottom: 0;
-   background-color: #f7f7f7;
    color: #333;
    padding-right: 0;
 }
@@ -57,6 +57,11 @@ h3 {
    font-size: 18px;
 }
 
+h4 {
+   font-weight: 400;
+   font-size: 15px;
+}
+
 /* Bootstrap */
 
 /* Modal */
@@ -76,6 +81,10 @@ h3 {
 
 .full-height {
    min-height: 83vh;
+}
+
+.form-control:focus {
+   box-shadow: none;
 }
 
 table {
@@ -170,6 +179,19 @@ table.small th {
    border-radius: 30px;
 }
 
+.ui.green.button {
+   background-color: #1da36b;
+}
+
+.ui.green.button:hover,
+.ui.green.button:focus {
+   background-color: #1eb676;
+}
+
+.ui.green.button:active {
+   background-color: #1eb676;
+}
+
 /* Utility */
 .text-center {
    text-align: center;
@@ -208,6 +230,10 @@ table.small th {
    width: 550px;
 }
 
+.DayPickerInput .DayPicker-Day {
+   border-radius: 0;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
 }
@@ -226,4 +252,17 @@ table.small th {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
    background: rgb(158, 158, 158);
+}
+
+/* React Select */
+
+.Select__control {
+   border-color: gainsboro !important;
+   background-color: #fff !important;
+   box-shadow: none !important;
+   cursor: text !important;
+}
+
+.Select__control:hover {
+   border-color: #adadad;
 }

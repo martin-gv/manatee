@@ -9,20 +9,20 @@ const CompanyOrders = props => {
    ));
 
    return (
-      <table
-         className="small hover clickable"
-         style={{ marginBottom: 20, marginTop: 82 }}
-      >
-         <thead>
-            <tr>
-               <th>Invoice #</th>
-               <th>Client ID</th>
-               <th>Date Created</th>
-               <th>Title</th>
-            </tr>
-         </thead>
-         <tbody>{rows}</tbody>
-      </table>
+      <div className="section" style={{ marginTop: 92 }}>
+         <h3>Orders</h3>
+         <table className="small hover clickable">
+            <thead>
+               <tr>
+                  <th>Invoice #</th>
+                  <th>Client ID</th>
+                  <th>Date Created</th>
+                  <th>Title</th>
+               </tr>
+            </thead>
+            <tbody>{rows}</tbody>
+         </table>
+      </div>
    );
 };
 

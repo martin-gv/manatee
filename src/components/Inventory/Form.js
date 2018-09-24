@@ -26,13 +26,13 @@ class InventoryForm extends React.Component {
       this.props.updateInventory(this.props.item);
    };
 
-   handleDeleteButton = () => {
-      // this.props.closePanel();
-      this.props.deleteInventory(this.props.item.inventoryID);
+   handleDeleteButton = async () => {
+      await this.props.deleteInventory(this.props.item.inventoryID);
+      this.props.closePanel();
    };
 
    render() {
-      const { inventoryID, price } = this.props.item;
+      const { inventoryID, title, price } = this.props.item;
 
       const fields = Object.keys(this.state.formData).map(el => (
          <div className="form-group" key={el}>
@@ -59,7 +59,7 @@ class InventoryForm extends React.Component {
                ...this.props.style
             }}
          >
-            <h3>{this.props.item.title || ""}</h3>
+            <h3>{title || ""}</h3>
             <div>Inventory ID: {inventoryID}</div>
             <form
                className="ui form"
@@ -78,6 +78,9 @@ class InventoryForm extends React.Component {
                      onChange={this.handleChange}
                   />
                </div>
+               <button style={{ display: "none" }} />
+            </form>
+            <div style={{ marginTop: 20 }}>
                <button
                   className="ui red basic button"
                   onClick={this.handleDeleteButton}
@@ -85,11 +88,11 @@ class InventoryForm extends React.Component {
                   <i className="material-icons">delete</i>
                   Delete
                </button>
-               <button className="ui green button">
+               <button className="ui green button" onClick={this.handleSubmit}>
                   <i className="material-icons">save</i>
                   Save
                </button>
-            </form>
+            </div>
          </div>
       );
    }
