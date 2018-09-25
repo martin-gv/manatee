@@ -3,6 +3,7 @@ export const SET_IDLE_TIMEOUT = "SET_IDLE_TIMEOUT";
 
 // Users
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
+export const LOAD_USERS = "LOAD_USERS";
 
 // Errors
 export const ADD_ERROR = "ADD_ERROR";

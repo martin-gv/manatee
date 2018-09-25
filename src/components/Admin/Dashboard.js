@@ -13,10 +13,11 @@ import {
 } from "../../store/actions/dev";
 import { createClient } from "../../store/actions/clients";
 import { updateOrder } from "../../store/actions/orders";
-import { createUser } from "../../store/actions/users";
+import { createUser, fetchUser, loadUsers } from "../../store/actions/users";
 
 class AdminDashboard extends React.Component {
    state = {
+      loading: false,
       firstName: "",
       lastName: "",
       email: "",
@@ -24,8 +25,14 @@ class AdminDashboard extends React.Component {
       password: ""
    };
 
+   async componentDidMount() {
+      const res = await this.props.fetchUser();
+      this.props.loadUsers(res);
+   }
+
    reset = () => {
       this.setState({
+         loading: false,
          firstName: "",
          lastName: "",
          email: "",
@@ -108,14 +115,22 @@ class AdminDashboard extends React.Component {
 
    createUser = async e => {
       e.preventDefault();
-      const res = await this.props.createUser(this.state);
-      console.log(res);
-      if (res) {
-         this.reset();
-      }
+      this.setState({ loading: true });
+      await this.props.createUser({
+         firstName: this.state.firstName,
+         lastName: this.state.lastName,
+         email: this.state.email,
+         username: this.state.username,
+         password: this.state.password
+      });
+      const res = await this.props.fetchUser();
+      this.props.loadUsers(res);
+      this.reset();
    };
 
    render() {
+      const { users } = this.props;
+
       return (
          <div className="card full-height">
             <h2>Admin Dashboard</h2>
@@ -196,13 +211,47 @@ class AdminDashboard extends React.Component {
                                  }
                               />
                            </div>
-                           <button className="ui button">Submit</button>
+                           <button
+                              className={
+                                 "ui button" +
+                                 (this.state.loading ? " loading" : "")
+                              }
+                           >
+                              Submit
+                           </button>
                         </form>
                      </div>
                   </div>
                   <div className="seven wide column">
                      <div className="section">
                         <h3 style={{ marginBottom: 20 }}>Users</h3>
+                        {!users.length ? (
+                           <div className="loader">Loading...</div>
+                        ) : (
+                           <table
+                              className="small"
+                              style={{ marginBottom: 10 }}
+                           >
+                              <tbody>
+                                 {users.map(user => {
+                                    return (
+                                       <tr key={user._id}>
+                                          <td
+                                             style={{ width: 75 }}
+                                             style={{ padding: "12px 0" }}
+                                          >
+                                             <strong>{user.username}</strong>
+                                             <br />
+                                             {user.firstName} {user.lastName}
+                                             <br />
+                                             {user.email}
+                                          </td>
+                                       </tr>
+                                    );
+                                 })}
+                              </tbody>
+                           </table>
+                        )}
                      </div>
                   </div>
                </div>
@@ -212,8 +261,14 @@ class AdminDashboard extends React.Component {
    }
 }
 
+function mapStateToProps(state) {
+   return {
+      users: state.users.users
+   };
+}
+
 export default connect(
-   null,
+   mapStateToProps,
    {
       createClient,
       generateClients,
@@ -221,6 +276,8 @@ export default connect(
       generateOrder,
       generateRow,
       updateOrder,
-      createUser
+      createUser,
+      fetchUser,
+      loadUsers
    }
 )(AdminDashboard);

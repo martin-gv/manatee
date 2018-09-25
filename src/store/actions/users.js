@@ -1,14 +1,15 @@
 import { apiCall } from "../../services/api";
 import { addError, removeError } from "./errors";
+import { LOAD_USERS } from "../actionTypes";
 
 // LOCAL ACTIONS
 
-// export function loadPayments(data) {
-//    return {
-//       type: LOAD_PAYMENTS,
-//       data
-//    };
-// }
+export function loadUsers(data) {
+   return {
+      type: LOAD_USERS,
+      data
+   };
+}
 
 // export function addNewPayment(obj) {
 //    return {
@@ -41,19 +42,18 @@ export function createUser(data) {
    };
 }
 
-// export function fetchPayment(orderID) {
-//    return dispatch => {
-//       return apiCall("get", "/api/payments", { params: { orderID } }) // no parameter returns all records
-//          .then(res => {
-//             dispatch(removeError());
-//             dispatch(loadPayments(res));
-//             return res;
-//          })
-//          .catch(err => {
-//             dispatch(addError(err.message));
-//          });
-//    };
-// }
+export function fetchUser() {
+   return dispatch => {
+      return apiCall("get", "/api/users")
+         .then(res => {
+            dispatch(removeError());
+            return res;
+         })
+         .catch(err => {
+            dispatch(addError(err.message));
+         });
+   };
+}
 
 // export function updatePayment(paymentID, data) {
 //    return dispatch => {
