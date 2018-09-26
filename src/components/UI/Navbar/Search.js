@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Search } from "semantic-ui-react";
 
-// import _ from "lodash";
-
 import { fetchClient } from "../../../store/actions/clients";
 import { fetchOrderByID } from "../../../store/actions/orders";
 import { resetDataLoadedStatus } from "../../../store/actions/system";
@@ -38,13 +36,28 @@ class GlobalSearch extends React.Component {
                if (Number.isInteger(id)) {
                   this.props.fetchOrderByID(id).then(res => {
                      const orders = res.map(this.formatOrderResults);
-                     const results = {
-                        clients: {
+
+                     const clientResults = {};
+                     if (clients.length > 0) {
+                        clientResults.clients = {
                            name: "Clients",
                            results: clients
-                        },
-                        orders: { name: "Orders", results: orders }
+                        };
+                     }
+
+                     const orderResults = {};
+                     if (orders.length > 0) {
+                        orderResults.orders = {
+                           name: "Orders",
+                           results: orders
+                        };
+                     }
+
+                     const results = {
+                        ...clientResults,
+                        ...orderResults
                      };
+
                      this.setState({ loading: false, results });
                   });
                } else {

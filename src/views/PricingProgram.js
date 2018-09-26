@@ -174,9 +174,9 @@ class PricingProgramView extends React.Component {
                      <label>Glass</label>
                      <Select
                         value={this.state.glass}
-                        onChange={e => {
-                           this.setState({ glass: e.value ? e : null });
-                        }}
+                        onChange={e =>
+                           this.setState({ glass: e.value ? e : null })
+                        }
                         options={setupOptions(rows, "glass")}
                         classNamePrefix="Select"
                      />
@@ -186,8 +186,7 @@ class PricingProgramView extends React.Component {
                      <Select
                         value={this.state.mount}
                         onChange={e =>
-                           this.setState({ mount: e.value ? e : null });
-
+                           this.setState({ mount: e.value ? e : null })
                         }
                         options={setupOptions(rows, "mount")}
                         classNamePrefix="Select"
