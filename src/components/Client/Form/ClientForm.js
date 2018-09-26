@@ -224,7 +224,7 @@ class ClientForm extends Component {
                   close={this.toggleModal}
                   submit={this.saveSecureNotes}
                   client={client || {}}
-                  // onChange={this.handleChange}
+                  onChange={this.onChange}
                />
                <CompanyModal
                   open={modal.company}

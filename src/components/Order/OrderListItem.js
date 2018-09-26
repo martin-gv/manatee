@@ -5,7 +5,7 @@ const Item = props => {
    const {
       orderID,
       createdAt,
-      title,
+      clientID,
       total,
       paymentTotal,
       onClick,
@@ -22,8 +22,8 @@ const Item = props => {
          <td>
             {orderID} {isVoid && <strong>VOID</strong>}
          </td>
+         <td>{clientID}</td>
          <td style={voidedStyle}>{moment(createdAt).format("MMM Do YYYY")}</td>
-         <td style={voidedStyle}>{title}</td>
          <td style={voidedStyle}>${total}</td>
          <td style={voidedStyle}>${paymentTotal}</td>
       </tr>

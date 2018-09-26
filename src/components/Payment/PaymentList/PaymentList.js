@@ -9,7 +9,6 @@ import {
    searchPayments,
    loadPayments
 } from "../../../store/actions/payments";
-import { found } from "../../../utility/utility";
 
 import Toolbar from "./Toolbar";
 import Head from "./TableHead";
@@ -19,6 +18,7 @@ import DateRangePicker from "../../UI/Shared/DateRangePicker";
 class PaymentList extends React.Component {
    state = {
       ready: false,
+      searching: false,
       from: undefined,
       to: undefined,
       data: [
@@ -34,8 +34,8 @@ class PaymentList extends React.Component {
    };
 
    async componentDidMount() {
-      const res = await this.props.fetchPayment();
-      if (found(res)) this.setState({ ready: true });
+      await this.props.fetchPayment();
+      this.setState({ ready: true });
    }
 
    rowClick = orderID => {
@@ -61,11 +61,13 @@ class PaymentList extends React.Component {
    // }
 
    search = async () => {
+      this.setState({ searching: true });
       let { from, to } = this.state;
       from = moment(from).startOf("day");
       to = moment(to).endOf("day");
       const res = await this.props.searchPayments({ from, to });
       this.props.loadPayments(res);
+      this.setState({ searching: false });
    };
 
    download = () => {
@@ -130,7 +132,15 @@ class PaymentList extends React.Component {
                   </div>
                   <table style={{ marginTop: 30 }}>
                      <Head />
-                     <tbody>{rows}</tbody>
+                     <tbody>
+                        {this.state.searching ? (
+                           <tr>
+                              <td colSpan="6">{loader}</td>
+                           </tr>
+                        ) : (
+                           rows
+                        )}
+                     </tbody>
                   </table>
                </div>
             )}

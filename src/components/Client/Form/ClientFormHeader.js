@@ -3,14 +3,7 @@ import moment from "moment";
 
 const ClientFormHeader = props => {
    const { client, company, toggleModal } = props;
-   const {
-      clientID,
-      firstName,
-      lastName,
-      createdAt,
-      updatedAt,
-      framingRewards
-   } = client;
+   const { clientID, firstName, lastName, createdAt, updatedAt } = client;
    const { companyID } = company;
 
    return (
@@ -41,7 +34,6 @@ const ClientFormHeader = props => {
                <button
                   className="ui yellow basic button"
                   onClick={() => toggleModal("rewards")}
-                  disabled={framingRewards && !framingRewards.length}
                >
                   <i className="gift icon" />
                   Rewards

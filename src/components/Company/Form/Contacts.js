@@ -56,7 +56,7 @@ const Contacts = props => {
    ));
 
    return (
-      <div className="section">
+      <div className="section" style={{marginRight: 0}}>
          <h4 style={{ marginBottom: 20 }}>Company Contacts</h4>
          {contacts}
          <hr />

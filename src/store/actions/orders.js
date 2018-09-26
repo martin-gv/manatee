@@ -66,6 +66,7 @@ export function fetchOrder() {
             dispatch(removeError());
             dispatch(loadOrders(res));
             dispatch(setDataLoadedStatus("orderList"));
+            return res;
          })
          .catch(err => {
             dispatch(addError(err.message));

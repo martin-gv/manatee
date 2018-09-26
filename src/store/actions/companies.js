@@ -63,22 +63,18 @@ export function removeCompanyContact(companyID, id) {
 
 // DATABASE API CALLS
 
-// export function createOrderRow(orderId, rowNum) {
-//    return dispatch => {
-//       return apiCall("post", `/api/order_rows`, {
-//          row: { orderId, rowNum }
-//       })
-//          .then(res => {
-//             dispatch(removeError());
-//             dispatch(addNewOrderRow(res));
-//             dispatch(setSelectedOrderRow(res._id));
-//             return res;
-//          })
-//          .catch(err => {
-//             dispatch(addError(err.message));
-//          });
-//    };
-// }
+export function createCompany(data) {
+   return dispatch => {
+      return apiCall("post", "/api/companies", { company: data })
+         .then(res => {
+            dispatch(removeError());
+            return res;
+         })
+         .catch(err => {
+            dispatch(addError(err.message));
+         });
+   };
+}
 
 export function fetchCompany(companyID) {
    return dispatch => {

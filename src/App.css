@@ -126,7 +126,7 @@ table td {
 
 .section {
    margin-top: 20px;
-   border: 1px solid #ddd;
+   border: 1px solid #cad4db;
    padding: 20px;
    border-radius: 5px;
    /* width: 250px; */
@@ -156,6 +156,7 @@ table.small th {
 .ui.button {
    padding: 10px 20px;
    margin-right: 10px;
+   margin-bottom: 10px;
    min-width: 100px;
 }
 

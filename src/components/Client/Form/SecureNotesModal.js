@@ -11,7 +11,9 @@ const SecureNotesModal = props => {
                <textarea
                   name="secureNotes"
                   value={client.secureNotes}
-                  onChange={onChange}
+                  onChange={({ target }) =>
+                     onChange("secureNotes", target.value)
+                  }
                />
             </div>
             <button className="ui green basic button">Save</button>

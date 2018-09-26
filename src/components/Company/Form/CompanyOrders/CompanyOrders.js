@@ -9,7 +9,7 @@ const CompanyOrders = props => {
    ));
 
    return (
-      <div className="section" style={{ marginTop: 92 }}>
+      <div className="section" style={{ marginRight: 0 }}>
          <h3>Orders</h3>
          <table className="small hover clickable">
             <thead>

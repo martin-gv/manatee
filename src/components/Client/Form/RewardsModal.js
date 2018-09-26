@@ -28,8 +28,10 @@ const RewardsModal = props => {
 
    return (
       <Modal open={open} close={() => close("rewards")}>
-         <h3>Framing Rewards</h3>
-         {cards}
+         <h3 style={{marginBottom: 20}}>Framing Rewards</h3>
+         {cards.length ? cards : (
+            <div>No rewards yet</div>
+         )}
       </Modal>
    );
 };

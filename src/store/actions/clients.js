@@ -35,10 +35,10 @@ export function editClient(clientID, field, value) {
 
 // DATABASE API CALLS
 
-export function fetchClient(search, tagSearch) {
+export function fetchClient(search, tagSearch, all) {
    return dispatch => {
       return apiCall("get", "/api/clients", {
-         params: { search, tagSearch: tagSearch }
+         params: { search: search, tagSearch: tagSearch, all: all }
       })
          .then(res => {
             dispatch(removeError());

@@ -24,7 +24,7 @@ import Toolbar from "./Toolbar";
 
 const form = [
    { name: "name", label: "Name" },
-   { name: "address1", label: "Address" },
+   { name: "address", label: "Address" },
    { name: "city", label: "City" },
    { name: "province", label: "Province" },
    { name: "country", label: "Country" },
@@ -166,65 +166,75 @@ class CompanyForm extends React.Component {
          <div className="card full-height">
             {loader}
             {ready && (
-               <div className="ui grid">
-                  <div className="five wide column">
-                     <h2 style={{ marginBottom: 40 }}>{company.name}</h2>
-                     <CompanyInfo
-                        form={form}
-                        onSubmit={this.onSubmit}
-                        onChange={this.onChange}
-                        company={company}
-                     />
-                  </div>
-                  <div className="eleven wide column">
-                     <Toolbar
-                        newOrder={() => this.toggleModal("newOrderModal")}
-                     />
-                     <Orders orders={orders} rowClick={this.viewOrder} />
-                     <div className="ui grid">
-                        <div
-                           className="five wide column"
-                           style={{ paddingRight: 0 }}
-                        >
-                           <PrimaryContact
-                              {...company.primaryContact}
-                              remove={this.removePrimaryContact}
-                           />
-                        </div>
-                        <div
-                           className="eleven wide column"
-                           style={{ paddingLeft: 0 }}
-                        >
-                           <Contacts
-                              contacts={company.contacts || []}
-                              addButton={() =>
-                                 this.toggleModal("addContactModal")
-                              }
-                              removeButton={id =>
-                                 this.removeContact(id, company)
-                              }
-                              makePrimaryButton={this.makePrimaryContact}
-                           />
-                        </div>
+               <div>
+                  <div className="ui grid">
+                     <div className="eleven wide column">
+                        <h2>{company.name}</h2>
+                     </div>
+                     <div className="five wide column">
+                        <Toolbar
+                           newOrder={() => this.toggleModal("newOrderModal")}
+                        />
                      </div>
                   </div>
-                  <AddContactModal
-                     open={addContactModal}
-                     toggle={() => this.toggleModal("addContactModal")}
-                     submit={this.addContact}
-                     value={modalInput}
-                     onChange={e =>
-                        this.setState({ modalInput: e.target.value })
-                     }
-                  />
-                  <NewOrderModal
-                     contacts={contacts}
-                     open={newOrderModal}
-                     toggle={() => this.toggleModal("newOrderModal")}
-                     selectedID={selectedContactID}
-                     onSelect={ID => this.setState({ selectedContactID: ID })}
-                     submit={this.newOrder}
-                  />
+                  <div className="ui grid">
+                     <div className="five wide column">
+                        <CompanyInfo
+                           form={form}
+                           onSubmit={this.onSubmit}
+                           onChange={this.onChange}
+                           company={company}
+                        />
+                     </div>
+                     <div className="eleven wide column">
+                        <Orders orders={orders} rowClick={this.viewOrder} />
+                        <div className="ui grid">
+                           <div
+                              className="five wide column"
+                              style={{ paddingRight: 0 }}
+                           >
+                              <PrimaryContact
+                                 {...company.primaryContact}
+                                 remove={this.removePrimaryContact}
+                              />
+                           </div>
+                           <div
+                              className="eleven wide column"
+                              style={{ paddingLeft: 0 }}
+                           >
+                              <Contacts
+                                 contacts={company.contacts || []}
+                                 addButton={() =>
+                                    this.toggleModal("addContactModal")
+                                 }
+                                 removeButton={id =>
+                                    this.removeContact(id, company)
+                                 }
+                                 makePrimaryButton={this.makePrimaryContact}
+                              />
+                           </div>
+                        </div>
+                     </div>
+                     <AddContactModal
+                        open={addContactModal}
+                        toggle={() => this.toggleModal("addContactModal")}
+                        submit={this.addContact}
+                        value={modalInput}
+                        onChange={e =>
+                           this.setState({ modalInput: e.target.value })
+                        }
+                     />
+                     <NewOrderModal
+                        contacts={contacts}
+                        open={newOrderModal}
+                        toggle={() => this.toggleModal("newOrderModal")}
+                        selectedID={selectedContactID}
+                        onSelect={ID =>
+                           this.setState({ selectedContactID: ID })
+                        }
+                        submit={this.newOrder}
+                     />
+                  </div>
                </div>
             )}
          </div>

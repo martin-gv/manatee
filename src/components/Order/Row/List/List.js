@@ -19,13 +19,13 @@ const OrderRowList = props => {
    //    return total.toString();
    // }, 0);
 
-   const js = props.rows.reduce((acc, current) => {
-      return (
-         acc +
-         (parseFloat(current.price) || 0) +
-         (parseFloat(current.itemPrice) || 0)
-      );
-   }, 0);
+   // const js = props.rows.reduce((acc, current) => {
+   //    return (
+   //       acc +
+   //       (parseFloat(current.price) || 0) +
+   //       (parseFloat(current.itemPrice) || 0)
+   //    );
+   // }, 0);
 
    const { total, isVoid } = props;
 
@@ -66,7 +66,7 @@ const OrderRowList = props => {
          <div style={{ fontSize: 16, textAlign: "right" }}>
             Order Total: <span>${total}</span>
          </div>
-         <div style={{ textAlign: "right" }}>JS: ${js}</div>
+         {/* <div style={{ textAlign: "right" }}>JS: ${js}</div> */}
          {/* <strong>Total (Local): ${orderTotal}</strong> */}
       </div>
    );

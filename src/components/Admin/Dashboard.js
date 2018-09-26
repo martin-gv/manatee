@@ -6,18 +6,21 @@ import f from "faker";
 import { randPrice } from "../../utility/utility";
 
 import {
-   generateClients,
    generateInventory,
    generateOrder,
-   generateRow
+   generateRow,
+   generatePayments
 } from "../../store/actions/dev";
-import { createClient } from "../../store/actions/clients";
-import { updateOrder } from "../../store/actions/orders";
+import { createClient, fetchClient } from "../../store/actions/clients";
+import { createCompany } from "../../store/actions/companies";
+import { fetchOrder, updateOrder } from "../../store/actions/orders";
 import { createUser, fetchUser, loadUsers } from "../../store/actions/users";
+import { toggleModalV2 } from "../../store/actions/system";
 
 class AdminDashboard extends React.Component {
    state = {
       loading: false,
+      generating: false,
       firstName: "",
       lastName: "",
       email: "",
@@ -42,11 +45,14 @@ class AdminDashboard extends React.Component {
    };
 
    orders = async () => {
-      const orders = await this.props.generateOrder();
+      this.setState({ generating: true });
+
+      const clients = await this.props.fetchClient(null, null, true);
+      const orders = await this.props.generateOrder(clients);
       const rowData = orders.reduce((acc, cur) => {
          const { orderID } = cur;
          let i = 1;
-         while (i <= 25) {
+         while (i <= 4) {
             acc.push({
                orderID,
                rowNum: i,
@@ -74,17 +80,18 @@ class AdminDashboard extends React.Component {
             return Number(sum);
          }, 0);
          const orderData = { orderID: key, total };
-         this.props.updateOrder(orderData);
+         await this.props.updateOrder(orderData);
       }
+      this.setState({ generating: false });
    };
 
    clients = async () => {
-      const client = []; // array of clients
+      this.setState({ generating: true });
+      const clients = []; // array of clientss
+      const num = 100;
       let n = 0;
-      while (n < 100) {
-         const clientID = n + 1;
-         client.push({
-            clientID,
+      while (n < num) {
+         clients.push({
             firstName: f.name.firstName(),
             lastName: f.name.lastName(),
             phone: this.randomPhoneNum(),
@@ -93,11 +100,21 @@ class AdminDashboard extends React.Component {
             city: f.address.city(),
             province: f.address.stateAbbr(),
             postalCode: f.address.zipCode(),
-            country: "Canada"
+            country: "Canada",
+            notes: f.lorem.sentences(),
+            secureNotes: f.lorem.sentence()
          });
          n++;
       }
-      await this.props.createClient({ client });
+      await this.props.createClient({ clients });
+      this.props.toggleModalV2(true, "Done", `${num} new clients created`);
+      this.setState({ generating: false });
+   };
+
+   inventory = async () => {
+      this.setState({ generating: true });
+      await this.props.generateInventory();
+      this.setState({ generating: false });
    };
 
    randomPhoneNum = () => {
@@ -128,6 +145,56 @@ class AdminDashboard extends React.Component {
       this.reset();
    };
 
+   companies = async () => {
+      this.setState({ generating: true });
+      const companies = []; // array of clients
+      const num = 100;
+      let n = 0;
+      while (n < num) {
+         companies.push({
+            name: f.company.companyName(),
+            address: f.address.streetAddress(),
+            city: f.address.city(),
+            province: f.address.stateAbbr(),
+            postalCode: f.address.zipCode(),
+            country: "Canada"
+         });
+         n++;
+      }
+      await this.props.createCompany(companies);
+      this.props.toggleModalV2(true, "Done", `${num} new companies created`);
+      this.setState({ generating: false });
+   };
+
+   payments = async () => {
+      this.setState({ generating: true });
+      const orders = await this.props.fetchOrder();
+      const payments = await this.props.generatePayments(orders);
+
+      const paymentDictionary = payments.reduce((acc, cur) => {
+         const { orderID } = cur;
+         if (!acc[orderID]) acc[orderID] = [];
+         acc[orderID].push(cur);
+         return acc;
+      }, {});
+
+      for (const key in paymentDictionary) {
+         const paymentTotal = paymentDictionary[key].reduce((acc, cur) => {
+            const sum = Big(acc).plus(Big(cur.amountPaid || 0));
+            return Number(sum);
+         }, 0);
+         const orderData = { orderID: key, paymentTotal };
+         await this.props.updateOrder(orderData);
+      }
+
+      this.props.toggleModalV2(
+         true,
+         "Done",
+         `${payments.length} new payments created`
+      );
+      this.setState({ generating: false });
+   };
+
    render() {
       const { users } = this.props;
 
@@ -135,18 +202,6 @@ class AdminDashboard extends React.Component {
          <div className="card full-height">
             <h2>Admin Dashboard</h2>
             <div style={{ marginTop: 10 }}>
-               <button
-                  className="ui basic button"
-                  onClick={this.props.generateInventory}
-               >
-                  Generate Inventory
-               </button>
-               <button className="ui basic button" onClick={this.orders}>
-                  Orders
-               </button>
-               <button className="ui basic button" onClick={this.clients}>
-                  Clients
-               </button>
                <div className="ui grid">
                   <div className="nine wide column">
                      <div className="section">
@@ -221,6 +276,46 @@ class AdminDashboard extends React.Component {
                            </button>
                         </form>
                      </div>
+                     <div className="section">
+                        <h3>Generate Example Data</h3>
+                        <div>Generating data may take up to 90 seconds</div>
+                        {this.state.generating ? (
+                           <div className="loader" />
+                        ) : (
+                           <div style={{ marginTop: 20 }}>
+                              <button
+                                 className="ui basic button"
+                                 onClick={this.clients}
+                              >
+                                 Clients
+                              </button>
+                              <button
+                                 className="ui basic button"
+                                 onClick={this.companies}
+                              >
+                                 Companies
+                              </button>
+                              <button
+                                 className="ui basic button"
+                                 onClick={this.orders}
+                              >
+                                 Orders
+                              </button>
+                              <button
+                                 className="ui basic button"
+                                 onClick={this.payments}
+                              >
+                                 Payments
+                              </button>
+                              <button
+                                 className="ui basic button"
+                                 onClick={this.inventory}
+                              >
+                                 Inventory
+                              </button>
+                           </div>
+                        )}
+                     </div>
                   </div>
                   <div className="seven wide column">
                      <div className="section">
@@ -236,15 +331,14 @@ class AdminDashboard extends React.Component {
                                  {users.map(user => {
                                     return (
                                        <tr key={user._id}>
-                                          <td
-                                             style={{ width: 75 }}
-                                             style={{ padding: "12px 0" }}
-                                          >
+                                          <td style={{ padding: "12px 0" }}>
+                                             Username:{" "}
                                              <strong>{user.username}</strong>
                                              <br />
-                                             {user.firstName} {user.lastName}
+                                             Name: {user.firstName}{" "}
+                                             {user.lastName}
                                              <br />
-                                             {user.email}
+                                             Email: {user.email}
                                           </td>
                                        </tr>
                                     );
@@ -271,13 +365,17 @@ export default connect(
    mapStateToProps,
    {
       createClient,
-      generateClients,
+      fetchClient,
+      createCompany,
       generateInventory,
       generateOrder,
       generateRow,
+      generatePayments,
+      fetchOrder,
       updateOrder,
       createUser,
       fetchUser,
-      loadUsers
+      loadUsers,
+      toggleModalV2
    }
 )(AdminDashboard);

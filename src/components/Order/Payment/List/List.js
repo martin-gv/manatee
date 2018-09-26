@@ -107,11 +107,11 @@ class OrderPaymentList extends React.Component {
       ));
 
       // const total = sum(payments, "amountPaid");
-      const js = payments
-         .map(el => el.amountPaid || 0)
-         .reduce((acc, current) => {
-            return acc + current;
-         }, 0);
+      // const js = payments
+      //    .map(el => el.amountPaid || 0)
+      //    .reduce((acc, current) => {
+      //       return acc + current;
+      //    }, 0);
 
       const voidStyle = { borderRadius: isVoid ? "5px" : "5px 0 0 5px" };
 
@@ -127,7 +127,7 @@ class OrderPaymentList extends React.Component {
                   <div style={{ fontSize: 16 }}>
                      Payments: <span>${paymentTotal}</span>
                   </div>
-                  <div>JS: ${js}</div>
+                  {/* <div>JS: ${js}</div> */}
                   {/* <strong>Total (Local): ${total}</strong> */}
                </div>
             </div>

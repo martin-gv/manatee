@@ -5,24 +5,6 @@ import { apiCall } from "../../services/api";
 import { addError, removeError } from "./errors";
 import { toggleModalV2 } from "./system";
 
-export const generateClients = async () => {
-   //    const client = []; // array of clients
-   //    let n = 0;
-   //    while (n < 100) {
-   //       const clientId = n + 1;
-   //       client.push({
-   //          clientId,
-   //          firstName: f.name.firstName,
-   //          lastName: f.name.lastName,
-   //          phone: f.phone.phoneNumberFormat,
-   //          email: f.internet.email
-   //       });
-   //       n++;
-   //    }
-   //    const res = await createClient({ client });
-   //    console.log(res);
-};
-
 export function generateInventory(quantity) {
    const items = [];
    for (let i = 0; i < 1000; i++) {
@@ -37,12 +19,11 @@ export function generateInventory(quantity) {
    }
 
    return dispatch => {
-      return apiCall("post", `/api/inventory`, { inventory: items })
+      return apiCall("post", "/api/inventory", { inventory: items })
          .then(res => {
             dispatch(removeError());
-            dispatch(
-               toggleModalV2(true, "New Inventory Items Created", res.length)
-            );
+            dispatch(toggleModalV2(true, "Done", "1000 new items created"));
+            return;
          })
          .catch(err => {
             dispatch(addError(err.message));
@@ -50,21 +31,62 @@ export function generateInventory(quantity) {
    };
 }
 
-export function generateOrder(quantity) {
-   const clientID = 6;
+export function generateOrder(clients) {
    const orders = [];
    const date = moment();
 
-   var i = 0;
-   while (i < 10) {
-      const createdAt = date.subtract(1, "day").toDate();
-      orders.push({ clientID, createdAt });
-      i++;
-   }
+   clients.forEach(client => {
+      const num = Math.floor(Math.random() * 3 + 1);
+      let i = 0;
+      while (i < num) {
+         const createdAt = date.subtract(1, "day").toDate();
+         orders.push({ clientID: client.clientID, createdAt });
+         i++;
+      }
+   });
+
    orders.reverse();
 
    return dispatch => {
       return apiCall("post", "/api/orders", { orders })
+         .then(res => {
+            dispatch(removeError());
+            return res;
+         })
+         .catch(err => {
+            dispatch(addError(err.message));
+         });
+   };
+}
+
+export function generatePayments(orders) {
+   const payments = [];
+   orders.forEach(order => {
+      const numberOfPayments = Math.floor(Math.random() * 3 + 1);
+      const orderDate = moment(order.createdAt);
+      let i = 0;
+      while (i < numberOfPayments) {
+         // first payment is made when order is placed
+         let datePaid = orderDate;
+         const paymentNum = i + 1;
+         if (i !== 0) {
+            // additional payments are made 1 - 3 weeks after
+            const randNumOfDays = Math.floor(Math.random() * 14 + 7);
+            datePaid = orderDate.add(randNumOfDays, "day").toDate();
+         }
+         const amountPaid = Math.floor(Math.random() * 200 + 100);
+         payments.push({
+            orderID: order.orderID,
+            paymentNum,
+            amountPaid,
+            datePaid
+         });
+         i++;
+      }
+   });
+
+   return dispatch => {
+      return apiCall("post", "/api/payments", { payment: payments })
          .then(res => {
             dispatch(removeError());
             return res;

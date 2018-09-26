@@ -3,7 +3,6 @@ import React from "react";
 const style = {
    display: "inline-block",
    float: "right",
-   marginBottom: 20
 };
 
 const Toolbar = props => (
