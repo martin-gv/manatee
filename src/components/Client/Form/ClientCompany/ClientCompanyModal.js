@@ -7,7 +7,14 @@ const ClientCompanyModal = props => {
    return (
       <Modal open={open} close={() => close("company")}>
          <h3>Add Company</h3>
-         <form className="ui form" style={{ marginTop: 20 }} onSubmit={submit}>
+         <form
+            className="ui form"
+            style={{ marginTop: 20 }}
+            onSubmit={() => {
+               console.log("temp");
+               // submit();
+            }}
+         >
             <div className="field">
                <input
                   type="text"
@@ -16,7 +23,10 @@ const ClientCompanyModal = props => {
                   onChange={onChange}
                />
             </div>
-            <button className="ui blue button">Add Company</button>
+            <div>Placeholder form</div>
+            <button className="ui blue button" disabled>
+               Add Company
+            </button>
          </form>
       </Modal>
    );

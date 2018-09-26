@@ -190,7 +190,7 @@ class CompanyForm extends React.Component {
                         <Orders orders={orders} rowClick={this.viewOrder} />
                         <div className="ui grid">
                            <div
-                              className="five wide column"
+                              className="seven wide column"
                               style={{ paddingRight: 0 }}
                            >
                               <PrimaryContact
@@ -199,7 +199,7 @@ class CompanyForm extends React.Component {
                               />
                            </div>
                            <div
-                              className="eleven wide column"
+                              className="nine wide column"
                               style={{ paddingLeft: 0 }}
                            >
                               <Contacts
