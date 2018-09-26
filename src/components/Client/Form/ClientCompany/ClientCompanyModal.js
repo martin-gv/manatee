@@ -2,7 +2,13 @@ import React from "react";
 import Modal from "../../../UI/Shared/Modal";
 
 const ClientCompanyModal = props => {
-   const { open, close, submit, value, onChange } = props;
+   const {
+      open,
+      close,
+      // submit,
+      value,
+      onChange
+   } = props;
 
    return (
       <Modal open={open} close={() => close("company")}>

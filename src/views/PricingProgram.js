@@ -174,8 +174,9 @@ class PricingProgramView extends React.Component {
                      <label>Glass</label>
                      <Select
                         value={this.state.glass}
-                        // todo: fix when delete?
-                        onChange={glass => this.setState({ glass })}
+                        onChange={e => {
+                           this.setState({ glass: e.value ? e : null });
+                        }}
                         options={setupOptions(rows, "glass")}
                         classNamePrefix="Select"
                      />
@@ -184,8 +185,10 @@ class PricingProgramView extends React.Component {
                      <label>Mount</label>
                      <Select
                         value={this.state.mount}
-                        // todo: fix when delete?
-                        onChange={mount => this.setState({ mount })}
+                        onChange={e =>
+                           this.setState({ mount: e.value ? e : null });
+
+                        }
                         options={setupOptions(rows, "mount")}
                         classNamePrefix="Select"
                      />

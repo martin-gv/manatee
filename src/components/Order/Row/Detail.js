@@ -1,5 +1,5 @@
 import React from "react";
-// import Select from "react-select";
+import Select from "react-select";
 import Big from "big.js";
 import "./RowDetail.css";
 
@@ -42,7 +42,9 @@ class OrderRowDetail extends React.Component {
          addItem,
          removeItem,
          modal,
-         isVoid
+         isVoid,
+         glassOptions,
+         mountOptions
       } = this.props;
       const { price, itemPrice, framingRewards } = row;
 
@@ -65,6 +67,18 @@ class OrderRowDetail extends React.Component {
             />
          </div>
       ));
+
+      const glassObject = glassOptions.find(
+         option => option.value === row.glass
+      );
+      let glassLabel;
+      if (glassObject) glassLabel = glassObject.label;
+
+      const mountObject = mountOptions.find(
+         option => option.value === row.mount
+      );
+      let mountLabel;
+      if (mountObject) mountLabel = mountObject.label;
 
       return (
          <div className="section RowDetail" style={{ marginTop: -10 }}>
@@ -132,33 +146,46 @@ class OrderRowDetail extends React.Component {
                </div>
                <div className="five wide column">
                   <form className="ui form">
-                     {framingFields.slice(0, 3)}
-                     <div className="form-group">
-                        {/* <label>Glass</label> */}
-                        {/* <Select
-                        disabled={!rowFound || isVoid}
-                        options={this.props.glassOptions}
-                        onChange={e =>
-                           onRowChange(id, "glass", e ? e.value : null)
-                        }
-                        value={row.glass}
-                     /> */}
-                     </div>
-                     <div className="form-group">
-                        {/* <label>Mount</label> */}
-                        {/* <Select
-                        disabled={!rowFound || isVoid}
-                        options={this.props.mountOptions}
-                        onChange={e =>
-                           onRowChange(id, "mount", e ? e.value : null)
-                        }
-                        value={row.mount}
-                     /> */}
+                     {framingFields.slice(0, 2)}
+                     <div className="field">
+                        <label>Glass</label>
+
+                        <Select
+                           value={{ label: glassLabel, value: row.glass }}
+                           onChange={e => {
+                              onRowChange(
+                                 id,
+                                 "glass",
+                                 e.value ? e.value : null
+                              );
+                           }}
+                           options={this.props.glassOptions}
+                           disabled={!rowFound || isVoid}
+                           classNamePrefix="Select"
+                        />
                      </div>
                   </form>
                </div>
                <div className="six wide column">
-                  <form className="ui form">{framingFields.slice(3)}</form>
+                  <form className="ui form">
+                     <div className="field">
+                        <label>Mount</label>
+                        <Select
+                           value={{ label: mountLabel, value: row.mount }}
+                           onChange={e => {
+                              onRowChange(
+                                 id,
+                                 "mount",
+                                 e.value ? e.value : null
+                              );
+                           }}
+                           options={this.props.mountOptions}
+                           disabled={!rowFound || isVoid}
+                           classNamePrefix="Select"
+                        />
+                     </div>
+                     {framingFields.slice(4)}
+                  </form>
                </div>
                <div className="ten wide column" style={{ paddingTop: 0 }}>
                   <InventoryItem
