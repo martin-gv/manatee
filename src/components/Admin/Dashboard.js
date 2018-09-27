@@ -148,7 +148,7 @@ class AdminDashboard extends React.Component {
    companies = async () => {
       this.setState({ generating: true });
       const companies = []; // array of clients
-      const num = 100;
+      const num = 1000;
       let n = 0;
       while (n < num) {
          companies.push({

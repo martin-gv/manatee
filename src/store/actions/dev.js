@@ -11,8 +11,8 @@ export function generateInventory(quantity) {
       let item = {
          title: f.commerce.productName(),
          artist: `${f.name.firstName()} ${f.name.lastName()}`,
-         type: "",
-         medium: "",
+         type: f.commerce.department(),
+         medium: f.commerce.product(),
          price: f.commerce.price()
       };
       items.push(item);
@@ -62,7 +62,7 @@ export function generateOrder(clients) {
 export function generatePayments(orders) {
    const payments = [];
    orders.forEach(order => {
-      const numberOfPayments = Math.floor(Math.random() * 3 + 1);
+      const numberOfPayments = Math.floor(Math.random() * 2 + 1);
       const orderDate = moment(order.createdAt);
       let i = 0;
       while (i < numberOfPayments) {
