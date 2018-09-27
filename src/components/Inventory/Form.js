@@ -74,7 +74,22 @@ class InventoryForm extends React.Component {
             <Motion style={{ opacity: spring(this.state.show ? 1 : 0) }}>
                {style => (
                   <div style={{ opacity: style.opacity }}>
-                     <h3>{title || ""}</h3>
+                     <i
+                        className="material-icons"
+                        onClick={this.props.closePanel}
+                        style={{
+                           color: "#d4d4d4",
+                           fontSize: 26,
+                           position: "absolute",
+                           top: 7,
+                           left: 232,
+                           cursor: "pointer",
+                           padding: 5
+                        }}
+                     >
+                        close
+                     </i>
+                     <h3 style={{ marginTop: 20 }}>{title || ""}</h3>
                      <div>Inventory ID: {inventoryID}</div>
                      <form
                         className="ui form"

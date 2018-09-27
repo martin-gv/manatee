@@ -85,6 +85,8 @@ class InventoryList extends React.Component {
          />
       ));
 
+      console.log(this.checked());
+
       const loader = <div className="loader">Loading...</div>;
 
       return (
