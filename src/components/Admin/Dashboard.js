@@ -106,14 +106,8 @@ class AdminDashboard extends React.Component {
          });
          n++;
       }
-      await this.props.createClient({ client: clients });
+      await this.props.createClient(clients);
       this.props.toggleModalV2(true, "Done", `${num} new clients created`);
-      this.setState({ generating: false });
-   };
-
-   inventory = async () => {
-      this.setState({ generating: true });
-      await this.props.generateInventory();
       this.setState({ generating: false });
    };
 
@@ -124,6 +118,12 @@ class AdminDashboard extends React.Component {
             .slice(2, 11)
       );
       return phone;
+   };
+
+   inventory = async () => {
+      this.setState({ generating: true });
+      await this.props.generateInventory();
+      this.setState({ generating: false });
    };
 
    onChange = (field, value) => {
