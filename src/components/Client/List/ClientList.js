@@ -9,11 +9,16 @@ import {
    fetchTag
 } from "../../../store/actions/system";
 
-// import Toolbar from "./Toolbar";
+import Toolbar from "./Toolbar";
 import TableHead from "./TableHead";
 import TableBody from "./TableBody";
+import NewClientModal from "../NewClientModal";
 
 class ClientList extends Component {
+   state = {
+      newClientModal: false
+   };
+
    async componentDidMount() {
       const res = await this.props.fetchClient();
       this.props.loadClients(res);
@@ -29,26 +34,33 @@ class ClientList extends Component {
       this.props.history.push("/clients/" + id);
    };
 
+   toggleModal = modal => {
+      this.setState({ [modal]: !this.state[modal] });
+   };
+
    render() {
       const { isDataLoaded, clients } = this.props;
       const cssAnimate = isDataLoaded ? "fade-visible" : "fade-hidden";
 
-      let loader = null;
-      if (!isDataLoaded) {
-         loader = <div className="loader">Loading...</div>;
-      }
+      const loader = <div className="loader">Loading...</div>;
 
       return (
          <div className="ClientList card full-height">
-            {/* <Toolbar tagData={this.props.tagData} /> */}
-            {loader}
-            <div className={"animated " + cssAnimate}>
-               <h2>Clients</h2>
+            <Toolbar
+               tagData={this.props.tagData}
+               toggleModal={this.toggleModal}
+            />
+            {!isDataLoaded && loader}
+            <div className={"animated " + cssAnimate} style={{ marginTop: 20 }}>
                <table className="hover clickable">
                   <TableHead />
                   <TableBody clients={clients} onRowClick={this.viewClient} />
                </table>
             </div>
+            <NewClientModal
+               open={this.state.newClientModal}
+               toggle={() => this.toggleModal("newClientModal")}
+            />
          </div>
       );
    }

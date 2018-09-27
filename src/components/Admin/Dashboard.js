@@ -88,7 +88,7 @@ class AdminDashboard extends React.Component {
    clients = async () => {
       this.setState({ generating: true });
       const clients = []; // array of clientss
-      const num = 100;
+      const num = 1000;
       let n = 0;
       while (n < num) {
          clients.push({
@@ -106,7 +106,7 @@ class AdminDashboard extends React.Component {
          });
          n++;
       }
-      await this.props.createClient({ clients });
+      await this.props.createClient({ client: clients });
       this.props.toggleModalV2(true, "Done", `${num} new clients created`);
       this.setState({ generating: false });
    };

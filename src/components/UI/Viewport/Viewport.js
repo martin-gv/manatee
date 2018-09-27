@@ -11,7 +11,6 @@ import Sidebar from "../Sidebar/Sidebar";
 import Navbar from "../Navbar/Navbar";
 
 import Dashboard from "../../Dashboard/Dashboard";
-import ClientNew from "../../Client/New";
 import ClientView from "../../../views/ClientView";
 import CompanyView from "../../../views/CompanyView";
 import OrderView from "../../../views/OrderView";
@@ -42,7 +41,6 @@ class Viewport extends React.Component {
                <Switch>
                   <Route exact path="/dashboard" component={Dashboard} />
                   <Route path="/clients" component={ClientView} />
-                  <Route exact path="/clients/new" component={ClientNew} />
                   <Route path="/companies" component={CompanyView} />
                   <Route exact path="/orders" component={OrderView} />
                   <Route exact path="/orders/:id" component={OrderForm} />

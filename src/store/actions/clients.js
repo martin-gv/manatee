@@ -35,6 +35,19 @@ export function editClient(clientID, field, value) {
 
 // DATABASE API CALLS
 
+export function createClient(data) {
+   return dispatch => {
+      return apiCall("post", "/api/clients", { client: data })
+         .then(res => {
+            dispatch(removeError());
+            return res;
+         })
+         .catch(err => {
+            dispatch(addError(err.message));
+         });
+   };
+}
+
 export function fetchClient(search, tagSearch, all) {
    return dispatch => {
       return apiCall("get", "/api/clients", {
@@ -66,19 +79,6 @@ export function fetchClientById(id) {
 export function fetchClientByID_v2(clientID) {
    return dispatch => {
       return apiCall("get", "/api/clients/" + clientID)
-         .then(res => {
-            dispatch(removeError());
-            return res;
-         })
-         .catch(err => {
-            dispatch(addError(err.message));
-         });
-   };
-}
-
-export function createClient(client) {
-   return dispatch => {
-      return apiCall("post", "/api/clients", client)
          .then(res => {
             dispatch(removeError());
             return res;
