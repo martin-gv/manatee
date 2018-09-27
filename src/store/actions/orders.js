@@ -137,7 +137,7 @@ export function updateOrder(order) {
          .then(res => {
             dispatch(removeError());
             dispatch(triggerOrderSave(false));
-            // dispatch(toggleModalV2(true, "Order updated!"));
+            dispatch(toggleModalV2(true, "Order updated!"));
             return res;
          })
          .catch(err => {

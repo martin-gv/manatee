@@ -213,6 +213,11 @@ class PricingProgramView extends React.Component {
                         </tbody>
                      </table>
                      <div style={{ fontSize: 14 }}>
+                        {ui > 60 ? (
+                           <div style={{ color: "#b73333" }}>
+                              Maximum UI is 60
+                           </div>
+                        ) : null}
                         Total:
                         <span style={{ fontSize: 16, marginLeft: 12 }}>
                            ${total}

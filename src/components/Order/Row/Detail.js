@@ -95,11 +95,12 @@ class OrderRowDetail extends React.Component {
                            type="number"
                            min="1"
                            step="1"
-                           disabled={!rowFound || isVoid}
+                           // disabled={!rowFound || isVoid}
                            value={row.quantity || ""}
                            onChange={e =>
                               onRowChange(id, e.target.name, e.target.value)
                            }
+                           disabled
                         />
                      </div>
                      <div className="field">
