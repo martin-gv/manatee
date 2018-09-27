@@ -44,11 +44,12 @@ class AdminDashboard extends React.Component {
       });
    };
 
-   orders = async () => {
-      this.setState({ generating: true });
+   orders = async inputClients => {
+      // this.setState({ generating: true });
 
-      const clients = await this.props.fetchClient(null, null, true);
-      const orders = await this.props.generateOrder(clients);
+      // const clients = await this.props.fetchClient(null, null, true);
+      const orders = await this.props.generateOrder(inputClients);
+      console.log(orders);
       const rowData = orders.reduce((acc, cur) => {
          const { orderID } = cur;
          let i = 1;
@@ -82,13 +83,15 @@ class AdminDashboard extends React.Component {
          const orderData = { orderID: key, total };
          await this.props.updateOrder(orderData);
       }
-      this.setState({ generating: false });
+
+      // this.setState({ generating: false });
+      return orders;
    };
 
    clients = async () => {
       this.setState({ generating: true });
       const clients = []; // array of clientss
-      const num = 1000;
+      const num = 500;
       let n = 0;
       while (n < num) {
          clients.push({
@@ -106,8 +109,17 @@ class AdminDashboard extends React.Component {
          });
          n++;
       }
-      await this.props.createClient(clients);
-      this.props.toggleModalV2(true, "Done", `${num} new clients created`);
+      const res = await this.props.createClient(clients);
+      console.log(res);
+      const newOrders = await this.orders(res);
+      const numPayments = await this.payments(newOrders);
+      this.props.toggleModalV2(
+         true,
+         "Done",
+         `${num} new clients, ${
+            newOrders.length
+         } orders, and ${numPayments} payments created`
+      );
       this.setState({ generating: false });
    };
 
@@ -166,10 +178,10 @@ class AdminDashboard extends React.Component {
       this.setState({ generating: false });
    };
 
-   payments = async () => {
-      this.setState({ generating: true });
-      const orders = await this.props.fetchOrder();
-      const payments = await this.props.generatePayments(orders);
+   payments = async inputOrders => {
+      // this.setState({ generating: true });
+      // const orders = await this.props.fetchOrder();
+      const payments = await this.props.generatePayments(inputOrders);
 
       const paymentDictionary = payments.reduce((acc, cur) => {
          const { orderID } = cur;
@@ -187,12 +199,13 @@ class AdminDashboard extends React.Component {
          await this.props.updateOrder(orderData);
       }
 
-      this.props.toggleModalV2(
-         true,
-         "Done",
-         `${payments.length} new payments created`
-      );
-      this.setState({ generating: false });
+      // this.props.toggleModalV2(
+      //    true,
+      //    "Done",
+      //    `${payments.length} new payments created`
+      // );
+      // this.setState({ generating: false });
+      return payments.length;
    };
 
    render() {
