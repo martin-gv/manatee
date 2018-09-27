@@ -8,7 +8,10 @@ import {
    fetchInventory,
    searchInventory
 } from "../../../store/actions/inventory";
-import { resetDataLoadedStatus } from "../../../store/actions/system";
+import {
+   resetDataLoadedStatus,
+   toggleModalV2
+} from "../../../store/actions/system";
 
 import InventoryNew from "../New";
 import InventoryListItem from "./ListItem";
@@ -62,12 +65,24 @@ class InventoryList extends React.Component {
 
    checked = () => {
       const selection = this.props.inventory.filter(el => el.checked);
-      return JSON.stringify(selection);
+      // return JSON.stringify(selection);
+      return selection;
    };
 
    checkboxClick = e => {
       e.stopPropagation();
       this.closeSelectedItemPanel();
+   };
+
+   priceTags = e => {
+      if (!this.checked().length) {
+         e.preventDefault();
+         this.props.toggleModalV2(
+            true,
+            "Oops!",
+            "Please select at least 1 item"
+         );
+      }
    };
 
    render() {
@@ -84,8 +99,6 @@ class InventoryList extends React.Component {
             checkboxClick={this.checkboxClick}
          />
       ));
-
-      console.log(this.checked());
 
       const loader = <div className="loader">Loading...</div>;
 
@@ -156,9 +169,12 @@ class InventoryList extends React.Component {
                            <input
                               type="hidden"
                               name="inventory"
-                              defaultValue={this.checked()}
+                              defaultValue={JSON.stringify(this.checked())}
                            />
-                           <button className="ui basic button">
+                           <button
+                              className="ui basic button"
+                              onClick={this.priceTags}
+                           >
                               <i className="download icon" />
                               Price Tags
                            </button>
@@ -237,6 +253,7 @@ export default connect(
       fetchInventory,
       searchInventory,
       // printInventory,
-      resetDataLoadedStatus
+      resetDataLoadedStatus,
+      toggleModalV2
    }
 )(InventoryList);
