@@ -289,9 +289,8 @@ class AdminDashboard extends React.Component {
                            </button>
                         </form>
                      </div>
-                     <div className="section">
+                     {/* <div className="section">
                         <h3>Generate Example Data</h3>
-                        <div>Generating data may take up to 90 seconds</div>
                         {this.state.generating ? (
                            <div className="loader" />
                         ) : (
@@ -328,7 +327,7 @@ class AdminDashboard extends React.Component {
                               </button>
                            </div>
                         )}
-                     </div>
+                     </div> */}
                   </div>
                   <div className="seven wide column">
                      <div className="section">
