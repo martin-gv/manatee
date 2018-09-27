@@ -1,0 +1,12 @@
+.Login {
+   background-color: rgb(35, 40, 56);
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.Login .card {
+   width: 400px;
+   top: -100px;
+}

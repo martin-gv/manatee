@@ -1,8 +1,5 @@
-import {
-   LOAD_PAYMENTS,
-   ADD_NEW_PAYMENT,
-   EDIT_PAYMENT
-} from "../actionTypes";
+import { LOAD_PAYMENTS, ADD_NEW_PAYMENT, EDIT_PAYMENT } from "../actionTypes";
+import { editStore } from "../../utility/utility";
 
 const defaultState = [];
 
@@ -15,13 +12,8 @@ const addNewPayment = (state, action) => {
 };
 
 const editPayment = (state, action) => {
-   const index = state.findIndex(el => el.paymentID === action.paymentID);
-   const newState = [...state];
-   newState[index] = {
-      ...newState[index],
-      [action.field]: action.value
-   };
-   return newState;
+   console.log("action", action);
+   return editStore(state, action, "paymentID");
 };
 
 // const removeRow = (state, action) => {

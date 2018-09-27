@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Motion, spring } from "react-motion";
+import { Motion, spring as $ } from "react-motion";
 import "./InventoryList.css";
 
 import {
@@ -8,7 +8,10 @@ import {
    fetchInventory,
    searchInventory
 } from "../../../store/actions/inventory";
-import { resetDataLoadedStatus } from "../../../store/actions/system";
+import {
+   resetDataLoadedStatus,
+   toggleModalV2
+} from "../../../store/actions/system";
 
 import InventoryNew from "../New";
 import InventoryListItem from "./ListItem";
@@ -62,7 +65,24 @@ class InventoryList extends React.Component {
 
    checked = () => {
       const selection = this.props.inventory.filter(el => el.checked);
-      return JSON.stringify(selection);
+      // return JSON.stringify(selection);
+      return selection;
+   };
+
+   checkboxClick = e => {
+      e.stopPropagation();
+      this.closeSelectedItemPanel();
+   };
+
+   priceTags = e => {
+      if (!this.checked().length) {
+         e.preventDefault();
+         this.props.toggleModalV2(
+            true,
+            "Oops!",
+            "Please select at least 1 item"
+         );
+      }
    };
 
    render() {
@@ -76,6 +96,7 @@ class InventoryList extends React.Component {
             selectedItemID={this.state.selectedItemID}
             handleRowClick={() => this.handleRowClick(el.inventoryID)}
             onChange={this.onChange}
+            checkboxClick={this.checkboxClick}
          />
       ));
 
@@ -83,7 +104,7 @@ class InventoryList extends React.Component {
 
       return (
          <div style={{ display: "flex", alignItems: "flex-start" }}>
-            <Motion style={{ x: spring(showAddNewPanel ? 0 : -280) }}>
+            <Motion style={{ x: $(showAddNewPanel ? 0 : -280) }}>
                {style => (
                   <InventoryNew
                      style={{ transform: `translateX(${style.x}px)` }}
@@ -93,8 +114,8 @@ class InventoryList extends React.Component {
 
             <Motion
                style={{
-                  xLeft: spring(showAddNewPanel ? 0 : -240),
-                  xRight: spring(selectedItemID ? 0 : -290)
+                  xLeft: $(showAddNewPanel ? 0 : -240),
+                  xRight: $(selectedItemID ? 0 : -290)
                }}
             >
                {style => (
@@ -148,9 +169,12 @@ class InventoryList extends React.Component {
                            <input
                               type="hidden"
                               name="inventory"
-                              defaultValue={this.checked()}
+                              defaultValue={JSON.stringify(this.checked())}
                            />
-                           <button className="ui basic button">
+                           <button
+                              className="ui basic button"
+                              onClick={this.priceTags}
+                           >
                               <i className="download icon" />
                               Price Tags
                            </button>
@@ -183,11 +207,7 @@ class InventoryList extends React.Component {
                                  tableRows
                               ) : (
                                  <tr>
-                                    <td colSpan="4">
-                                       <div className="alert alert-primary">
-                                          Loading...
-                                       </div>
-                                    </td>
+                                    <td colSpan="5">{loader}</td>
                                  </tr>
                               )}
                            </tbody>
@@ -197,10 +217,18 @@ class InventoryList extends React.Component {
                )}
             </Motion>
 
-            <Motion style={{ x: spring(this.state.selectedItemID ? 0 : 330) }}>
+            <Motion
+               style={{
+                  x: $(this.state.selectedItemID ? 0 : 350),
+                  opacity: $(this.state.selectedItemID ? 1 : 0)
+               }}
+            >
                {style => (
                   <InventoryForm
-                     style={{ transform: `translateX(${style.x}px)` }}
+                     style={{
+                        transform: `translateX(${style.x}px)`,
+                        opacity: style.opacity
+                     }}
                      selectedItemID={this.state.selectedItemID}
                      closePanel={this.closeSelectedItemPanel}
                   />
@@ -225,6 +253,7 @@ export default connect(
       fetchInventory,
       searchInventory,
       // printInventory,
-      resetDataLoadedStatus
+      resetDataLoadedStatus,
+      toggleModalV2
    }
 )(InventoryList);

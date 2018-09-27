@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { max, sum, add } from "../../../../utility/utility";
@@ -82,19 +83,20 @@ class OrderPaymentList extends React.Component {
       this.setState({ amount: "", date: null });
    };
 
-   // paid = data => {
-   //    const { updatePayment, editPayment } = this.props;
-   //    const { paymentID, amountRequired } = data;
-   //    const updateData = {
-   //       amount: amountRequired,
-   //       date: moment()
-   //    };
-   //    updatePayment(paymentID, updateData).then(res => {
-   //       const { amount, date } = res;
-   //       editPayment(paymentID, "amount", amount);
-   //       editPayment(paymentID, "date", date);
-   //    });
-   // };
+   paid = data => {
+      const { updatePayment, editPayment } = this.props;
+      const { paymentID, amountRequired } = data;
+      const updateData = {
+         amountPaid: amountRequired,
+         datePaid: moment()
+      };
+      updatePayment(paymentID, updateData).then(res => {
+         const { amountPaid, datePaid } = res;
+         console.log("res", res);
+         editPayment(paymentID, "amountPaid", amountPaid);
+         editPayment(paymentID, "datePaid", datePaid);
+      });
+   };
 
    render() {
       const { amount, date } = this.state;
@@ -104,61 +106,82 @@ class OrderPaymentList extends React.Component {
          <Item key={el._id} {...el} paidButton={this.paid} />
       ));
 
-      const total = sum(payments, "amountPaid");
-      const js = payments
-         .map(el => el.amountPaid || 0)
-         .reduce((acc, current) => {
-            return acc + current;
-         }, 0);
+      // const total = sum(payments, "amountPaid");
+      // const js = payments
+      //    .map(el => el.amountPaid || 0)
+      //    .reduce((acc, current) => {
+      //       return acc + current;
+      //    }, 0);
+
+      const voidStyle = { borderRadius: isVoid ? "5px" : "5px 0 0 5px" };
 
       return (
-         <div className="section">
-            <h3>Payments</h3>
-            <table className="small" style={{ marginBottom: 30 }}>
-               <TableHead />
-               <tbody>{tableRows}</tbody>
-            </table>
-            <strong>Total: ${paymentTotal}</strong>
-            <br />
-            <strong>Total (Local): ${total}</strong>
-            <br />
-            <strong>JS: ${js}</strong>
-            {!isVoid && (
-               <form onSubmit={this.newPayment}>
-                  <div className="ui grid" style={{ margin: "20px 0" }}>
-                     <div
-                        className="eight wide column"
-                        style={{ padding: "0 10px 0 0" }}
-                     >
-                        <InputMoney
-                           value={amount}
-                           onChange={val => this.onChange("amount", val)}
-                        />
-                     </div>
-                     <div className="eight wide column" style={{ padding: "0 0 0 10px" }}>
-                        <DatePicker
-                           selected={date}
-                           onChange={val => this.onChange("date", val)}
-                           dateFormat="MMM Do YYYY"
-                           className="form-control"
-                           placeholderText="Date"
-                           popperPlacement="top"
-                        />
-                     </div>
+         <div className="ui grid">
+            <div className="ten wide column" style={{ paddingRight: 0 }}>
+               <div className="section" style={{ margin: 0, ...voidStyle }}>
+                  <h3>Payments</h3>
+                  <table className="small" style={{ marginBottom: 30 }}>
+                     <TableHead />
+                     <tbody>{tableRows}</tbody>
+                  </table>
+                  <div style={{ fontSize: 16 }}>
+                     Payments: <span>${paymentTotal}</span>
                   </div>
-                  <button className="ui green basic button">
-                     <i className="material-icons">attach_money</i>
-                     Add New Payment
-                  </button>
-                  <button
-                     className="ui yellow basic button"
-                     onClick={this.schedulePayment}
+                  {/* <div>JS: ${js}</div> */}
+                  {/* <strong>Total (Local): ${total}</strong> */}
+               </div>
+            </div>
+            <div className="six wide column" style={{ paddingLeft: 0 }}>
+               {!isVoid && (
+                  <div
+                     className="section"
+                     style={{
+                        margin: 0,
+                        height: "100%",
+                        borderRadius: "0 5px 5px 0",
+                        borderLeftWidth: 0
+                     }}
                   >
-                     <i className="clock icon" />
-                     Schedule Payment
-                  </button>
-               </form>
-            )}
+                     <form onSubmit={this.newPayment}>
+                        <h3>Add New Payment</h3>
+                        <div className="ui grid" style={{ margin: "20px 0" }}>
+                           <div
+                              className="eight wide column"
+                              style={{ padding: "0 10px 0 0" }}
+                           >
+                              <InputMoney
+                                 value={amount}
+                                 onChange={val => this.onChange("amount", val)}
+                              />
+                           </div>
+                           <div
+                              className="eight wide column"
+                              style={{ padding: "0 0 0 10px" }}
+                           >
+                              <DatePicker
+                                 selected={date}
+                                 onChange={val => this.onChange("date", val)}
+                                 dateFormat="MMM Do YYYY"
+                                 className="form-control"
+                                 placeholderText="Date"
+                                 popperPlacement="top"
+                              />
+                           </div>
+                        </div>
+                        <button className="ui green basic button">
+                           Add Payment
+                        </button>
+                        <button
+                           className="ui yellow basic button"
+                           onClick={this.schedulePayment}
+                        >
+                           <i className="clock icon" />
+                           Schedule Payment
+                        </button>
+                     </form>
+                  </div>
+               )}
+            </div>
          </div>
       );
    }

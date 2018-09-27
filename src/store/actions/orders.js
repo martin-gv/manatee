@@ -1,6 +1,6 @@
 import { apiCall } from "../../services/api";
 import { addError, removeError } from "./errors";
-import { setDataLoadedStatus, toggleModalV2 } from "./system";
+import { setDataLoadedStatus, toggleModalV2, triggerOrderSave } from "./system";
 
 import {
    LOAD_ORDERS,
@@ -66,6 +66,7 @@ export function fetchOrder() {
             dispatch(removeError());
             dispatch(loadOrders(res));
             dispatch(setDataLoadedStatus("orderList"));
+            return res;
          })
          .catch(err => {
             dispatch(addError(err.message));
@@ -135,7 +136,8 @@ export function updateOrder(order) {
       return apiCall("put", "/api/orders/" + order.orderID, { order })
          .then(res => {
             dispatch(removeError());
-            dispatch(toggleModalV2(true, "Success: Order Saved"));
+            dispatch(triggerOrderSave(false));
+            // dispatch(toggleModalV2(true, "Order updated!"));
             return res;
          })
          .catch(err => {

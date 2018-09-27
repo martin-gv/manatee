@@ -1,8 +1,8 @@
 import React from "react";
-import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import Modal from "../../UI/Shared/Modal";
 
 const RewardsModal = props => {
-   const { isOpen, toggle, submit, client } = props;
+   const { open, close, client } = props;
    const framingRewards = client ? client.framingRewards : [];
 
    const cards = framingRewards.map(card => {
@@ -19,24 +19,19 @@ const RewardsModal = props => {
       });
       return (
          <div className="ui card" key={card._id}>
-            <div className="content">
-               <div className="meta">Card #{card.cardNum}</div>
-               <div className="ui feed">{points}</div>
-               <div className="extra content">$ {card.creditEarned}</div>
-            </div>
+            <div className="meta">Card #{card.cardNum}</div>
+            <div className="ui feed">{points}</div>
+            <div>${card.creditEarned}</div>
          </div>
       );
    });
 
    return (
-      <Modal isOpen={isOpen} toggle={() => toggle("rewards")} centered>
-         <ModalHeader>Framing Rewards</ModalHeader>
-         <form className="ui form" onSubmit={submit}>
-            <ModalBody>{cards}</ModalBody>
-            <ModalFooter>
-               {/* <button className="ui green button">Save</button> */}
-            </ModalFooter>
-         </form>
+      <Modal open={open} close={() => close("rewards")}>
+         <h3 style={{marginBottom: 20}}>Framing Rewards</h3>
+         {cards.length ? cards : (
+            <div>No rewards yet</div>
+         )}
       </Modal>
    );
 };

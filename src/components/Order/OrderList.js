@@ -13,7 +13,7 @@ import { sum } from "../../utility/utility";
 
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import { formatDate, parseDate } from "react-day-picker/moment";
-import TableHead from "./OrderListHeader";
+import TableHead from "./TableHead";
 import Item from "./OrderListItem";
 
 class OrderList extends React.Component {
@@ -21,7 +21,8 @@ class OrderList extends React.Component {
       selectedDay: undefined,
       hello: "test",
       from: undefined,
-      to: undefined
+      to: undefined,
+      loading: false
    };
 
    componentDidMount() {
@@ -54,6 +55,7 @@ class OrderList extends React.Component {
    }
 
    search = async () => {
+      this.setState({ loading: true });
       const { from, to } = this.state;
 
       const fromTo = moment(from)
@@ -65,6 +67,7 @@ class OrderList extends React.Component {
 
       const res = await this.props.searchOrders(fromTo, queryTo);
       this.props.loadOrders(res);
+      this.setState({ loading: false });
    };
 
    total = () => {
@@ -92,6 +95,7 @@ class OrderList extends React.Component {
                loader
             ) : (
                <div>
+                  <h2 style={{ marginBottom: 20 }}>Orders</h2>
                   <div className="toolbar" style={{ marginBottom: "10px" }}>
                      <div className="InputFromTo">
                         <DayPickerInput
@@ -163,7 +167,15 @@ class OrderList extends React.Component {
                   </div>
                   <table className="hover clickable">
                      <TableHead />
-                     <tbody>{tableRows}</tbody>
+                     <tbody>
+                        {this.state.loading ? (
+                           <tr>
+                              <td colSpan="5">{loader}</td>
+                           </tr>
+                        ) : (
+                           tableRows
+                        )}
+                     </tbody>
                   </table>
                </div>
             )}

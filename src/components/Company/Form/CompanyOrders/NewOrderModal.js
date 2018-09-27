@@ -1,11 +1,11 @@
 import React from "react";
-import { Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import Modal from "../../../UI/Shared/Modal";
 
 class NewOrderModal extends React.Component {
    render() {
       const {
          contacts,
-         isOpen,
+         open,
          toggle,
          submit,
          selectedID,
@@ -14,35 +14,50 @@ class NewOrderModal extends React.Component {
       const rows = contacts.map(el => (
          <tr
             key={el._id}
-            onClick={() => onSelect(el.clientId)}
-            className={selectedID === el.clientId ? "selected" : null}
+            onClick={() => onSelect(el.clientID)}
+            className={selectedID === el.clientID ? "selected" : null}
          >
-            <td>
+            <td style={{ paddingLeft: 18 }}>
+               <i
+                  className="material-icons"
+                  style={{
+                     marginRight: 10,
+                     width: 27,
+                     top: 5,
+                     position: "relative",
+                     color: "#0090b2",
+                     opacity: selectedID === el.clientID ? 1 : 0
+                  }}
+               >
+                  checkmark
+               </i>
                {el.firstName} {el.lastName}
             </td>
          </tr>
       ));
 
       return (
-         <Modal
-            isOpen={isOpen}
-            toggle={toggle}
-            centered
-            style={{ maxWidth: "400px" }}
-         >
-            <ModalHeader>Select Company Contact</ModalHeader>
+         <Modal open={open} close={toggle}>
+            <h3>Select Company Contact</h3>
             <form className="ui form" onSubmit={submit}>
-               <ModalBody>
+               {contacts.length ? (
                   <p>Who is placing this order?</p>
-                  <table className="ui selectable clickable table">
-                     <tbody>{rows}</tbody>
-                  </table>
-               </ModalBody>
-               <ModalFooter>
-                  <button className="ui blue button" disabled={!selectedID}>
-                     Confirm
-                  </button>
-               </ModalFooter>
+               ) : (
+                  <p>Add a company contact before creating a new order</p>
+               )}
+               <table
+                  className="hover clickable"
+                  style={{ width: 325, border: "1px solid gainsboro" }}
+               >
+                  <tbody>{rows}</tbody>
+               </table>
+               <button
+                  className="ui blue button"
+                  disabled={!selectedID || !contacts.length}
+                  style={{ marginTop: 20 }}
+               >
+                  Confirm
+               </button>
             </form>
          </Modal>
       );

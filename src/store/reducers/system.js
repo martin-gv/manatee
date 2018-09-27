@@ -4,11 +4,12 @@ import {
    TOGGLE_MODAL,
    TOGGLE_MODAL_V2,
    SET_SELECTED_ORDER_ROW,
-   LOAD_CLIENT_TAG_OPTIONS,
+   LOAD_TAG_DATA,
    LOAD_PRICING_COLUMN_DATA,
    LOAD_PRICING_ROW_DATA,
    SET_DATA_READY_STATUS,
-   SET_IDLE_TIMEOUT
+   SET_IDLE_TIMEOUT,
+   TRIGGER_ORDER_SAVE
 } from "../actionTypes";
 
 const defaultState = {
@@ -31,9 +32,10 @@ const defaultState = {
       message: ""
    },
    selectedRowId: null,
-   clientTagOptions: [],
+   tagData: [],
    pricingColumns: [],
-   pricingRows: []
+   pricingRows: [],
+   triggerOrderSave: false
 };
 
 const setDataLoadedStatus = (state, action) => {
@@ -73,8 +75,8 @@ const setSelectedOrderRow = (state, action) => {
    return { ...state, selectedRowId: action.id };
 };
 
-const loadClientTagOptions = (state, action) => {
-   return { ...state, clientTagOptions: action.data };
+const loadTagData = (state, action) => {
+   return { ...state, tagData: action.data };
 };
 
 const loadPricingColumnData = (state, action) => {
@@ -97,6 +99,10 @@ const setIdleTimeout = (state, action) => {
    return { ...state, idleTimer: action.timeoutID };
 };
 
+const updateValue = (state, action) => {
+   return { ...state, [action.field]: action.value };
+};
+
 const reducer = (state = defaultState, action) => {
    switch (action.type) {
       case SET_DATA_LOADED_STATUS:
@@ -109,8 +115,8 @@ const reducer = (state = defaultState, action) => {
          return toggleModalV2(state, action);
       case SET_SELECTED_ORDER_ROW:
          return setSelectedOrderRow(state, action);
-      case LOAD_CLIENT_TAG_OPTIONS:
-         return loadClientTagOptions(state, action);
+      case LOAD_TAG_DATA:
+         return loadTagData(state, action);
       case LOAD_PRICING_COLUMN_DATA:
          return loadPricingColumnData(state, action);
       case LOAD_PRICING_ROW_DATA:
@@ -119,6 +125,8 @@ const reducer = (state = defaultState, action) => {
          return setDataReadyStatus(state, action);
       case SET_IDLE_TIMEOUT:
          return setIdleTimeout(state, action);
+      case TRIGGER_ORDER_SAVE:
+         return updateValue(state, action);
       default:
          return state;
    }

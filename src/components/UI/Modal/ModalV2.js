@@ -1,30 +1,35 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-   Modal as BootstrapModal,
-   ModalBody as BootstrapModalBody,
-   ModalHeader as BootstrapModalHeader,
-   ModalFooter as BootstrapModalFooter
-} from "reactstrap";
+import Modal from "../../UI/Shared/Modal";
 
 import { toggleModalV2 } from "../../../store/actions/system";
 
-class Modal extends React.Component {
+class ModalV2 extends React.Component {
    handleToggle = () => {
       this.props.toggleModalV2(false);
    };
 
    render() {
       return (
-         <BootstrapModal isOpen={this.props.isOpen} toggle={this.handleToggle}>
-            <BootstrapModalHeader>{this.props.title}</BootstrapModalHeader>
-            <BootstrapModalBody>{this.props.message}</BootstrapModalBody>
-            <BootstrapModalFooter>
-               <button onClick={this.handleToggle} className="btn btn-primary">
-                  Okay
-               </button>
-            </BootstrapModalFooter>
-         </BootstrapModal>
+         <Modal
+            open={this.props.isOpen}
+            close={this.handleToggle}
+            cardStyle={{ width: 400 }}
+            zModifier={100}
+         >
+            <div style={{ textAlign: "center" }}>
+               <h3 style={{ marginBottom: 20 }}>{this.props.title}</h3>
+               <div style={{ marginBottom: 20 }}>{this.props.message}</div>
+               <div>
+                  <button
+                     onClick={this.handleToggle}
+                     className="ui basic blue button"
+                  >
+                     Okay
+                  </button>
+               </div>
+            </div>
+         </Modal>
       );
    }
 }
@@ -40,4 +45,4 @@ function mapStateToProps(state) {
 export default connect(
    mapStateToProps,
    { toggleModalV2 }
-)(Modal);
+)(ModalV2);

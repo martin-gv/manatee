@@ -1,5 +1,4 @@
 import React from "react";
-import Big from "big.js";
 
 import OrderRowListItem from "./Item";
 
@@ -13,48 +12,62 @@ const OrderRowList = props => {
       />
    ));
 
-   const orderTotal = props.rows.reduce((acc, current) => {
-      const total = Big(acc).plus(
-         Big(current.price || 0).plus(Big(current.itemPrice || 0))
-      );
-      return total.toString();
-   }, 0);
+   // const orderTotal = props.rows.reduce((acc, current) => {
+   //    const total = Big(acc).plus(
+   //       Big(current.price || 0).plus(Big(current.itemPrice || 0))
+   //    );
+   //    return total.toString();
+   // }, 0);
 
-   const js = props.rows.reduce((acc, current) => {
-      return (
-         acc +
-         (parseFloat(current.price) || 0) +
-         (parseFloat(current.itemPrice) || 0)
-      );
-   }, 0);
+   // const js = props.rows.reduce((acc, current) => {
+   //    return (
+   //       acc +
+   //       (parseFloat(current.price) || 0) +
+   //       (parseFloat(current.itemPrice) || 0)
+   //    );
+   // }, 0);
 
    const { total, isVoid } = props;
 
    return (
-      <div className="section" style={{ marginBottom: 30 }}>
-         <button
-            className="ui blue basic button"
-            onClick={props.newRowButton}
-            disabled={isVoid}
-         >
-            <i className="material-icons">add</i>
-            New Row
-         </button>
+      <div
+         className="section"
+         style={{ marginTop: -10, marginBottom: 10, marginRight: 0 }}
+      >
+         <div style={{ marginBottom: -10 }}>
+            <h3 style={{ display: "inline-block" }}>Rows</h3>
+            <button
+               className="ui blue basic button"
+               onClick={props.newRowButton}
+               disabled={isVoid}
+               style={{
+                  float: "right",
+                  position: "relative",
+                  top: -7,
+                  padding: "8px 17px"
+               }}
+            >
+               <i className="material-icons">add</i>
+               Add Row
+            </button>
+         </div>
+         <hr />
          <table className="small hover clickable" style={{ marginBottom: 30 }}>
             <thead>
                <tr>
-                  <th>#</th>
-                  <th>Title</th>
-                  <th>Price</th>
+                  <th style={{ width: 60 }}>#</th>
+                  <th style={{ width: 100 }}>Title</th>
+                  <th>Total</th>
                </tr>
             </thead>
             <tbody>{tableRows}</tbody>
          </table>
-         <strong>Total: ${total}</strong>
-         <br />
-         <strong>Total (Local): ${orderTotal}</strong>
-         <br />
-         <strong>JS: ${js}</strong>
+
+         <div style={{ fontSize: 16, textAlign: "right" }}>
+            Order Total: <span>${total}</span>
+         </div>
+         {/* <div style={{ textAlign: "right" }}>JS: ${js}</div> */}
+         {/* <strong>Total (Local): ${orderTotal}</strong> */}
       </div>
    );
 };

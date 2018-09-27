@@ -3,7 +3,6 @@ import React from "react";
 const style = {
    display: "inline-block",
    float: "right",
-   marginBottom: 20
 };
 
 const Toolbar = props => (
@@ -12,7 +11,9 @@ const Toolbar = props => (
          <i className="material-icons">add</i>
          New Order
       </button>
-      <button className="ui green basic button">Infusionsoft</button>
+      <button className="ui green basic button" disabled>
+         Infusionsoft
+      </button>
    </div>
 );
 

@@ -4,14 +4,14 @@ import moment from "moment";
 const TableRow = props => {
    const {
       orderID,
+      paymentNum,
       amountPaid,
       actionDate,
       datePaid,
       amountRequired,
       dateRequired,
       rowClick,
-      void: isVoid,
-      testField
+      void: isVoid
    } = props;
 
    // const voidedStyle = isVoid && {
@@ -29,6 +29,7 @@ const TableRow = props => {
          <td>
             {orderID} {isVoid && <strong>VOID</strong>}
          </td>
+         <td>{paymentNum}</td>
          <td>
             {amountPaid && "$"}
             {amountPaid}
@@ -43,7 +44,6 @@ const TableRow = props => {
                </div>
             )}
          </td>
-         <td>{testField}</td>
          <td>
             {amountRequired && "$"}
             {amountRequired}

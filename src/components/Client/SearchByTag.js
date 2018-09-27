@@ -24,13 +24,13 @@ class ClientSearchByTag extends React.Component {
       return (
          <div className="row">
             <div className="col-8">
-               <Select
+               {/* <Select
                   options={tagOptions}
                   onChange={selectedOption => this.setState({ selectedOption })}
                   value={this.state.selectedOption}
                   placeholder="Search by tag"
                   multi
-               />
+               /> */}
             </div>
             <div className="col">
                <button

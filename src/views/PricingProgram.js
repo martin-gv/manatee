@@ -2,19 +2,20 @@ import React from "react";
 import { connect } from "react-redux";
 import Big from "big.js";
 import Select from "react-select";
-import Button from "@material-ui/core/Button";
 
 import { setupOptions } from "../utility/utility";
 import {
    fetchPricingColumn,
    fetchPricingRow,
-   toggleModalV2
+   toggleModalV2,
+   triggerOrderSave
 } from "../store/actions/system";
-import { fetchOrderByID } from "../store/actions/orders";
+import { fetchOrderByID, updateOrder } from "../store/actions/orders";
 import {
    createOrderRow,
    fetchOrderRow,
-   updateOrderRow
+   updateOrderRow,
+   editRow
 } from "../store/actions/orderRows";
 
 import AddToInvoiceModal from "../components/PricingProgram/AddToInvoiceModal";
@@ -38,7 +39,7 @@ class PricingProgramView extends React.Component {
       if (!ui || !item) {
          return;
       }
-      const id = item;
+      const itemID = item.value;
       const { columns, rows } = this.props;
       const filteredColumns = columns.filter(el => ui <= el.maxSize);
       if (filteredColumns.length > 0) {
@@ -48,7 +49,7 @@ class PricingProgramView extends React.Component {
       } else {
          return;
       }
-      const row = rows.find(el => el._id === id);
+      const row = rows.find(el => el._id === itemID);
       if (colNum === 0) {
          return row.minCharge;
       }
@@ -77,37 +78,54 @@ class PricingProgramView extends React.Component {
       this.setState({ showModal: !this.state.showModal });
    };
 
-   addToOrder = (e, id, total) => {
-      e.preventDefault();
-      this.props.fetchOrderByID(id).then(res => {
-         if (res && res.length) {
-            this.props.fetchOrderRow(id).then(res => {
-               if (res) {
-                  const nextRowNum = Math.max(0, ...res.map(r => r.rowNum)) + 1;
-                  this.props.createOrderRow(id, nextRowNum).then(res => {
-                     if (res) {
-                        const row = { ...res, ...this.state, price: total };
-                        this.props.updateOrderRow(row).then(res => {
-                           if (res) {
-                              this.props.history.push(`/orders/${id}`);
-                           } else {
-                              this.props.toggleModalV2(
-                                 true,
-                                 "Error",
-                                 "Row API error"
-                              );
-                           }
-                        });
-                     }
-                  });
+   addToOrder = async (orderID, total) => {
+      const orderRes = await this.props.fetchOrderByID(orderID);
+      if (orderRes && orderRes.length) {
+         const rowRes = await this.props.fetchOrderRow(orderID);
+         if (rowRes) {
+            const nextRowNum =
+               Math.max(0, ...rowRes.map(row => row.rowNum)) + 1;
+            const newRow = await this.props.createOrderRow(orderID, nextRowNum);
+            if (newRow) {
+               const row = {
+                  ...newRow,
+                  height: this.state.height,
+                  width: this.state.width,
+                  glass: this.state.glass.value,
+                  mount: this.state.mount.value,
+                  price: total
+               };
+               const rowUpdate = await this.props.updateOrderRow(row);
+               if (rowUpdate) {
+                  const orderTotal = this.updateOrderTotal([
+                     ...rowRes,
+                     rowUpdate
+                  ]);
+                  const data = { orderID, total: orderTotal };
+                  await this.props.updateOrder(data);
+                  this.props.history.push("/orders/" + orderID);
+                  // todo: save order to update order totals
+                  // todo: message if successful
                } else {
                   this.props.toggleModalV2(true, "Error", "Row API error");
                }
-            });
+            }
          } else {
-            this.props.toggleModalV2(true, "Error", "No order found");
+            this.props.toggleModalV2(true, "Error", "Row API error");
          }
-      });
+      } else {
+         this.props.toggleModalV2(true, "Error", "No order found");
+      }
+   };
+
+   updateOrderTotal = arr => {
+      const total = arr.reduce((acc, curr) => {
+         const sum = Big(acc).plus(
+            Big(curr.price || 0).plus(Big(curr.itemPrice || 0))
+         );
+         return Number(sum);
+      }, 0);
+      return total;
    };
 
    render() {
@@ -121,7 +139,7 @@ class PricingProgramView extends React.Component {
 
       return (
          <div className="card full-height">
-            <h2 style={{ marginBottom: 20 }}>Quote Calculator</h2>
+            <h2 style={{ marginBottom: 40 }}>Quote Calculator</h2>
             <div className="ui grid">
                <div className="five wide column">
                   <form className="ui form" style={{ marginBottom: 10 }}>
@@ -155,46 +173,65 @@ class PricingProgramView extends React.Component {
                   <div className="form-group">
                      <label>Glass</label>
                      <Select
-                        options={setupOptions(rows, "glass")}
-                        onChange={glass =>
-                           this.setState({ glass: glass && glass.value })
-                        }
                         value={this.state.glass}
+                        onChange={e =>
+                           this.setState({ glass: e.value ? e : null })
+                        }
+                        options={setupOptions(rows, "glass")}
+                        classNamePrefix="Select"
                      />
                   </div>
                   <div className="form-group">
                      <label>Mount</label>
                      <Select
-                        options={setupOptions(rows, "mount")}
-                        onChange={mount =>
-                           this.setState({ mount: mount && mount.value })
-                        }
                         value={this.state.mount}
+                        onChange={e =>
+                           this.setState({ mount: e.value ? e : null })
+                        }
+                        options={setupOptions(rows, "mount")}
+                        classNamePrefix="Select"
                      />
                   </div>
                </div>
-               <div className="eleven wide column">
-                  UI: {ui}
-                  <br />
-                  Glass: {glass && glass.label} - ${glassCharge}
-                  <br />
-                  Mount: {mount && mount.label} - ${mountCharge}
-                  <br />
-                  Total: ${total}
-                  <br />
-                  <button
-                     className="ui blue basic button"
-                     onClick={this.toggleModal}
-                     style={{ marginTop: 10 }}
-                  >
-                     <i className="material-icons">add_shopping_cart</i>
-                     Add to Invoice
-                  </button>
-                  <AddToInvoiceModal
-                     isOpen={this.state.showModal}
-                     toggle={this.toggleModal}
-                     addToOrder={(e, id) => this.addToOrder(e, id, total)}
-                  />
+               <div className="eight wide column">
+                  <div className="section">
+                     <h3 style={{ marginBottom: 20 }}>Quote Summary</h3>
+                     <table className="small" style={{ marginBottom: 10 }}>
+                        <tbody>
+                           <tr>
+                              <td style={{ width: 75 }}>UI:</td>
+                              <td>{ui}</td>
+                           </tr>
+                           <tr>
+                              <td>Glass:</td>
+                              <td>{glass && glass.label}</td>
+                           </tr>
+                           <tr>
+                              <td>Mount:</td>
+                              <td>{mount && mount.label}</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                     <div style={{ fontSize: 14 }}>
+                        Total:
+                        <span style={{ fontSize: 16, marginLeft: 12 }}>
+                           ${total}
+                        </span>
+                     </div>
+                     <button
+                        className="ui blue basic button"
+                        onClick={this.toggleModal}
+                        style={{ marginTop: 10 }}
+                     >
+                        <i className="material-icons">add_shopping_cart</i>
+                        Add to Invoice
+                     </button>
+                     <AddToInvoiceModal
+                        isOpen={this.state.showModal}
+                        toggle={this.toggleModal}
+                        addToOrder={id => this.addToOrder(id, total)}
+                     />
+                  </div>
                </div>
             </div>
          </div>
@@ -215,9 +252,12 @@ export default connect(
       fetchPricingColumn,
       fetchPricingRow,
       toggleModalV2,
+      triggerOrderSave,
       fetchOrderByID,
+      updateOrder,
       createOrderRow,
       fetchOrderRow,
-      updateOrderRow
+      updateOrderRow,
+      editRow
    }
 )(PricingProgramView);

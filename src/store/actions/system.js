@@ -6,10 +6,11 @@ import {
    RESET_DATA_LOADED_STATUS,
    TOGGLE_MODAL,
    TOGGLE_MODAL_V2,
-   LOAD_CLIENT_TAG_OPTIONS,
+   LOAD_TAG_DATA,
    LOAD_PRICING_COLUMN_DATA,
    LOAD_PRICING_ROW_DATA,
-   SET_DATA_READY_STATUS
+   SET_DATA_READY_STATUS,
+   TRIGGER_ORDER_SAVE
 } from "../actionTypes";
 
 export function setDataLoadedStatus(component) {
@@ -52,19 +53,19 @@ export function setDataReadyStatus(component, status) {
 
 // Client Tag Actions
 
-export function loadClientTagOptions(data) {
+export function loadTagData(data) {
    return {
-      type: LOAD_CLIENT_TAG_OPTIONS,
+      type: LOAD_TAG_DATA,
       data
    };
 }
 
-export function fetchClientTag() {
+export function fetchTag() {
    return dispatch => {
       return apiCall("get", "/api/clients/tags")
          .then(res => {
             dispatch(removeError());
-            dispatch(loadClientTagOptions(res));
+            dispatch(loadTagData(res));
          })
          .catch(err => {
             dispatch(addError(err.message));
@@ -111,5 +112,13 @@ export function fetchPricingRow() {
          .catch(err => {
             dispatch(addError(err.message));
          });
+   };
+}
+
+export function triggerOrderSave(boolean) {
+   return {
+      type: TRIGGER_ORDER_SAVE,
+      field: "triggerOrderSave",
+      value: boolean
    };
 }

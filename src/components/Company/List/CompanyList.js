@@ -3,13 +3,14 @@ import { connect } from "react-redux";
 import "./CompanyList.css";
 
 import { fetchCompany } from "../../../store/actions/companies";
-import Loading from "../../UI/Loading";
-import TableHeader from "./TableHeader";
+import TableHead from "./TableHead";
 import TableRow from "./TableRow";
+import NewCompanyModal from "../NewCompanyModal";
 
 class OrderList extends React.Component {
    state = {
-      ready: false
+      ready: false,
+      newCompanyModal: false
    };
 
    componentDidMount() {
@@ -20,6 +21,10 @@ class OrderList extends React.Component {
    rowClick = id => {
       const { history } = this.props;
       history.push(`/companies/${id}`);
+   };
+
+   toggleModal = modal => {
+      this.setState({ [modal]: !this.state[modal] });
    };
 
    render() {
@@ -39,11 +44,33 @@ class OrderList extends React.Component {
          <div className="card full-height CompanyList">
             {loader}
             {ready && (
-               <table className="hover clickable">
-                  <TableHeader />
-                  <tbody>{ready ? tableRows : null}</tbody>
-               </table>
+               <div>
+                  <div className="ui grid">
+                     <div className="five wide column">
+                        <h2>Companies</h2>
+                     </div>
+                     <div
+                        className="eleven wide column"
+                        style={{ textAlign: "right" }}
+                     >
+                        <button
+                           className="ui blue button"
+                           onClick={() => this.toggleModal("newCompanyModal")}
+                        >
+                           New Company
+                        </button>
+                     </div>
+                  </div>
+                  <table className="hover clickable">
+                     <TableHead />
+                     <tbody>{ready ? tableRows : null}</tbody>
+                  </table>
+               </div>
             )}
+            <NewCompanyModal
+               open={this.state.newCompanyModal}
+               toggle={() => this.toggleModal("newCompanyModal")}
+            />
          </div>
       );
    }

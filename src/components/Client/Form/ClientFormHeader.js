@@ -3,14 +3,7 @@ import moment from "moment";
 
 const ClientFormHeader = props => {
    const { client, company, toggleModal } = props;
-   const {
-      clientID,
-      firstName,
-      lastName,
-      createdAt,
-      updatedAt,
-      addButton
-   } = client;
+   const { clientID, firstName, lastName, createdAt, updatedAt } = client;
    const { companyID } = company;
 
    return (
@@ -27,32 +20,32 @@ const ClientFormHeader = props => {
          <div className="ten wide column">
             <div style={{ display: "inline-block", float: "right" }}>
                {!companyID && (
-                  <button className="ui blue basic button" onClick={addButton}>
+                  <button
+                     className="ui blue basic button"
+                     onClick={() => toggleModal("company")}
+                  >
+                     <i className="building icon" />
                      Add Company
                   </button>
                )}
-               <button className="ui green basic button">
-                  <i className="material-icons">android</i>
+               <button className="ui green basic button" disabled={true}>
                   Infusionsoft
                </button>
                <button
                   className="ui yellow basic button"
                   onClick={() => toggleModal("rewards")}
                >
-                  <i className="material-icons">dashboard</i>
+                  <i className="gift icon" />
                   Rewards
                </button>
                <button
-                  className="ui orange basic button"
+                  className="ui red basic button"
                   onClick={() => toggleModal("secure")}
                >
                   <i className="material-icons">lock</i>
                   Secure Notes
                </button>
-               <button
-                  className="ui negative basic button"
-                  onClick={() => toggleModal("secure")}
-               >
+               <button className="ui negative basic button" disabled={true}>
                   <i className="material-icons">delete</i>
                   Delete
                </button>

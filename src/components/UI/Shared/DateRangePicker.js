@@ -7,7 +7,7 @@ const DateRangePicker = props => {
    const { from, to, onChange } = props;
 
    return (
-      <div className="InputFromTo" style={{ display: "inline-block" }}>
+      <div className="InputFromTo DateRangePicker" style={{ display: "inline-block" }}>
          <DayPickerInput
             classNames={{
                container: "DayPickerInput ui input",

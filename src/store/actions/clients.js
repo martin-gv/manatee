@@ -1,10 +1,10 @@
 import { apiCall } from "../../services/api";
 import { addError, removeError } from "./errors";
-import { toggleModal } from "./system";
+import { toggleModalV2 } from "./system";
 import {
    LOAD_CLIENTS,
-   LOAD_TAG,
-   REMOVE_TAG,
+   //    LOAD_TAG,
+   //    REMOVE_TAG,
    EDIT_CLIENT
 } from "../actionTypes";
 
@@ -35,10 +35,23 @@ export function editClient(clientID, field, value) {
 
 // DATABASE API CALLS
 
-export function fetchClient(search, tagSearch) {
+export function createClient(data) {
+   return dispatch => {
+      return apiCall("post", "/api/clients", { client: data })
+         .then(res => {
+            dispatch(removeError());
+            return res;
+         })
+         .catch(err => {
+            dispatch(addError(err.message));
+         });
+   };
+}
+
+export function fetchClient(search, tagSearch, all) {
    return dispatch => {
       return apiCall("get", "/api/clients", {
-         params: { search, tagSearch: tagSearch }
+         params: { search: search, tagSearch: tagSearch, all: all }
       })
          .then(res => {
             dispatch(removeError());
@@ -76,25 +89,13 @@ export function fetchClientByID_v2(clientID) {
    };
 }
 
-export function createClient(client) {
-   return dispatch => {
-      return apiCall("post", "/api/clients", client)
-         .then(res => {
-            dispatch(removeError());
-            return res;
-         })
-         .catch(err => {
-            dispatch(addError(err.message));
-         });
-   };
-}
-
 export function saveClient(data) {
    return dispatch => {
       return apiCall("put", "/api/clients/" + data.clientID, { client: data })
          .then(res => {
             dispatch(removeError());
-            dispatch(toggleModal("clientSaveConfirmation"));
+            // dispatch(toggleModal("clientSaveConfirmation"));
+            dispatch(toggleModalV2(true, "Client updated!"));
             return true;
          })
          .catch(err => {
@@ -118,39 +119,38 @@ export function deleteClient(id, history) {
 
 // Client Tag Actions
 
-export function loadTag(clientId, tag) {
-   return {
-      type: LOAD_TAG,
-      clientId,
-      tag
-   };
-}
+// export function loadTag(clientID, tag) {
+//    return {
+//       type: LOAD_TAG,
+//       clientID,
+//       tag
+//    };
+// }
 
-export function removeTag(clientId, tag) {
-   return {
-      type: REMOVE_TAG,
-      clientId,
-      tag
-   };
-}
+// export function removeTag(clientID, tag) {
+//    return {
+//       type: REMOVE_TAG,
+//       clientID,
+//       tag
+//    };
+// }
 
-export function addTagToClient(clientId, tag, op) {
-   // is clientId needed in data object? not according to API endpoint used
+export function updateClientTag(clientID, tagID, op) {
    const data = {
-      clientId,
-      [op]: { tags: tag._id },
+      [op]: { tags: tagID },
       skipPreUpdateHook: true
    };
 
    return dispatch => {
-      return apiCall("put", `/api/clients/${clientId}`, { client: data })
+      return apiCall("put", "/api/clients/" + clientID, { client: data })
          .then(res => {
             dispatch(removeError());
-            if (op === "$push") {
-               dispatch(loadTag(clientId, tag));
-            } else if (op === "$pull") {
-               dispatch(removeTag(clientId, tag));
-            }
+            // if (op === "$push") {
+            //    dispatch(loadTag(clientID, tagID));
+            // } else if (op === "$pull") {
+            //    dispatch(removeTag(clientID, tagID));
+            // }
+            return res;
          })
          .catch(err => {
             dispatch(addError(err.message));

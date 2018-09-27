@@ -21,11 +21,11 @@ import Header from "./ClientFormHeader";
 import Info from "./ClientInfo/ClientInfo";
 import Orders from "./ClientOrders/ClientOrders";
 import ClientTags from "../Tags/ClientTags";
-import Modal from "../../UI/Modal/Modal";
+import MessageModal from "../../UI/Modal/Modal";
 import SecureNotesModal from "./SecureNotesModal";
 import RewardsModal from "./RewardsModal";
 import Company from "./ClientCompany/ClientCompany";
-import ClientCompanyModal from "./ClientCompany/ClientCompanyModal";
+import CompanyModal from "./ClientCompany/ClientCompanyModal";
 
 class ClientForm extends Component {
    state = {
@@ -34,9 +34,12 @@ class ClientForm extends Component {
       modal: {
          secure: false,
          company: false,
-         rewards: false
+         rewards: false,
+         newTag: false
       },
-      inputCompany: ""
+      inputCompany: "",
+      inputTagCategory: "",
+      inputTagName: ""
    };
 
    static getDerivedStateFromProps(props, state) {
@@ -73,11 +76,6 @@ class ClientForm extends Component {
    onChange = (field, value) => {
       const { clientID } = this.props.client;
       this.props.editClient(clientID, field, value);
-   };
-
-   handleChange = e => {
-      const id = this.props.client.clientId;
-      this.props.updateClient(id, e);
    };
 
    saveClient = e => {
@@ -153,7 +151,7 @@ class ClientForm extends Component {
 
    render() {
       const { ready, modal, inputCompany } = this.state;
-      const { client } = this.props;
+      const { id, client } = this.props;
       const { clientID, company, tags, notes } = client || {};
       const cssAnimate = ["animated", ready ? "fade-visible" : "fade-hidden"];
 
@@ -169,7 +167,6 @@ class ClientForm extends Component {
                <Header
                   client={client || {}}
                   toggleModal={this.toggleModal}
-                  addButton={() => this.toggleModal("company")}
                   company={company || {}}
                />
                <div className="ui grid ">
@@ -189,17 +186,15 @@ class ClientForm extends Component {
                      className="nine wide column"
                      style={{ position: "relative", top: "-50px" }}
                   >
-                     <Orders clientID={clientID} />
-                     <ClientTags clientID={clientID} tags={tags || []} />
-                     <div
-                        style={{
-                           marginTop: "20px",
-                           border: "1px solid #ddd",
-                           padding: "20px",
-                           borderRadius: "5px"
-                        }}
-                     >
-                        Notes
+                     <Orders clientID={id} />
+                     <ClientTags
+                        clientID={clientID}
+                        tags={tags || []}
+                        open={modal.newTag}
+                        toggle={this.toggleModal}
+                     />
+                     <div className="section">
+                        <h3 style={{ marginBottom: 15 }}>Notes</h3>
                         <form className="ui form">
                            <div className="field">
                               <textarea
@@ -215,7 +210,7 @@ class ClientForm extends Component {
                      </div>
                   </div>
                </div>
-               <Modal
+               <MessageModal
                   isOpen={this.props.showSaveConfirmation}
                   toggle={() =>
                      this.props.toggleModal("clientSaveConfirmation")
@@ -223,17 +218,17 @@ class ClientForm extends Component {
                   title="Success!"
                >
                   Changes saved succesfully
-               </Modal>
+               </MessageModal>
                <SecureNotesModal
-                  isOpen={modal.secure}
-                  toggle={this.toggleModal}
+                  open={modal.secure}
+                  close={this.toggleModal}
                   submit={this.saveSecureNotes}
                   client={client || {}}
-                  onChange={this.handleChange}
+                  onChange={this.onChange}
                />
-               <ClientCompanyModal
-                  isOpen={modal.company}
-                  toggle={this.toggleModal}
+               <CompanyModal
+                  open={modal.company}
+                  close={this.toggleModal}
                   value={inputCompany}
                   onChange={e =>
                      this.setState({ inputCompany: e.target.value })
@@ -241,8 +236,8 @@ class ClientForm extends Component {
                   submit={this.addCompany}
                />
                <RewardsModal
-                  isOpen={modal.rewards}
-                  toggle={this.toggleModal}
+                  open={modal.rewards}
+                  close={this.toggleModal}
                   client={client}
                />
             </div>
@@ -255,6 +250,7 @@ function mapStateToProps(state, ownProps) {
    const id = ownProps.match.params.clientID;
    const client = state.clients.find(obj => obj.clientID === +id);
    return {
+      id,
       client,
       showSaveConfirmation: state.system.showModal.clientSaveConfirmation
    };

@@ -1,9 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import Select from "react-select";
+import "./ClientTags.css";
 
-import { fetchClientTag } from "../../../store/actions/system";
-import { addTagToClient } from "../../../store/actions/clients";
+import { fetchTag, loadTagData } from "../../../store/actions/system";
+import { loadClients, updateClientTag } from "../../../store/actions/clients";
+import { createTag } from "../../../store/actions/tags";
+import NewTagModal from "./NewTagModal";
 
 class ClientTags extends React.Component {
    state = {
@@ -11,75 +14,103 @@ class ClientTags extends React.Component {
    };
 
    componentDidMount = () => {
-      this.props.fetchClientTag();
+      this.props.fetchTag();
    };
 
-   onAddTagButtonClick = () => {
+   onAddTagButtonClick = async () => {
+      const { option } = this.state;
+      const { tags, clientID } = this.props;
+
       // prevent action if no option selected
-      if (!this.state.option) {
+      if (!option) {
          return;
       }
 
       // prevent adding duplicate tags
-      const option = this.state.option.value;
-      const tagIds = this.props.tags.map(el => el._id);
-      if (tagIds.includes(option._id)) {
+      const tagID = option.value;
+      const tagIDs = tags.map(el => el._id);
+      if (tagIDs.includes(tagID)) {
          return;
       }
 
-      this.props.addTagToClient(this.props.clientId, option, "$push");
+      const res = await this.props.updateClientTag(clientID, tagID, "$push");
+      this.props.loadClients([res]);
       this.setState({ option: "" });
    };
 
-   onDeleteTagButtonClick = tag => {
-      this.props.addTagToClient(this.props.clientId, tag, "$pull");
+   onDeleteTagButtonClick = async tagID => {
+      const { clientID } = this.props;
+      const res = await this.props.updateClientTag(clientID, tagID, "$pull");
+      this.props.loadClients([res]);
+   };
+
+   createNewTag = async data => {
+      const res = await this.props.createTag(data);
+      this.props.loadTagData(res);
+      return true;
    };
 
    render() {
-      const tags = this.props.tags.map(el => (
-         <span className="badge badge-secondary mr-3 mb-3" key={el._id}>
-            {el.category} -> {el.name}{" "}
-            <button
-               className="btn btn-secondary btn-sm"
-               onClick={() => this.onDeleteTagButtonClick(el)}
-            >
-               x
-            </button>
+      const clientTags = this.props.tags.map(tag => (
+         <span className="client-tag" key={tag._id}>
+            <span className="category">{tag.category}</span>
+            <span className="name">{tag.name}</span>
+            <i
+               className="x icon"
+               onClick={() => this.onDeleteTagButtonClick(tag._id)}
+            />
          </span>
       ));
 
-      const tagIds = this.props.tags.map(el => el._id);
-      const clientTagOptions = this.props.data
-         .filter(el => !tagIds.includes(el._id))
-         .map(el => ({
-            label: `${el.category} -> ${el.name}`,
-            value: el
+      const tagIDs = this.props.tags.map(tag => tag._id);
+      const tagOptions = this.props.data
+         .filter(tag => !tagIDs.includes(tag._id))
+         .map(tag => ({
+            label: `${tag.category} - ${tag.name}`,
+            value: tag._id
          }));
 
       return (
-         <div style={{ marginTop: "20px", border: "1px solid #ddd", padding: "20px", borderRadius: "5px" }}>
-            <div style={{fontSize: "16px", marginBottom: "15px", fontWeight: "300"}}>Tags</div>
+         <div className="section ClientTags">
+            <h3 style={{ marginBottom: 15 }}>Tags</h3>
             <div className="ui grid">
-               <div className="twelve wide column">
+               <div className="ten wide column">
                   <Select
-                     options={clientTagOptions}
-                     onChange={option => this.setState({ option })}
                      value={this.state.option}
-                     disabled={clientTagOptions.length === 0}
+                     options={tagOptions}
+                     onChange={option => this.setState({ option })}
+                     disabled={tagOptions.length === 0}
+                     noOptionsMessage={() => "No matching tag found"}
+                     classNamePrefix="tag-select"
+                     placeholder="Search tags..."
                   />
                </div>
-               <div className="four wide column">
+               <div className="six wide column">
                   <button
-                     className="ui basic primary button"
+                     className="ui basic blue button"
                      onClick={this.onAddTagButtonClick}
                      disabled={!this.state.option}
                   >
+                     <i className="tag icon" />
                      Add Tag
                   </button>
                </div>
             </div>
+            <div style={{ marginTop: 20 }}>{clientTags}</div>
             <hr />
-            <span style={{ fontSize: "18px" }}>{tags}</span>
+            <div>
+               <button
+                  className="ui basic mini button"
+                  onClick={() => this.props.toggle("newTag")}
+               >
+                  Create New Tag
+               </button>
+            </div>
+            <NewTagModal
+               open={this.props.open}
+               toggle={this.props.toggle}
+               createNewTag={this.createNewTag}
+            />
          </div>
       );
    }
@@ -87,11 +118,11 @@ class ClientTags extends React.Component {
 
 function mapStateToProps(state) {
    return {
-      data: state.system.clientTagOptions
+      data: state.system.tagData
    };
 }
 
 export default connect(
    mapStateToProps,
-   { fetchClientTag, addTagToClient }
+   { fetchTag, loadTagData, loadClients, updateClientTag, createTag }
 )(ClientTags);

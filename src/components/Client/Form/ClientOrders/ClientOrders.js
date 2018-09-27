@@ -7,12 +7,17 @@ import {
    createOrder,
    deleteOrder
 } from "../../../../store/actions/orders";
+import { createOrderRow } from "../../../../store/actions/orderRows";
 import { resetDataLoadedStatus } from "../../../../store/actions/system";
 
 import TableHead from "./TableHead";
 import TableRow from "./TableRow";
 
 class ClientOrderList extends React.Component {
+   state = {
+      newOrderLoading: false
+   };
+
    componentDidMount() {
       this.props.fetchClientOrders(this.props.clientID);
    }
@@ -21,8 +26,11 @@ class ClientOrderList extends React.Component {
       this.props.resetDataLoadedStatus("clientOrderList");
    }
 
-   handleNewOrderButton = () => {
-      this.props.createOrder(this.props.clientID);
+   handleNewOrderButton = async () => {
+      this.setState({ newOrderLoading: true });
+      const res = await this.props.createOrder(this.props.clientID);
+      await this.props.createOrderRow(res.orderID, 1);
+      this.props.history.push("/orders/" + res.orderID);
    };
 
    handleRowClick = id => {
@@ -39,6 +47,7 @@ class ClientOrderList extends React.Component {
          return null;
       }
 
+      const loading = this.state.newOrderLoading ? " loading" : "";
       const clientOrderList = this.props.orders.map(o => {
          return (
             <TableRow
@@ -54,7 +63,7 @@ class ClientOrderList extends React.Component {
          <div>
             <button
                style={{ float: "right", position: "relative", top: "10px" }}
-               className="ui primary button"
+               className={"ui primary button " + loading}
                onClick={this.handleNewOrderButton}
             >
                <i className="material-icons">add</i>
@@ -79,6 +88,12 @@ function mapStateToProps(state) {
 export default withRouter(
    connect(
       mapStateToProps,
-      { fetchClientOrders, createOrder, deleteOrder, resetDataLoadedStatus }
+      {
+         fetchClientOrders,
+         createOrder,
+         deleteOrder,
+         resetDataLoadedStatus,
+         createOrderRow
+      }
    )(ClientOrderList)
 );

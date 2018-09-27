@@ -1,14 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-
-// import _ from "lodash";
+import { Search } from "semantic-ui-react";
 
 import { fetchClient } from "../../../store/actions/clients";
 import { fetchOrderByID } from "../../../store/actions/orders";
 import { resetDataLoadedStatus } from "../../../store/actions/system";
-
-import { Search } from "semantic-ui-react";
 
 class GlobalSearch extends React.Component {
    componentWillMount() {
@@ -32,28 +29,36 @@ class GlobalSearch extends React.Component {
          typingTimeout: setTimeout(async () => {
             this.props.fetchClient(value).then(res => {
                const clients = res.map(this.formatResults);
-               // todo: don't show category if no result found
+               const clientResults = {};
+               if (clients.length > 0) {
+                  clientResults.clients = {
+                     name: "Clients",
+                     results: clients
+                  };
+               }
                // todo: show "no results found" if no results
 
                const id = Number(value);
                if (Number.isInteger(id)) {
                   this.props.fetchOrderByID(id).then(res => {
                      const orders = res.map(this.formatOrderResults);
+                     const orderResults = {};
+                     if (orders.length > 0) {
+                        orderResults.orders = {
+                           name: "Orders",
+                           results: orders
+                        };
+                     }
+
                      const results = {
-                        clients: {
-                           name: "Clients",
-                           results: clients
-                        },
-                        orders: { name: "Orders", results: orders }
+                        ...clientResults,
+                        ...orderResults
                      };
                      this.setState({ loading: false, results });
                   });
                } else {
                   const results = {
-                     clients: {
-                        name: "Clients",
-                        results: clients
-                     }
+                     ...clientResults
                   };
                   this.setState({ loading: false, results });
                }
@@ -73,9 +78,9 @@ class GlobalSearch extends React.Component {
    formatResults = res => {
       return {
          type: "clients",
-         id: res.clientId,
+         id: res.clientID,
          title: res.firstName + " " + res.lastName,
-         description: res.email + "," + res.phone + ", ID: " + res.clientId
+         description: res.email + "," + res.phone + ", ID: " + res.clientID
       };
    };
 
@@ -93,6 +98,7 @@ class GlobalSearch extends React.Component {
       return (
          <Search
             category
+            placeholder="Search database..."
             loading={loading}
             results={results}
             value={value}

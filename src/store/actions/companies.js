@@ -1,10 +1,9 @@
 import { apiCall } from "../../services/api";
 
 import { addError, removeError } from "./errors";
-import { toggleModalV2 } from "./system";
 import {
    LOAD_COMPANY_DATA,
-   COMPANY_INPUT_CHANGE,
+   EDIT_COMPANY,
    ADD_COMPANY_CONTACT,
    REMOVE_COMPANY_CONTACT
 } from "../actionTypes";
@@ -16,12 +15,12 @@ export function loadData(data) {
    };
 }
 
-export function companyInputChange(event, id) {
+export function editCompany(companyID, field, value) {
    return {
-      type: COMPANY_INPUT_CHANGE,
-      field: event.target.name,
-      value: event.target.value,
-      id
+      type: EDIT_COMPANY,
+      id: +companyID,
+      field,
+      value
    };
 }
 
@@ -64,22 +63,18 @@ export function removeCompanyContact(companyID, id) {
 
 // DATABASE API CALLS
 
-// export function createOrderRow(orderId, rowNum) {
-//    return dispatch => {
-//       return apiCall("post", `/api/order_rows`, {
-//          row: { orderId, rowNum }
-//       })
-//          .then(res => {
-//             dispatch(removeError());
-//             dispatch(addNewOrderRow(res));
-//             dispatch(setSelectedOrderRow(res._id));
-//             return res;
-//          })
-//          .catch(err => {
-//             dispatch(addError(err.message));
-//          });
-//    };
-// }
+export function createCompany(data) {
+   return dispatch => {
+      return apiCall("post", "/api/companies", { company: data })
+         .then(res => {
+            dispatch(removeError());
+            return res;
+         })
+         .catch(err => {
+            dispatch(addError(err.message));
+         });
+   };
+}
 
 export function fetchCompany(companyID) {
    return dispatch => {
@@ -101,7 +96,7 @@ export function updateCompany(company) {
       return apiCall("put", "/api/companies/" + companyID, { company })
          .then(res => {
             dispatch(removeError());
-            dispatch(toggleModalV2(true, "Success", "Save succesful"));
+            // dispatch(toggleModalV2(true, "Success", "Save succesful"));
             return true;
          })
          .catch(err => {

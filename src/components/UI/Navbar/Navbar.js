@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import "./Navbar.css";
 
 import { logout } from "../../../store/actions/auth";
 
-import Logo from "../../../images/manatee.png";
 import Search from "./Search";
 
 class Navbar extends Component {
@@ -14,25 +13,20 @@ class Navbar extends Component {
          currentUser: { username }
       } = this.props.users;
       return (
-         <nav className="navbar navbar-expand">
+         <nav className="Navbar navbar navbar-expand">
             <div className="container-fluid">
-               <div className="navbar-header">
-                  <Link to="/" className="navbar-brand">
-                     <img src={Logo} alt="Manatee Home" />
-                  </Link>
-               </div>
                <Search />
-               <ul className="nav navbar-nav navbar-right">
-                  {!isAuthenticated ? (
-                     <li>
-                        <Link to="/login">Login</Link>
-                     </li>
-                  ) : (
-                     <li>
-                        {username} <a onClick={this.props.logout}>Log out</a>
-                     </li>
-                  )}
-               </ul>
+               {isAuthenticated && (
+                  <div>
+                     <div className="user">
+                        Logged in as{" "}
+                        <span className="username">{username}</span>
+                     </div>
+                     <a className="logout" onClick={this.props.logout}>
+                        Log out
+                     </a>
+                  </div>
+               )}
             </div>
          </nav>
       );
