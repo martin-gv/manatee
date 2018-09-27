@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, withRouter } from "react-router-dom";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { resetIdleTimeout } from "../../../store/actions/auth";
@@ -39,6 +39,11 @@ class Viewport extends React.Component {
                <Modal />
                <ErrorModal />
                <Switch>
+                  <Route
+                     exact
+                     path="/"
+                     render={() => <Redirect to="/clients" />}
+                  />
                   <Route exact path="/dashboard" component={Dashboard} />
                   <Route path="/clients" component={ClientView} />
                   <Route path="/companies" component={CompanyView} />

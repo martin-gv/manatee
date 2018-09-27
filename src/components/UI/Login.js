@@ -35,7 +35,7 @@ class Login extends Component {
 
    render() {
       const { username, password, redirectTo, animate } = this.state;
-      const { from } = this.props.location.state || { from: { pathname: "/clients" } };
+      const { from } = this.props.location.state || { from: { pathname: "/" } };
 
       if (redirectTo) return <Redirect to={from} />;
 
@@ -44,11 +44,11 @@ class Login extends Component {
             <Motion style={{ opacity: spring(animate ? 1 : 0) }}>
                {style => (
                   <div className="card" style={{ opacity: style.opacity }}>
-                     <h2>Login</h2>
+                     <h2 style={{ marginBottom: 10 }}>Login</h2>
                      <form
                         className="ui form"
                         onSubmit={this.onSubmit}
-                        style={{ marginTop: 20 }}
+                        style={{ marginTop: 10 }}
                      >
                         <div className="field">
                            <label>Username</label>
@@ -70,6 +70,17 @@ class Login extends Component {
                         </div>
                         <button className="ui blue button">Submit</button>
                      </form>
+                     {this.props.message ? (
+                        <div
+                           style={{
+                              padding: "10px 0",
+                              color: "#c43f3f",
+                              fontWeight: "bold"
+                           }}
+                        >
+                           {this.props.message}
+                        </div>
+                     ) : null}
                   </div>
                )}
             </Motion>
@@ -78,7 +89,13 @@ class Login extends Component {
    }
 }
 
+function mapStateToProps(state) {
+   return {
+      message: state.errors.message
+   };
+}
+
 export default connect(
-   null,
+   mapStateToProps,
    { authUser }
 )(Login);
