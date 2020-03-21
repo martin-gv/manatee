@@ -1,1 +1,11 @@
+# dependencies
 node_modules 
+
+build
+
+# environment variables
+.env
+
+# netlify
+.netlify
+netlify.toml
